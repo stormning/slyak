@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
+		
+	 <bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
+	 	<property name="driverClass" value="${db.driver}"/>
+	 	<property name="jdbcUrl" value="${db.url}"/>
+	 	<property name="username" value="${db.username}"/>
+	 	<property name="password" value="${db.password}"/>
+	 	<property name="idleConnectionTestPeriodInMinutes" value="60"/>
+	 	<property name="idleMaxAgeInMinutes" value="240"/>
+	 	<property name="maxConnectionsPerPartition" value="30"/>
+	 	<property name="minConnectionsPerPartition" value="10"/>
+	 	<property name="partitionCount" value="3"/>
+	 	<property name="acquireIncrement" value="5"/>
+	 	<property name="statementsCacheSize" value="100"/>
+	 	<property name="releaseHelperThreads" value="3"/>
+      </bean>
+	
+</beans>

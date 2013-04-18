@@ -1,0 +1,201 @@
+
+.container-fluid {
+    margin: 0 auto;
+    max-width: 960px;
+}
+.sidebar-nav {
+    padding: 9px 0;
+}
+body {
+    background: none repeat scroll 0 0 #EEEEEE;
+    padding-bottom: 20px;
+    padding-top: 20px;
+}
+.hero-unit {
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #DEDEDE;
+    border-radius: 0 0 0 0;
+    box-shadow: 0 1px 4px #888888;
+    clear: both;
+    color: #2D3033;
+    float: none;
+    height: auto;
+    overflow: hidden;
+    padding: 33px 33px 44px;
+    position: static;
+    text-decoration: none;
+    text-shadow: none;
+    transition: background-color 0.25s ease 0s;
+    width: auto;
+}
+.btn-primary {
+    background-color: #239EC3;
+    background-image: linear-gradient(to bottom, #75C2D9, #239EC3);
+    background-repeat: repeat-x;
+    border-color: #75C2D9 #75C2D9 #239EC3;
+    color: #FFFFFF;
+}
+.btn {
+}
+#share a {
+    margin-bottom: 10px;
+}
+#back-top-general {
+    border-bottom: 0 none;
+    border-right: 0 none;
+    bottom: 0;
+    float: right;
+    height: 50px;
+    margin-bottom: 0;
+    padding: 10px;
+    position: fixed;
+    right: 10px;
+    text-align: center;
+}
+#back-top-general a {
+    display: block;
+    font-size: 11px;
+    margin-top: 3px;
+    text-decoration: none;
+    transition: all 1s ease 0s;
+    width: 36px;
+}
+#back-top-general a:hover {
+    color: #000000;
+}
+#back-top-general span {
+    background: url("../images/toTop.png") no-repeat scroll center center transparent;
+    display: block;
+    float: left;
+    height: 36px;
+    margin-bottom: 5px;
+    margin-right: 3px;
+    margin-top: -3px;
+    transition: all 1s ease 0s;
+    width: 36px;
+}
+.btn-large {
+    border-radius: 6px 6px 6px 6px;
+    font-size: 15px;
+    margin-left: 0;
+    padding: 11px 19px;
+}
+.navMargin {
+    margin-bottom: 5px;
+}
+.btn-primary:hover, .btn-primary:active, .btn-primary.active, .btn-primary.disabled, .btn-primary[disabled] {
+    background-color: #239EC3;
+    color: #FFFFFF;
+}
+h1, h2, h3, h4, h5, h6 {
+}
+h2, h3 {
+    font-size: 25px;
+}
+.hero-unit h1 {
+}
+body, a, p {
+    color: #2D3033;
+    font-family: 'Average Sans',sans-serif;
+}
+.hero-unit p a {
+    color: #0073D4;
+}
+.hero-unit .noLink a {
+    color: #FFFFFF;
+}
+body {
+    background-image: url("../images/bg.png");
+}
+.smallerTopPadding {
+    padding-bottom: 15px;
+    padding-top: 15px;
+}
+.hero-unit p {
+    font-family: 'Average Sans',sans-serif;
+    font-size: 14px;
+    line-height: 20px;
+    padding-bottom: 20px;
+}
+.banner {
+    background: url("../images/banner.png") no-repeat scroll 0 0 #FFFFFF;
+    height: 236px;
+    margin-left: -30px;
+}
+.nomargin {
+    padding: 0;
+}
+.nomargin hr {
+    margin-top: 0;
+    padding-top: 0;
+}
+.hero-unit h1 {
+    font-size: 35px;
+    margin-bottom: 10px;
+}
+.telefon {
+    font-family: 'Allura',cursive;
+    font-size: 2.1em;
+    margin-bottom: 20px;
+    margin-top: 10px;
+}
+.telefon p {
+    font-family: 'Allura',cursive;
+}
+.logo a {
+    font-family: 'Allura',cursive;
+    font-size: 2.1em;
+    font-weight: 400;
+}
+.logo {
+    font-family: 'Allura',cursive;
+    margin-bottom: 20px;
+    margin-top: 10px;
+}
+.navbar-inner {
+    padding: 0 0 0 10px;
+}
+.nav li {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+.divider-vertical {
+    display: none;
+}
+.nav {
+    margin: 0;
+}
+.row-fluid .telefon {
+    display: none;
+}
+#share {
+    background-color: #F6F6F6;
+    border: 1px solid #D5D5D5;
+    border-radius: 4px 4px 4px 4px;
+    float: right;
+    height: auto;
+    overflow: hidden;
+    padding: 10px 10px 0 15px;
+    position: fixed;
+    right: -4px;
+    text-align: left;
+    top: 105px;
+    width: 40px;
+}
+#share {
+    background-color: #F6F6F6;
+    border: 1px solid #D5D5D5;
+    border-radius: 4px 4px 4px 4px;
+    float: left;
+    height: 40px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    padding-bottom: 10px;
+    position: relative;
+    text-align: left;
+    width: 100%;
+}
+#share span {
+    margin: 10px;
+}

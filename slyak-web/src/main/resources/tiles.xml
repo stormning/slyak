@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	<definition name="mainTemplate" template="/WEB-INF/views/layout.jsp">
+		<put-attribute name="footer" value="/WEB-INF/views/footer.jsp"/>
+		<put-attribute name="header" value="/WEB-INF/views/header.jsp"/>
+		<put-attribute name="subheader" value="/WEB-INF/views/subheader.jsp"/>
+	</definition>
+	
+	<!-- 最大的匹配放在最下面 -->
+	<definition name="account.*" extends="mainTemplate">
+		<put-attribute name="content" value="/WEB-INF/views/account/layout.jsp"/>
+		<put-attribute name="subheader" value="/WEB-INF/views/account/subheader.jsp" cascade="true"/>
+		<put-attribute name="right" value="/WEB-INF/views/account/{1}.jsp" cascade="true"/>
+	</definition>
+	
+	<definition name="alone:*.*" templateExpression="/WEB-INF/views/{1}/{2}.jsp"/>
+	<definition name="*.*" extends="mainTemplate">
+		<put-attribute name="content" expression="/WEB-INF/views/{1}/{2}.jsp"/>
+	</definition>
+</tiles-definitions>

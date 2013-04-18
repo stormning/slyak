@@ -1,0 +1,16 @@
+@IMPORT url("widget.css");
+
+#wrap {
+	/* margin-top: 60px; */
+	width: 998px;
+}
+.inline {
+	white-space: nowrap;
+}
+
+html{
+}
+
+body {
+	background: transparent;
+}

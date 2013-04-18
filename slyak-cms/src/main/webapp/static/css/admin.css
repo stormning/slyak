@@ -1,0 +1,209 @@
+.ace_editor {
+	position: relative !important;
+	border: 1px solid lightgray;
+	margin: auto;
+	height: 255px;
+	width: 97%;
+}
+
+.ace_editor.fullScreen {
+	height: auto;
+	width: auto;
+	border: 0;
+	margin: 0;
+	position: fixed !important;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 10;
+	background: white;
+}
+
+.fullScreen {
+	overflow: hidden
+}
+
+.scrollmargin {
+	height: 500px;
+	text-align: center;
+}
+
+.large-button {
+	color: lightblue;
+	cursor: pointer;
+	font: 30px arial;
+	padding: 20px;
+	text-align: center;
+	border: medium solid transparent;
+	display: inline-block;
+}
+
+.large-button:hover {
+	border: medium solid lightgray;
+	border-radius: 10px 10px 10px 10px;
+	box-shadow: 0 0 12px 0 lightblue;
+}
+
+.column {
+	min-height: 100px;
+}
+
+.ui-sortable-placeholder {
+	border: 1px dotted #666;
+	visibility: visible !important;
+}
+
+.ui-sortable-placeholder * {
+	visibility: hidden;
+}
+
+.form-horizontal .control-label {
+	padding-top: 4px;
+}
+
+#toolbar {
+	position: absolute;
+	right: 0px;
+	top: -200px;
+}
+
+#toolbar li {
+	border-width: 1px 1px 0;
+	border-color: #ddd;
+	border-style: solid;
+}
+
+#toolbar a {
+	display: block;
+	padding: 10px;
+	background-color: #eee;
+	border-bottom: 1px solid #ddd;
+	cursor: pointer;
+	color: #333;
+	font-size: 12px;
+	border-bottom: 1px solid #ddd;
+	cursor: pointer;
+}
+
+#toolbar a:HOVER {
+	color: #000;
+	filter: alpha(opacity =     60);
+	-moz-opacity: 0.6;
+	-khtml-opacity: 0.6;
+	opacity: 0.6;
+}
+
+#widgetAdd {
+	width: 900px;
+}
+
+#globalEdit {
+	width: 900px;
+}
+
+.widget-snapshot {
+	border: 1px solid #ccc;
+	background-color: #ddd;
+	color: #fff;
+	font-size: 16px;
+	font-weight: bold;
+	width: 120px;
+	line-height: 80px;
+	text-align: center;
+}
+
+.layout-demo {
+	border: 1px solid #ccc;
+	padding: 3px;
+	margin-bottom: 10px;
+	cursor: pointer;
+}
+
+.layout-demo-hover {
+	border-color: blue;
+}
+
+.layout-demo .span12,.layout-demo .span3,.layout-demo .span4,.layout-demo .span6,.layout-demo .span8,.layout-demo .span9
+	{
+	background-color: #ddd;
+	height: 120px;
+	border-bottom: 3px solid #fff;
+}
+
+.layout-demo .last {
+	border-bottom: 0px !important;
+}
+
+.layout-demo .row-1-2 {
+	height: 60px !important;
+}
+
+.layout-demo .row-1-3 {
+	height: 40px !important;
+}
+
+.layout-demo .row-1-4 {
+	height: 30px !important;
+}
+
+.layout-demo .row-1-5 {
+	height: 24px !important;
+}
+
+.layout-demo .row-1-6 {
+	height: 20px !important;
+}
+
+.widget {
+	position: relative;
+}
+
+#widgetHelper {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	width: auto;
+	padding: 8px 2px 0 0;
+	border: none;
+}
+
+#widgetHelper a.icon {
+	display: block;
+	background: #fff url("../images/widget-icon.png") left top no-repeat;
+	width: 18px;
+	height: 18px;
+	margin-right: 5px;
+	float: left;
+	border: 1px solid #C2C2C2;
+}
+
+#widgetHelper a.icon:HOVER {
+	background-color: #eee;
+}
+
+a.icon-edit {
+	background-position: 4px -205px !important;
+}
+
+a.icon-remove {
+	background-position: 4px -293px !important;
+}
+
+.system-borders {
+	
+}
+
+.system-borders a {
+	display: block;
+	border: 1px solid #ccc;
+	height: 26px;
+	width: 26px;
+	float: left;
+	margin: 0 5px 0 0;
+	cursor: pointer;
+}
+
+.system-borders a:HOVER,.system-borders a.btn-selected {
+	border: 1px solid blue;
+}

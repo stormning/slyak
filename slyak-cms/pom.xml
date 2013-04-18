@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.slyak</groupId>
+    <artifactId>slyak-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>slyak-cms</artifactId>
+  <packaging>war</packaging>
+  <name>slyak-cms Maven Webapp</name>
+  <url>http://maven.apache.org</url>
+  <build>
+    <finalName>slyak-cms</finalName>
+  </build>
+  <dependencies>
+  	<dependency>
+  		<groupId>com.slyak</groupId>
+  		<artifactId>slyak-comment</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.slyak</groupId>
+  		<artifactId>slyak-core</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.freemarker</groupId>
+  		<artifactId>freemarker</artifactId>
+  		<version>2.3.19</version>
+  	</dependency>
+  </dependencies>
+</project>
