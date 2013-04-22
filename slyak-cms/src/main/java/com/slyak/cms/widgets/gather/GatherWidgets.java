@@ -16,6 +16,7 @@ import org.springframework.ui.ModelMap;
 import com.slyak.cms.core.annotation.Setting;
 import com.slyak.cms.core.annotation.Widget;
 import com.slyak.cms.core.annotation.Widgets;
+import com.slyak.cms.core.enums.InputType;
 import com.slyak.cms.core.model.Settings;
 import com.slyak.core.js.JavaScriptHandler;
 import com.slyak.core.util.StringUtils;
@@ -34,7 +35,7 @@ public class GatherWidgets{
 	}
 
 	@Widget(settings = { @Setting(key = "uri", value = ""),
-			@Setting(key = "method", value = "GET"),@Setting(key="callback",value="")})
+			@Setting(key = "method", value = "GET"),@Setting(key="callback",value="",inputType=InputType.TEXTAREA)})
 	public String proxy(Settings settings, ModelMap modelMap) {
 		String uri = StringUtils.trimWhitespace(settings.get("uri"));
 		if (StringUtils.hasText(uri) && uri.toLowerCase().startsWith("http")) {

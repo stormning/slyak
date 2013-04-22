@@ -53,7 +53,31 @@
 						${st.key}
 					</div>
 					<div class="span9">
-						<input type="text" name="stvalue" value="${st.value}"/>
+						<c:choose>
+							<c:when test="${'INPUT' eq st.inputType}">
+								<input type="text" name="stvalue" value="${st.value}"/>
+							</c:when>
+							<c:when test="${'TEXTAREA' eq st.inputType}">
+								<textarea name="stvalue">${mergedSettings[st.key]}</textarea>
+							</c:when>
+							<c:when test="${'SELECT' eq st.inputType}">
+								<select name="stvalue">
+									<c:forEach items="${st.options}" var="op">
+										<option value="${op}" <c:if test="${op eq mergedSettings[st.key]}">selected="selected"</c:if>>${op}</option>
+									</c:forEach>
+								</select>
+							</c:when>
+							<c:when test="${'RADIO' eq st.inputType}">
+								<c:forEach items="${st.options}" var="op">
+									${op}:<input type="radio" name="stvalue" value="${op}" <c:if test="${op eq mergedSettings[st.key]}">checked="checked"</c:if>/>
+								</c:forEach>
+							</c:when>
+							<c:otherwise>
+								<c:forEach items="${st.options}" var="op">
+									${op}:<input type="checkbox" name="stvalue" value="${op}" <c:if test="${op eq mergedSettings[st.key]}">checked="checked"</c:if>/>
+								</c:forEach>
+							</c:otherwise>
+						</c:choose>
 					</div>
 				</div>			
 			</c:forEach>

@@ -62,7 +62,7 @@ $(function() {
 						var stts = {};
 						_this.find(".settings").each(function(index,el){
 							var _key = $(el).children("div:eq(0)").attr("key");
-							stts[_key]=$(el).find("input").val();
+							stts[_key]=$(el).find("[name=stvalue]").val();
 						});
 						var data = {id:_this.find("input[name=id]").val(),title:_this.find("input[name=title]").val(),borderTpl:tpl,borderClass:bc,settings:stts};
 						$.ajax(_this.find("form").attr("action"),{type:'post',contentType:'application/json',data:$.toJSON(data),complete:function(){

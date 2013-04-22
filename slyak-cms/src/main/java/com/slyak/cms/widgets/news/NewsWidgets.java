@@ -3,7 +3,6 @@ package com.slyak.cms.widgets.news;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.ui.ModelMap;
@@ -13,6 +12,7 @@ import org.springframework.util.NumberUtils;
 import com.slyak.cms.core.annotation.Setting;
 import com.slyak.cms.core.annotation.Widgets;
 import com.slyak.cms.core.annotation.Widget;
+import com.slyak.cms.core.enums.InputType;
 import com.slyak.cms.core.model.Settings;
 import com.slyak.comment.model.Comment;
 import com.slyak.comment.model.CommentType;
@@ -28,7 +28,8 @@ public class NewsWidgets {
 			@Setting(key = "type", value = ""),
 			@Setting(key = "style", value = ""),
 			@Setting(key = "fetchSize", value = "10"),
-			@Setting(key = "template",value = "list.tpl")
+			@Setting(key = "template",value = "list1.tpl",options={"list1.tpl","list2.tpl"}),
+			@Setting(key = "diy",value ="",inputType = InputType.TEXTAREA )
 			},onEdit="addType",onRemove="removeType")
 	public String list(Settings settings,ModelMap modelMap) {
 		CommentType commentType = commentService.findCommentType("news", settings.get("type"));
@@ -37,13 +38,7 @@ public class NewsWidgets {
 					.parseNumber(settings.get("fetchSize"), Integer.class),commentType.getId()));
 		}
 		modelMap.put("style", settings.get("style"));
-		
-		String template = settings.get("template");
-		if(StringUtils.isBlank(template)){
-			return "list.tpl";
-		}else{
-			return template;
-		}
+		return settings.get("template");
 	}
 	
 	@Widget(show=false)

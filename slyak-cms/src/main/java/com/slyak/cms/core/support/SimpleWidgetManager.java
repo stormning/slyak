@@ -38,6 +38,7 @@ import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 import com.slyak.cms.core.annotation.Setting;
 import com.slyak.cms.core.annotation.Widget;
 import com.slyak.cms.core.annotation.Widgets;
+import com.slyak.cms.core.enums.InputType;
 
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
@@ -131,6 +132,13 @@ public class SimpleWidgetManager implements WidgetManager,ApplicationContextAwar
 											st.setKey(setting.key());
 											st.setInputType(setting.inputType());
 											st.setOptions(setting.options());
+											String[] options = setting.options();
+											if(options.length>1&&(setting.inputType()!=InputType.RADIO||setting.inputType()!=InputType.CHECKBOX)){
+												st.setInputType(InputType.SELECT);
+											}else{
+												st.setInputType(setting.inputType());
+											}
+											st.setOptions(options);
 											st.setValue(setting.value());
 											info.addSetting(st);
 										}
