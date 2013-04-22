@@ -331,7 +331,7 @@ public class CmsController implements ServletContextAware,InitializingBean{
 		
 		String[] regionAndName = StringUtils.split(widget.getName(),".");
 		WidgetInfo widgetInfo = widgetManager.getWidgetInfo(regionAndName[0], regionAndName[1]);
-		Map<String,String> mergedSettings = mergeSettings(widgetInfo.getSettings(),widget.getSettings());
+		Map<String,String> mergedSettings = mergeSettings(widgetInfo.getSettingsMap(),widget.getSettings());
 		modelMap.put("settings", mergedSettings);
 		return "alone:core.widgetEdit";
 	}
@@ -389,7 +389,7 @@ public class CmsController implements ServletContextAware,InitializingBean{
 			String[] regionAndName = StringUtils.split(widget.getName(),".");
 			WidgetInfo moduleInfo = widgetManager.getWidgetInfo(regionAndName[0],regionAndName[1]);
 			
-			Map<String,String> mergedSettings = mergeSettings(moduleInfo.getSettings(),widget.getSettings());
+			Map<String,String> mergedSettings = mergeSettings(moduleInfo.getSettingsMap(),widget.getSettings());
 			//invoke
 			//TODO : optimize it
 			Object handler = moduleInfo.getHandler();

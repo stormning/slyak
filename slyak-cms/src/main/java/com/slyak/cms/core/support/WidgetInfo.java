@@ -1,7 +1,9 @@
 package com.slyak.cms.core.support;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class WidgetInfo {
@@ -14,7 +16,9 @@ public class WidgetInfo {
 
 	private Method method;
 
-	private Map<String, String> settings;
+	private List<Setting> settings = new ArrayList<Setting>();
+	
+	private Map<String,String> settingsMap = new HashMap<String, String>();
 
 	private Method onAdd;
 	
@@ -48,17 +52,8 @@ public class WidgetInfo {
 		this.method = method;
 	}
 
-	public Map<String, String> getSettings() {
-		return this.settings;
-	}
 
-	public void addSetting(String key, String value) {
-		if (settings == null) {
-			settings = new HashMap<String, String>();
-		}
-		settings.put(key, value);
-	}
-
+	
 	public String getRegion() {
 		return region;
 	}
@@ -91,10 +86,20 @@ public class WidgetInfo {
 		this.onRemove = onRemove;
 	}
 
-	public void setSettings(Map<String, String> settings) {
-		this.settings = settings;
+	
+	public List<Setting> getSettings() {
+		return settings;
+	}
+	
+	public Map<String, String> getSettingsMap() {
+		return settingsMap;
 	}
 
+	public void addSetting(Setting setting) {
+		this.settings.add(setting);
+		this.settingsMap.put(setting.getKey(), setting.getValue());
+	}
+	
 	public boolean isShow() {
 		return show;
 	}

@@ -127,7 +127,12 @@ public class SimpleWidgetManager implements WidgetManager,ApplicationContextAwar
 									info.setRegion(region);
 									if(widget.settings()!=null){
 										for (Setting setting : widget.settings()) {
-											info.addSetting(setting.key(), setting.value());
+											com.slyak.cms.core.support.Setting st = new com.slyak.cms.core.support.Setting();
+											st.setKey(setting.key());
+											st.setInputType(setting.inputType());
+											st.setOptions(setting.options());
+											st.setValue(setting.value());
+											info.addSetting(st);
 										}
 									}
 									
