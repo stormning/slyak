@@ -25,25 +25,12 @@
 <script src="/static/thirdparty/ace/ace.js"></script>
 <script src="/static/thirdparty/jquery/jquery.json.js"></script>
 <script src="/static/js/admin.js"></script>
-
 <script>
 	$(function(){
 		$.admin({ctx:'',currentPageId:'${currentPage.id}'});
 	});
 </script>
-
 <!-- admin area end -->
-
-<!-- baidu -->
-<script type="text/javascript">
-var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Fddcde6a957b55e6295d9fbf4324b388c' type='text/javascript'%3E%3C/script%3E"));
-$(function(){
-	$("a:first").css({'display':'none'});
-});
-</script>
-
-
 </head>
 <body>
 	<tiles:insertAttribute name="content" />
