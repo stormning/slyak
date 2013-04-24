@@ -22,7 +22,7 @@
 	<form action="${action}/news/addNews" method="post">
 		<fieldset>
 			<legend>发布内容</legend>
-			<input type="hidden" name="owner" value="${newsType}"/>
+			<input type="hidden" name="owner" value="${newsType!!}"/>
 			<input type="hidden" name="biz" value="news"/>
 			<label>标题</label>
 			<input type="text" name="title" placeholder="必填"/>
