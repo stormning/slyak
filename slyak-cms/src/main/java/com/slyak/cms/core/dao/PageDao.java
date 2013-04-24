@@ -18,6 +18,7 @@ public interface PageDao extends JpaRepository<Page, Long> {
 	@QueryHints(value={@QueryHint(name=org.hibernate.annotations.QueryHints.CACHEABLE,value="true")})
 	List<Page> findAll();
 
+	@QueryHints(value={@QueryHint(name=org.hibernate.annotations.QueryHints.CACHEABLE,value="true")})
 	List<Page> findByParentId(Long parentId);
 
 	@Query("select p from Page p,Widget w where p = w.page and w.name=?1")

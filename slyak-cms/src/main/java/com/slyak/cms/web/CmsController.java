@@ -159,7 +159,6 @@ public class CmsController implements ServletContextAware,InitializingBean{
 	private String renderPage(Page page,final NativeWebRequest request,final Locale locale,final ModelMap sharedModel) throws InterruptedException,TemplateException, IOException {
 		sharedModel.put("pages", cmsService.findRootPages());
 		sharedModel.put("currentPage", page);
-		sharedModel.put("global", cmsService.findGlobal());
 		
 		List<Widget> widgets = page.getWidgets();
 		final Map<String,List<Widget>> containerMap = new ConcurrentHashMap<String, List<Widget>>();
