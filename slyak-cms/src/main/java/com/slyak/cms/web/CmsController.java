@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -36,6 +37,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -61,6 +63,7 @@ import com.slyak.cms.core.model.Settings;
 import com.slyak.cms.core.model.Widget;
 import com.slyak.cms.core.service.CmsService;
 import com.slyak.cms.core.support.ClassUtils;
+import com.slyak.cms.core.support.Setting;
 import com.slyak.cms.core.support.WidgetInfo;
 import com.slyak.cms.core.support.WidgetManager;
 import com.slyak.core.io.FileUtils;
@@ -325,7 +328,7 @@ public class CmsController implements ServletContextAware,InitializingBean{
 	}
 	
 	@RequestMapping(value="/widget/edit",method=RequestMethod.GET)
-	public String widgetEdit(Long widgetId,ModelMap modelMap){
+	public String widgetEdit(Long widgetId,ModelMap modelMap,final NativeWebRequest request,final ModelAndViewContainer container) throws Exception{
 		Widget widget = cmsService.findWidgetById(widgetId);
 		modelMap.put("widget", widget);
 		
@@ -333,8 +336,36 @@ public class CmsController implements ServletContextAware,InitializingBean{
 		WidgetInfo widgetInfo = widgetManager.getWidgetInfo(regionAndName[0], regionAndName[1]);
 		Map<String,String> mergedSettings = mergeSettings(widgetInfo.getSettingsMap(),widget.getSettings());
 		modelMap.put("mergedSettings", mergedSettings);
-		modelMap.put("settings", widgetInfo.getSettings());
+		modelMap.put("settings", prepare(widgetInfo.getHandler(),widgetInfo.getSettings(), request, container));
 		return "alone:core.widgetEdit";
+	}
+	
+	private List<Setting> prepare(Object handler,List<Setting> settings,final NativeWebRequest request,final ModelAndViewContainer container) throws Exception{
+		if(CollectionUtils.isEmpty(settings)){
+			return Collections.EMPTY_LIST;
+		}else{
+			List<Setting> prepared = new ArrayList<Setting>();
+			for (Setting setting : settings) {
+				Method optionsLoader = setting.getOptionsLoader();
+				if(optionsLoader == null){
+					prepared.add(setting);
+				}else{
+					Setting s = new Setting();
+					BeanUtils.copyProperties(setting, s,new String[]{"options"});
+					InvocableHandlerMethod handlerMethod = createInitBinderMethod(handler, optionsLoader);
+					Object result = handlerMethod.invokeForRequest(request, container);
+					Object[] array = ObjectUtils.toObjectArray(result);
+					String[] casted = new String[array.length];
+					for (int i = 0; i < array.length; i++) {
+						casted[i] = ObjectUtils.getDisplayString(array[i]);
+					}
+					s.setOptions(casted);
+				}
+			}
+		}
+//		InvocableHandlerMethod handlerMethod = createInitBinderMethod(widgetInfo.getHandler(), onEdit);
+//		handlerMethod.invokeForRequest(request, container, stored);
+		return null;
 	}
 	
 	@RequestMapping(value="/widget/edit",method=RequestMethod.POST)

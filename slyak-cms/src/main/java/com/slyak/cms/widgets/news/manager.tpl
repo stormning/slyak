@@ -2,7 +2,7 @@
 	<ul class="nav nav-pills">
 	  <#if newsTypes??>
 		<#list newsTypes as t>
-			<li <#if t.id==newsType.id>class="active"</#if>><a href="${view}/news/manager?newsType=${t.type}">${t.decription}</a></li>		
+			<li <#if t==newsType>class="active"</#if>><a href="${view}/news/manager?newsType=${t}">${t}</a></li>		
 		</#list>
 	  </#if>
     </ul>
@@ -22,7 +22,8 @@
 	<form action="${action}/news/addNews" method="post">
 		<fieldset>
 			<legend>发布内容</legend>
-			<input type="hidden" name="commentType.id" value="${newsType.id}"/>
+			<input type="hidden" name="owner" value="${newsType}"/>
+			<input type="hidden" name="biz" value="news"/>
 			<label>标题</label>
 			<input type="text" name="title" placeholder="必填"/>
 			<label>内容</label>
