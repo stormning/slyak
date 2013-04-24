@@ -1,33 +1,25 @@
 package com.slyak.comment.service;
 
+
 import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.slyak.comment.model.Comment;
-import com.slyak.comment.model.CommentType;
 
 public interface CommentService {
 
-	void saveCommentType(CommentType commentType);
-	
-	List<CommentType> listCommentTypes(String owner);
-	
-	CommentType findCommentType(String owner,String type);
-	
 	void save(Comment comment);
 	
 	void remove(Long commentId);
 
-	List<Comment> listByCommentTypeId(int fetchSize,Long commentTypeId);
-	
-	Page<Comment> pageByCommentTypeId(Pageable pageable,Long commentTypeId);
-	
 	Comment findOne(Long commentId);
 
-	void removeCommentType(CommentType commentType);
+	List<Comment> listComments(int fetchSize,String biz, String owner);
+	
+	Page<Comment> getComments(Pageable pageable,String biz, String owner);
 
-	CommentType findCommentType(Long commentTypeId);
+	List<String> listBizOwners(String biz);
 	
 }

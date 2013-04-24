@@ -10,9 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.slyak.comment.dao.CommentDao;
-import com.slyak.comment.dao.CommentTypeDao;
 import com.slyak.comment.model.Comment;
-import com.slyak.comment.model.CommentType;
 import com.slyak.comment.service.CommentService;
 
 @Service
@@ -21,9 +19,6 @@ public class CommentServiceImpl implements CommentService {
 	@Autowired
 	private CommentDao commentDao;
 	
-	@Autowired
-	private CommentTypeDao commentTypeDao;
-
 	@Override
 	public void save(Comment comment) {
 		if (comment.getId() == null) {
@@ -41,16 +36,6 @@ public class CommentServiceImpl implements CommentService {
 		}
 	}
 
-	@Override
-	public List<Comment> listByCommentTypeId(int fetchSize,Long commentTypeId) {
-		PageRequest request = new PageRequest(0, fetchSize);
-		return commentDao.findByCommentTypeId(request,commentTypeId);
-	}
-
-	@Override
-	public Page<Comment> pageByCommentTypeId(Pageable pageable,Long commentTypeId) {
-		return commentDao.pageByCommentTypeId(pageable, commentTypeId);
-	}
 
 	@Override
 	public void remove(Long commentId) {
@@ -62,34 +47,25 @@ public class CommentServiceImpl implements CommentService {
 		return commentDao.findOne(commentId);
 	}
 
-	@Override
-	public void saveCommentType(CommentType commentType) {
-		CommentType exist = findCommentType(commentType.getOwner(), commentType.getType());
-		if(exist==null){
-			commentTypeDao.save(commentType);
-		}else{
-			exist.setDecription(commentType.getDecription());
-			commentTypeDao.save(exist);
-		}
-	}
 
 	@Override
-	public List<CommentType> listCommentTypes(String owner) {
-		return commentTypeDao.findByOwner(owner);
+	public List<Comment> listComments(int fetchSize, String biz, String owner) {
+		Pageable pageable = new PageRequest(1, fetchSize);
+		return commentDao.listComments(pageable, owner, biz);
 	}
 
-	@Override
-	public CommentType findCommentType(String owner, String type) {
-		return commentTypeDao.findByOwnerAndType(owner,type);
-	}
 
 	@Override
-	public void removeCommentType(CommentType commentType) {
-		commentTypeDao.delete(commentType);
+	public Page<Comment> getComments(Pageable pageable, String biz, String owner) {
+		return commentDao.getComments(pageable, owner, biz);
 	}
 
+
 	@Override
-	public CommentType findCommentType(Long commentTypeId) {
-		return commentTypeDao.findOne(commentTypeId);
+	public List<String> listBizOwners(String biz) {
+		return commentDao.listBizOwners(biz);
 	}
+
+
+
 }

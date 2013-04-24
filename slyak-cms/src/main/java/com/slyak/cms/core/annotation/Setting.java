@@ -15,8 +15,10 @@ public @interface Setting {
 	String key();
 	
 	String value() default "";
-	//TODO
+	
 	String[] options() default {};
+	
+	String optionsLoader() default "";
 	
 	InputType inputType() default InputType.INPUT;
 }

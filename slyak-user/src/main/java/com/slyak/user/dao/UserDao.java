@@ -43,6 +43,7 @@ public interface UserDao extends JpaRepository<User, Long> {
 	User findByEmail(String email);
 
 	@Query("select count(u) from User u where u.email=?1")
+	@QueryHints(@QueryHint(name=org.hibernate.annotations.QueryHints.CACHEABLE,value="true"))
 	long countByEmail(String eamil);
 
 	@Query("select u from User u")

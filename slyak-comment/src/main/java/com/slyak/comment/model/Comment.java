@@ -2,19 +2,15 @@ package com.slyak.comment.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
@@ -40,7 +36,6 @@ public class Comment implements Serializable {
 
     @Lob
 	@Column(nullable=false)
-    @Basic(fetch=FetchType.LAZY)
 	private String content;
 
 	@Column(length=240)
@@ -51,29 +46,23 @@ public class Comment implements Serializable {
 
 	@Column(name="modify_at")
 	private Date modifyAt;
-
-	//bi-directional many-to-one association to Comment
-    @ManyToOne
-	@JoinColumn(name="parent_id")
-	private Comment parent;
-
-	//bi-directional many-to-one association to Comment
-	@OneToMany(mappedBy="parent")
-	private List<Comment> children;
+	
+	@Column
+	private String owner;
+	
+	@Column
+	private String biz;
 
 	//uni-directional many-to-one association to User
     @ManyToOne
 	@JoinColumn(name="creator")
+    @Cache(usage=CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private User creator;
 
     @ManyToOne
 	@JoinColumn(name="modifier")
-	private User modifier;
-    
-    @ManyToOne
-    @JoinColumn(name="comment_type_id")
     @Cache(usage=CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private CommentType commentType;
+	private User modifier;
     
     public Comment() {
     }
@@ -100,22 +89,6 @@ public class Comment implements Serializable {
 
 	public void setTitle(String title) {
 		this.title = title;
-	}
-
-	public Comment getParent() {
-		return this.parent;
-	}
-
-	public void setParent(Comment parent) {
-		this.parent = parent;
-	}
-	
-	public List<Comment> getChildren() {
-		return this.children;
-	}
-
-	public void setChildren(List<Comment> children) {
-		this.children = children;
 	}
 
 	public User getCreator() {
@@ -150,12 +123,19 @@ public class Comment implements Serializable {
 		this.modifyAt = modifyAt;
 	}
 
-	public CommentType getCommentType() {
-		return commentType;
+	public String getOwner() {
+		return owner;
 	}
 
-	public void setCommentType(CommentType commentType) {
-		this.commentType = commentType;
+	public void setOwner(String owner) {
+		this.owner = owner;
 	}
-	
+
+	public String getBiz() {
+		return biz;
+	}
+
+	public void setBiz(String biz) {
+		this.biz = biz;
+	}
 }
