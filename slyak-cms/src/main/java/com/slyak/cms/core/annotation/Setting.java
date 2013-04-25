@@ -21,4 +21,6 @@ public @interface Setting {
 	String optionsLoader() default "";
 	
 	InputType inputType() default InputType.INPUT;
+	
+	String desCode() default "";
 }

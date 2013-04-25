@@ -1,8 +1,10 @@
 package com.slyak.cms.widgets.news;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.ui.ModelMap;
@@ -17,6 +19,9 @@ import com.slyak.cms.core.model.Settings;
 import com.slyak.comment.model.Comment;
 import com.slyak.comment.service.CommentService;
 
+import freemarker.cache.StringTemplateLoader;
+import freemarker.template.Configuration;
+
 @Widgets("news")
 public class NewsWidgets {
 	
@@ -24,17 +29,35 @@ public class NewsWidgets {
 
 	@Autowired
 	private CommentService commentService;
+	
+	private static final StringTemplateLoader loader = new StringTemplateLoader();
+	
+	private static final Configuration configuration = new Configuration();
+	
+	static{
+		configuration.setTemplateLoader(loader);
+	}
 
 	@Widget(settings = {
 			@Setting(key = "type", value = "",optionsLoader="getNewsTypes"),
 			@Setting(key = "style", value = ""),
 			@Setting(key = "fetchSize", value = "10"),
 			@Setting(key = "template",value = "list1.tpl",options={"list1.tpl","list2.tpl"}),
-			@Setting(key = "diy",value ="",inputType = InputType.TEXTAREA )
+			@Setting(key = "diy",value ="",inputType = InputType.TEXTAREA ,desCode="news.list.diy")
 			},onEdit="addType",onRemove="removeType")
-	public String list(Settings settings,ModelMap modelMap) {
+	public Object list(Settings settings,ModelMap modelMap) throws IOException {
 		modelMap.put("comments", commentService.listComments(NumberUtils.parseNumber(settings.get("fetchSize"), Integer.class), BIZ, settings.get("type")));
-		return settings.get("template");
+		String diy = settings.get("diy");
+		if(StringUtils.isNotBlank(diy)){
+			String type = settings.get("type");
+			Object tempsource = loader.findTemplateSource(type);
+			if(tempsource == null){
+				loader.putTemplate(type, diy);
+			}
+			return configuration.getTemplate(diy);
+		} else {
+			return settings.get("template");
+		}
 	}
 	
 	@Widget(show=false)

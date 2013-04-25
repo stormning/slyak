@@ -69,6 +69,7 @@ import com.slyak.cms.core.support.WidgetManager;
 import com.slyak.core.io.FileUtils;
 
 import freemarker.template.Configuration;
+import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 @Controller
@@ -430,7 +431,8 @@ public class CmsController implements ServletContextAware,InitializingBean{
 			
 			String content = null;
 			try{
-				String mtpl = (String)handlerMethod.invokeForRequest(request,container,mergedSettings==null?null:new Settings(mergedSettings));
+				Object mtpl = handlerMethod.invokeForRequest(request,container,mergedSettings==null?null:new Settings(mergedSettings));
+				
 				ModelMap model = container.getModel();
 				model.addAllAttributes(sharedModel);
 				String ctx = urlPathHelper.getContextPath(request.getNativeRequest(HttpServletRequest.class));
@@ -442,9 +444,15 @@ public class CmsController implements ServletContextAware,InitializingBean{
 				widget.setSettings(mergedSettings);
 				model.addAttribute("widget", widget);
 				
-				//render content
-				Configuration widgetConfiguration = widgetManager.getConfiguration(handler);
-				content = FreeMarkerTemplateUtils.processTemplateIntoString(widgetConfiguration.getTemplate(mtpl,locale), model);
+				Template fmTemplate = null;
+				if(mtpl.getClass().isAssignableFrom(Template.class)){
+					fmTemplate = (Template)mtpl;
+				}else{
+					//render content
+					Configuration widgetConfiguration = widgetManager.getConfiguration(handler);
+					fmTemplate = widgetConfiguration.getTemplate((String)mtpl,locale);
+				}
+				content = FreeMarkerTemplateUtils.processTemplateIntoString(fmTemplate, model);
 				widget.setContent(content);
 			}catch(Exception e){
 				widget.setContent(e.getMessage());
