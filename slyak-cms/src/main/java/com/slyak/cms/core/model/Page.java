@@ -60,7 +60,7 @@ public class Page implements Serializable{
 	@OneToMany(mappedBy="page",cascade={CascadeType.ALL})
 	private List<Widget> widgets;
 	
-	@OneToMany(mappedBy="parent",cascade={CascadeType.ALL})
+	@OneToMany(mappedBy="parent",cascade={CascadeType.ALL},fetch=FetchType.EAGER)
 	@Where(clause="can_show=1")
 	private List<Page> children;
 

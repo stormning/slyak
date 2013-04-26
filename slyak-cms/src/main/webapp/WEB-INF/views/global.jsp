@@ -23,7 +23,7 @@
 				<a href="/" class="brand">SLYAK</a>
 				<div class="nav-collapse">
 					<ul class="nav">
-						<c:forEach items="${pages}" var="p">
+						<c:forEach items="${pages}" var="p" varStatus="status">
 							<c:choose>
 								<c:when test="${not empty p.children}">
 									<li class="dropdown">
@@ -37,7 +37,7 @@
 								</c:when>
 								<c:otherwise>
 									<li <c:if test="${p.id eq navPage.id}">class="active"</c:if>>
-										<a href="/${p.alias}">${p.name}</a>
+										<a href="/${status.first?'':p.alias}">${p.name}</a>
 									</li>
 								</c:otherwise>
 							</c:choose>

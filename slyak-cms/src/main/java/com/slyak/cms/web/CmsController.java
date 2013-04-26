@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -128,7 +127,7 @@ public class CmsController implements ServletContextAware,InitializingBean{
 			return "core.welcome";
 		} else {
 			Page page = pages.get(0);
-			return "redirect:/"+page.getAlias();
+			return renderPage(page, request, locale, modelMap);
 		}
 	}
 	
@@ -537,7 +536,9 @@ public class CmsController implements ServletContextAware,InitializingBean{
 	}
 	
 	@RequestMapping("/core/error404")
-	public String error404(){
+	public String error404(ModelMap modelMap){
+		List<Page> pages = cmsService.findRootPages();
+		modelMap.put("pages", pages);
 		return "core.error404";
 	}
 	
