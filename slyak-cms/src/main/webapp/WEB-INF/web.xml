@@ -80,9 +80,5 @@
 		<error-code>404</error-code>
 		<location>/core/error404</location>
 	</error-page>
-	<error-page>
-		<error-code>405</error-code>
-		<location>/core/error405</location>
-	</error-page>
 
 </web-app>

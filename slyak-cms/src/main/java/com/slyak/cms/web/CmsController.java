@@ -22,8 +22,10 @@ import java.util.concurrent.Executors;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -126,7 +128,7 @@ public class CmsController implements ServletContextAware,InitializingBean{
 			return "core.welcome";
 		} else {
 			Page page = pages.get(0);
-			return renderPage(page, request, locale, modelMap);
+			return "redirect:/"+page.getAlias();
 		}
 	}
 	
@@ -145,12 +147,12 @@ public class CmsController implements ServletContextAware,InitializingBean{
 	
 	
 	@RequestMapping("/{alias}")
-	public String page(@PathVariable String alias,final NativeWebRequest request,final ModelAndViewContainer container,final Locale locale,ModelMap modelMap) throws InterruptedException,TemplateException, IOException {
+	public String page(@PathVariable String alias,final NativeWebRequest request,final ModelAndViewContainer container,final Locale locale,ModelMap modelMap,HttpServletResponse response) throws InterruptedException,TemplateException, IOException {
 		//try to find page
 		Page page = cmsService.findPageByAlias(alias);
 		if(page == null){
-			//404
-			return "redirect:/";
+			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			return null;
 		}else{
 			return renderPage(page, request, locale, modelMap);
 		}
@@ -362,10 +364,8 @@ public class CmsController implements ServletContextAware,InitializingBean{
 					s.setOptions(casted);
 				}
 			}
+			return prepared;
 		}
-//		InvocableHandlerMethod handlerMethod = createInitBinderMethod(widgetInfo.getHandler(), onEdit);
-//		handlerMethod.invokeForRequest(request, container, stored);
-		return null;
 	}
 	
 	@RequestMapping(value="/widget/edit",method=RequestMethod.POST)
@@ -534,6 +534,11 @@ public class CmsController implements ServletContextAware,InitializingBean{
 			handlerMethod.invokeForRequest(request, container,page);
 		}
 		return new ModelAndView(new RedirectView("/"+currentPageAlias),container.getModel());
+	}
+	
+	@RequestMapping("/core/error404")
+	public String error404(){
+		return "core.error404";
 	}
 	
 	private InvocableHandlerMethod createInitBinderMethod(Object bean, Method method) {
