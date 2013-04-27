@@ -60,7 +60,6 @@ import org.springframework.web.util.UrlPathHelper;
 
 import com.slyak.cms.core.model.Global;
 import com.slyak.cms.core.model.Page;
-import com.slyak.cms.core.model.Settings;
 import com.slyak.cms.core.model.Widget;
 import com.slyak.cms.core.service.CmsService;
 import com.slyak.cms.core.support.ClassUtils;
@@ -315,7 +314,8 @@ public class CmsController implements ServletContextAware,InitializingBean{
 	public boolean widgetAdd(Long pageId,String widgetName,final NativeWebRequest request,final ModelAndViewContainer container) throws Exception{
 		Page page = cmsService.findPageById(pageId);
 		Widget widget = createWidget(page,widgetName);
-		cmsService.saveWidget(createWidget(page,widgetName));
+		cmsService.saveWidget(widget);
+		
 		//on widget add
 		WidgetInfo widgetInfo = findWidgetInfoByWidgetName(widgetName);
 		Method onAdd = widgetInfo.getOnAdd();

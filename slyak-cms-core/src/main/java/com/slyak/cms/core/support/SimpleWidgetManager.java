@@ -160,7 +160,7 @@ public class SimpleWidgetManager implements WidgetManager,ApplicationContextAwar
 									}
 									
 									if(StringUtils.isNotBlank(widget.onRemove())){
-										info.setOnAdd(com.slyak.cms.core.support.ClassUtils.getMethodByName(clazz, widget.onRemove()));
+										info.setOnRemove(com.slyak.cms.core.support.ClassUtils.getMethodByName(clazz, widget.onRemove()));
 									}
 									
 									regionMap.put(info.getName(),info);
