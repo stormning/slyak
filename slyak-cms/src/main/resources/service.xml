@@ -65,10 +65,11 @@
 	</tx:advice>
 	
 	<!-- messagesource -->
-	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+	<bean id="messageSource" class="com.slyak.core.support.PathMatchingReloadableResourceBundleMessageSource">
 		<property name="basenames">
 			<list>
-				<value>messages</value>
+				<value>classpath:messages</value>
+				<value>classpath*:com/slyak/cms/**/messages</value>
 			</list>
 		</property>
 		<property name="useCodeAsDefaultMessage" value="true"/>
