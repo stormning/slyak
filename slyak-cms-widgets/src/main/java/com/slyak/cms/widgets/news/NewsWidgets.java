@@ -39,17 +39,17 @@ public class NewsWidgets {
 	}
 
 	@Widget(settings = {
-			@Setting(key = "type", value = "",optionsLoader="getNewsTypes"),
 			@Setting(key = "style", value = ""),
 			@Setting(key = "fetchSize", value = "10"),
 			@Setting(key = "template",value = "list1.tpl",options={"list1.tpl","list2.tpl"}),
 			@Setting(key = "diy",value ="",inputType = InputType.TEXTAREA ,desCode="news.list.diy")
 			},onAdd="addType",onEdit="updateType",onRemove="removeType")
-	public Object list(Settings settings,ModelMap modelMap) throws IOException {
+	public Object list(com.slyak.cms.core.model.Widget widget,ModelMap modelMap) throws IOException {
+		Map<String,String> settings = widget.getSettings();
+		String type = widget.getId().toString();
 		modelMap.put("comments", commentService.listComments(NumberUtils.parseNumber(settings.get("fetchSize"), Integer.class), BIZ, settings.get("type")));
 		String diy = settings.get("diy");
 		if(StringUtils.isNotBlank(diy)){
-			String type = settings.get("type");
 			Object tempsource = loader.findTemplateSource(type);
 			if(tempsource == null){
 				loader.putTemplate(type, diy);

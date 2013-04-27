@@ -1,6 +1,7 @@
 package com.slyak.cms.widgets.gather;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -17,7 +18,6 @@ import com.slyak.cms.core.annotation.Setting;
 import com.slyak.cms.core.annotation.Widget;
 import com.slyak.cms.core.annotation.Widgets;
 import com.slyak.cms.core.enums.InputType;
-import com.slyak.cms.core.model.Settings;
 import com.slyak.core.js.JavaScriptHandler;
 import com.slyak.core.util.StringUtils;
 
@@ -36,7 +36,8 @@ public class GatherWidgets{
 
 	@Widget(settings = { @Setting(key = "uri", value = ""),
 			@Setting(key = "method", value = "GET"),@Setting(key="callback",value="",inputType=InputType.TEXTAREA)})
-	public String proxy(Settings settings, ModelMap modelMap) {
+	public String proxy(com.slyak.cms.core.model.Widget widget, ModelMap modelMap) {
+		Map<String,String> settings = widget.getSettings();
 		String uri = StringUtils.trimWhitespace(settings.get("uri"));
 		if (StringUtils.hasText(uri) && uri.toLowerCase().startsWith("http")) {
 			String method = settings.get("method");

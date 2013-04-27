@@ -453,7 +453,9 @@ public class CmsController implements ServletContextAware,InitializingBean{
 		
 		String content = null;
 		try{
-			Object mtpl = handlerMethod.invokeForRequest(request,container,mergedSettings==null?null:new Settings(mergedSettings));
+			widget.setSettings(mergedSettings);
+			
+			Object mtpl = handlerMethod.invokeForRequest(request,container,widget);
 			
 			ModelMap model = container.getModel();
 			model.addAllAttributes(sharedModel);
@@ -463,7 +465,6 @@ public class CmsController implements ServletContextAware,InitializingBean{
 			model.addAttribute("view", ctx+"/view/"+widget.getPage().getAlias());
 			model.addAttribute("action", ctx+"/action/"+widget.getPage().getAlias());
 			model.addAttribute("resource", ctx+"/widgetResource/"+regionAndName[0]);
-			widget.setSettings(mergedSettings);
 			model.addAttribute("widget", widget);
 			
 			Template fmTemplate = null;

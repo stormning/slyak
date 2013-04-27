@@ -17,18 +17,13 @@
   <dependencies>
   	<dependency>
   		<groupId>com.slyak</groupId>
-  		<artifactId>slyak-comment</artifactId>
+  		<artifactId>slyak-cms-core</artifactId>
   		<version>0.0.1-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>com.slyak</groupId>
-  		<artifactId>slyak-core</artifactId>
+  		<artifactId>slyak-cms-widgets</artifactId>
   		<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.freemarker</groupId>
-  		<artifactId>freemarker</artifactId>
-  		<version>2.3.19</version>
   	</dependency>
   </dependencies>
 </project>

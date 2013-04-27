@@ -12,6 +12,9 @@
 		<module>slyak-comment</module>
 		<module>slyak-cms</module>
 		<module>slyak-forum</module>
+		<module>slyak-biz</module>
+		<module>slyak-cms-widgets</module>
+		<module>slyak-cms-core</module>
 	</modules>
 	
 	<properties>

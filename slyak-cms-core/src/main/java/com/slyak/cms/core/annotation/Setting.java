@@ -23,4 +23,6 @@ public @interface Setting {
 	InputType inputType() default InputType.INPUT;
 	
 	String desCode() default "";
+	
+	boolean required() default false;
 }
