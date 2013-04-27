@@ -134,7 +134,7 @@ public class SimpleWidgetManager implements WidgetManager,ApplicationContextAwar
 											st.setOptions(setting.options());
 											String[] options = setting.options();
 											String optionLoader = StringUtils.trimToEmpty(setting.optionsLoader());
-											boolean hasOptionLoader = StringUtils.isEmpty(optionLoader);
+											boolean hasOptionLoader = !StringUtils.isEmpty(optionLoader);
 											if(hasOptionLoader||(options.length>1&&(setting.inputType()!=InputType.RADIO||setting.inputType()!=InputType.CHECKBOX))){
 												st.setInputType(InputType.SELECT);
 											}else{

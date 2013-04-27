@@ -22,6 +22,8 @@
     <filter-mapping>
     	<filter-name>jpa-open-entity-manager</filter-name>
     	<url-pattern>/*</url-pattern>
+    	<dispatcher>REQUEST</dispatcher>
+		<dispatcher>ERROR</dispatcher>
 	</filter-mapping>
 	
 	<!-- CharacterEncodingFilter -->

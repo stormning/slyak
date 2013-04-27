@@ -91,7 +91,7 @@
 	<!-- aop config -->
 	<aop:aspectj-autoproxy proxy-target-class="false" />
     <aop:config proxy-target-class="false">
-    	<aop:pointcut expression="execution(* com.slyak.**.service.impl.*.*(..))" id="servicePointCut"/>
+    	<aop:pointcut expression="execution(* com.slyak..impl.*.*(..))" id="servicePointCut"/>
     	<!-- for transaction -->
 		<aop:advisor pointcut-ref="servicePointCut" advice-ref="txAdvice"/>
 	</aop:config>

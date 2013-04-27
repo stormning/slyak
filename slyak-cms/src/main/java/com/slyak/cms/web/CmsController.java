@@ -162,7 +162,7 @@ public class CmsController implements ServletContextAware,InitializingBean{
 		sharedModel.put("pages", cmsService.findRootPages());
 		sharedModel.put("currentPage", page);
 		
-		List<Widget> widgets = page.getWidgets();
+		List<Widget> widgets = /*page.getWidgets();*/cmsService.findWidgetsByPageId(page.getId());
 		final Map<String,List<Widget>> containerMap = new ConcurrentHashMap<String, List<Widget>>();
 		
 		int fs = widgets.size();
@@ -230,7 +230,7 @@ public class CmsController implements ServletContextAware,InitializingBean{
 			page.setName(sourcePage.getName());
 		}
 		page.setLayout(sourcePage.getLayout());
-		List<Widget> widgets = sourcePage.getWidgets();
+		List<Widget> widgets = /*sourcePage.getWidgets()*/cmsService.findWidgetsByPageId(sourcePage.getId());
 		if(!CollectionUtils.isEmpty(widgets)){
 			List<Widget> newWidgets = new ArrayList<Widget>();
 			for (Widget widget : widgets) {
@@ -247,7 +247,8 @@ public class CmsController implements ServletContextAware,InitializingBean{
 				newWidget.setPage(page);
 				newWidgets.add(newWidget);
 			}
-			page.setWidgets(newWidgets);
+//			page.setWidgets(newWidgets);
+			cmsService.saveWidgets(newWidgets);
 		}
 		List<Page> sc = sourcePage.getChildren();
 		if(!CollectionUtils.isEmpty(sc)){
@@ -507,15 +508,15 @@ public class CmsController implements ServletContextAware,InitializingBean{
 		Page page = cmsService.findPageByWidgetName(wname);
 		if(page == null){
 			//create a child page
-			page = new Page();
-			page.setName(region+widgetName);
-			page.setParent(cmsService.findPageByAlias(parentPageAlias));
-			WidgetInfo widgetInfo = widgetManager.getWidgetInfo(region, widgetName);
-			page.setShow(widgetInfo.isShow());
-			List<Widget> widgets = new ArrayList<Widget>();
-			widgets.add(createWidget(page, wname));
-			page.setWidgets(widgets);
-			cmsService.savePage(page);
+//			page = new Page();
+//			page.setName(region+widgetName);
+//			page.setParent(cmsService.findPageByAlias(parentPageAlias));
+//			WidgetInfo widgetInfo = widgetManager.getWidgetInfo(region, widgetName);
+//			page.setShow(widgetInfo.isShow());
+//			List<Widget> widgets = new ArrayList<Widget>();
+//			widgets.add(createWidget(page, wname));
+//			page.setWidgets(widgets);
+//			cmsService.savePage(page);
 		}	
 		return renderPage(page, request, locale, modelMap);
 	}

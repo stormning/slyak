@@ -4,7 +4,6 @@ package com.slyak.cms.core.model;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,13 +17,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Where;
 
 @Entity
 @Table(name="t_page")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Page implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -54,19 +50,16 @@ public class Page implements Serializable{
 	
 	@Lob
 	@Column(name="custom_css")
-	@Basic(fetch=FetchType.LAZY)
 	private String customCss;
 	
-	@OneToMany(mappedBy="page",cascade={CascadeType.ALL})
-	private List<Widget> widgets;
+//	@OneToMany(mappedBy="page",cascade={CascadeType.ALL})
+//	private List<Widget> widgets;
 	
 	@OneToMany(mappedBy="parent",cascade={CascadeType.ALL},fetch=FetchType.EAGER)
-	@Where(clause="can_show=1")
 	private List<Page> children;
 
 	@ManyToOne
 	@JoinColumn(name="parent_id")
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Page parent;
 	
 	@Column(name="can_show",nullable=false)
@@ -96,13 +89,13 @@ public class Page implements Serializable{
 		this.layout = layout;
 	}
 
-	public List<Widget> getWidgets() {
-		return widgets;
-	}
-
-	public void setWidgets(List<Widget> widgets) {
-		this.widgets = widgets;
-	}
+//	public List<Widget> getWidgets() {
+//		return widgets;
+//	}
+//
+//	public void setWidgets(List<Widget> widgets) {
+//		this.widgets = widgets;
+//	}
 
 	public String getTitle() {
 		return title;

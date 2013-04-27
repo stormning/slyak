@@ -106,7 +106,18 @@ public class CmsServiceImpl implements CmsService,InitializingBean,ServletContex
 	
 	@Override
 	public void removePageById(Long id) {
-		pageDao.delete(id);
+		Page page = pageDao.findOne(id);
+		
+		Page parent = page.getParent();
+		if(parent!=null){
+			parent.getChildren().remove(page);
+		}
+		
+		List<Widget> widgets = findWidgetsByPageId(id);
+		if(!CollectionUtils.isEmpty(widgets)){
+			widgetDao.delete(findWidgetsByPageId(id));
+		}
+		pageDao.delete(page);
 	}
 
 	@Override
@@ -127,7 +138,7 @@ public class CmsServiceImpl implements CmsService,InitializingBean,ServletContex
 			if(newRows.length<oldRows.length){
 				//update widgets' container
 				int maxIndex = newRows.length-1;
-				List<Widget> widgets = page.getWidgets();
+				List<Widget> widgets = /*page.getWidgets()*/findWidgetsByPageId(page.getId());
 				for (Widget widget : widgets) {
 					String container = widget.getContainer();
 					//skip 'row'
@@ -197,5 +208,18 @@ public class CmsServiceImpl implements CmsService,InitializingBean,ServletContex
 	@Override
 	public void setServletContext(ServletContext servletContext) {
 		this.servletContext = servletContext;
+	}
+
+	@Override
+	public List<Widget> findWidgetsByPageId(Long id) {
+		return widgetDao.findByPageId(id);
+	}
+
+	@Override
+	public void saveWidgets(List<Widget> newWidgets) {
+		for (Widget widget : newWidgets) {
+			pageDao.save(widget.getPage());
+		}
+		widgetDao.save(newWidgets);
 	}
 }
