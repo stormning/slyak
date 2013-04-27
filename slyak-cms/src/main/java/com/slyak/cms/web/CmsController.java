@@ -312,19 +312,34 @@ public class CmsController implements ServletContextAware,InitializingBean{
 	
 	@RequestMapping(value="/widget/add",method=RequestMethod.POST)
 	@ResponseBody
-	public boolean widgetAdd(Long pageId,String widgetName){
+	public boolean widgetAdd(Long pageId,String widgetName,final NativeWebRequest request,final ModelAndViewContainer container) throws Exception{
 		Page page = cmsService.findPageById(pageId);
+		Widget widget = createWidget(page,widgetName);
 		cmsService.saveWidget(createWidget(page,widgetName));
 		//on widget add
-		
+		WidgetInfo widgetInfo = findWidgetInfoByWidgetName(widgetName);
+		Method onAdd = widgetInfo.getOnAdd();
+		if(onAdd!=null){		
+			handleWidgetEvent(widgetInfo.getHandler(),onAdd,widget,request,container);
+		}
 		return true;
 	}
 	
 	@RequestMapping(value="/widget/remove",method=RequestMethod.POST)
 	@ResponseBody
-	public boolean widgetRemove(Long widgetId){
-		cmsService.removeWidgetById(widgetId);
+	public boolean widgetRemove(Long widgetId,final NativeWebRequest request,final ModelAndViewContainer container) throws Exception{
+		
+		Widget widget = cmsService.findWidgetById(widgetId);
+		WidgetInfo widgetInfo = findWidgetInfoByWidgetName(widget.getName());
+		
 		//on widget remove
+		Method onRemove = widgetInfo.getOnRemove();
+		if(onRemove!=null){		
+			handleWidgetEvent(widgetInfo.getHandler(),onRemove,widget,request,container);
+		}
+		
+		cmsService.removeWidgetById(widgetId);
+		
 		
 		return true;
 	}
@@ -333,9 +348,7 @@ public class CmsController implements ServletContextAware,InitializingBean{
 	public String widgetEdit(Long widgetId,ModelMap modelMap,final NativeWebRequest request,final ModelAndViewContainer container) throws Exception{
 		Widget widget = cmsService.findWidgetById(widgetId);
 		modelMap.put("widget", widget);
-		
-		String[] regionAndName = StringUtils.split(widget.getName(),".");
-		WidgetInfo widgetInfo = widgetManager.getWidgetInfo(regionAndName[0], regionAndName[1]);
+		WidgetInfo widgetInfo = findWidgetInfoByWidgetName(widget.getName());
 		Map<String,String> mergedSettings = mergeSettings(widgetInfo.getSettingsMap(),widget.getSettings());
 		modelMap.put("mergedSettings", mergedSettings);
 		modelMap.put("settings", prepare(widgetInfo.getHandler(),widgetInfo.getSettings(), request, container));
@@ -378,16 +391,26 @@ public class CmsController implements ServletContextAware,InitializingBean{
 		stored.setSettings(widget.getSettings());
 		stored.setTitle(widget.getTitle());
 		cmsService.saveWidget(stored);
+		
 		//on widget add
-		String[] regionAndName = StringUtils.split(stored.getName(),".");
-		WidgetInfo widgetInfo = widgetManager.getWidgetInfo(regionAndName[0], regionAndName[1]);
+		WidgetInfo widgetInfo = findWidgetInfoByWidgetName(stored.getName());
 		Method onEdit = widgetInfo.getOnEdit();
 		if(onEdit!=null){		
-			InvocableHandlerMethod handlerMethod = createInitBinderMethod(widgetInfo.getHandler(), onEdit);
-			handlerMethod.invokeForRequest(request, container, stored);
+			handleWidgetEvent(widgetInfo.getHandler(),onEdit,stored,request,container);
 		}
 		return true;
 	}
+	
+	private WidgetInfo findWidgetInfoByWidgetName(String widgetName){
+		String[] regionAndName = StringUtils.split(widgetName,".");
+		return widgetManager.getWidgetInfo(regionAndName[0], regionAndName[1]);
+	}
+	
+	private void handleWidgetEvent(Object handler,Method method,Widget widget,final NativeWebRequest request,final ModelAndViewContainer container) throws Exception{
+		InvocableHandlerMethod handlerMethod = createInitBinderMethod(handler, method);
+		handlerMethod.invokeForRequest(request, container, widget);
+	}
+	
 	
 	private Widget createWidget(Page page,String widgetName){
 		Widget w = new Widget();
@@ -416,73 +439,72 @@ public class CmsController implements ServletContextAware,InitializingBean{
 	}
 	
 	private void renderWidget(ModelMap sharedModel,Widget widget,final NativeWebRequest request,final Locale locale,boolean noborder, String borderClass) {
-
 		long start = System.currentTimeMillis();
-			String[] regionAndName = StringUtils.split(widget.getName(),".");
-			WidgetInfo moduleInfo = widgetManager.getWidgetInfo(regionAndName[0],regionAndName[1]);
+		String[] regionAndName = StringUtils.split(widget.getName(),".");
+		WidgetInfo widgetInfo = widgetManager.getWidgetInfo(regionAndName[0],regionAndName[1]);
+		
+		Map<String,String> mergedSettings = mergeSettings(widgetInfo.getSettingsMap(),widget.getSettings());
+		//invoke
+		//TODO : optimize it
+		Object handler = widgetInfo.getHandler();
+		ServletInvocableHandlerMethod handlerMethod = createServletInvocableHandlerMethod(handler,widgetInfo.getMethod());
+		
+		ModelAndViewContainer container = new ModelAndViewContainer();
+		
+		String content = null;
+		try{
+			Object mtpl = handlerMethod.invokeForRequest(request,container,mergedSettings==null?null:new Settings(mergedSettings));
 			
-			Map<String,String> mergedSettings = mergeSettings(moduleInfo.getSettingsMap(),widget.getSettings());
-			//invoke
-			//TODO : optimize it
-			Object handler = moduleInfo.getHandler();
-			ServletInvocableHandlerMethod handlerMethod = createServletInvocableHandlerMethod(handler,moduleInfo.getMethod());
+			ModelMap model = container.getModel();
+			model.addAllAttributes(sharedModel);
+			String ctx = urlPathHelper.getContextPath(request.getNativeRequest(HttpServletRequest.class));
+			//common attrs
+			model.addAttribute("ctx", ctx);
+			model.addAttribute("view", ctx+"/view/"+widget.getPage().getAlias());
+			model.addAttribute("action", ctx+"/action/"+widget.getPage().getAlias());
+			model.addAttribute("resource", ctx+"/widgetResource/"+regionAndName[0]);
+			widget.setSettings(mergedSettings);
+			model.addAttribute("widget", widget);
 			
-			ModelAndViewContainer container = new ModelAndViewContainer();
-			
-			String content = null;
-			try{
-				Object mtpl = handlerMethod.invokeForRequest(request,container,mergedSettings==null?null:new Settings(mergedSettings));
-				
-				ModelMap model = container.getModel();
-				model.addAllAttributes(sharedModel);
-				String ctx = urlPathHelper.getContextPath(request.getNativeRequest(HttpServletRequest.class));
-				//common attrs
-				model.addAttribute("ctx", ctx);
-				model.addAttribute("view", ctx+"/view/"+widget.getPage().getAlias());
-				model.addAttribute("action", ctx+"/action/"+widget.getPage().getAlias());
-				model.addAttribute("resource", ctx+"/widgetResource/"+regionAndName[0]);
-				widget.setSettings(mergedSettings);
-				model.addAttribute("widget", widget);
-				
-				Template fmTemplate = null;
-				if(mtpl.getClass().isAssignableFrom(Template.class)){
-					fmTemplate = (Template)mtpl;
-				}else{
-					//render content
-					Configuration widgetConfiguration = widgetManager.getConfiguration(handler);
-					fmTemplate = widgetConfiguration.getTemplate((String)mtpl,locale);
-				}
-				content = FreeMarkerTemplateUtils.processTemplateIntoString(fmTemplate, model);
-				widget.setContent(content);
-			}catch(Exception e){
-				widget.setContent(e.getMessage());
+			Template fmTemplate = null;
+			if(mtpl.getClass().isAssignableFrom(Template.class)){
+				fmTemplate = (Template)mtpl;
+			}else{
+				//render content
+				Configuration widgetConfiguration = widgetManager.getConfiguration(handler);
+				fmTemplate = widgetConfiguration.getTemplate((String)mtpl,locale);
 			}
-			
-			if(!noborder){
-				String borderTpl = widget.getBorderTpl();
-				if(borderTpl != null){
-					//set title
-					String title = widget.getTitle();
-					if(!StringUtils.hasText(title)){
-						widget.setTitle(messageSource.getMessage(widget.getName(),null, locale));
-					}
-					//render content with border
-					Map<String,Object> cmodel = new HashMap<String, Object>();
-					if(borderClass!=null){
-						widget.setBorderClass(borderClass);
-					}
-					cmodel.put("widget", widget);
-					try {
-						content = FreeMarkerTemplateUtils.processTemplateIntoString(borderConfiguration.getTemplate(borderTpl,locale), cmodel);
-						//the final widget content
-						widget.setContent(content);
-					} catch (Exception e) {
-						widget.setContent(e.getMessage());
-					}
+			content = FreeMarkerTemplateUtils.processTemplateIntoString(fmTemplate, model);
+			widget.setContent(content);
+		}catch(Exception e){
+			widget.setContent(e.getMessage());
+		}
+		
+		if(!noborder){
+			String borderTpl = widget.getBorderTpl();
+			if(borderTpl != null){
+				//set title
+				String title = widget.getTitle();
+				if(!StringUtils.hasText(title)){
+					widget.setTitle(messageSource.getMessage(widget.getName(),null, locale));
+				}
+				//render content with border
+				Map<String,Object> cmodel = new HashMap<String, Object>();
+				if(borderClass!=null){
+					widget.setBorderClass(borderClass);
+				}
+				cmodel.put("widget", widget);
+				try {
+					content = FreeMarkerTemplateUtils.processTemplateIntoString(borderConfiguration.getTemplate(borderTpl,locale), cmodel);
+					//the final widget content
+					widget.setContent(content);
+				} catch (Exception e) {
+					widget.setContent(e.getMessage());
 				}
 			}
-			long end = System.currentTimeMillis();
-			LOGGER.info("Widget {} rendered ,it cost {} ms",new Object[]{widget.getId(),end-start});
+		}
+		long end = System.currentTimeMillis();
+		LOGGER.info("Widget {} rendered ,it cost {} ms",new Object[]{widget.getId(),end-start});
 	}
 	
 	private Map<String,String> mergeSettings(Map<String,String> defaultSettings,Map<String,String> settings){
@@ -556,7 +578,6 @@ public class CmsController implements ServletContextAware,InitializingBean{
 	}
 	
 	private ServletInvocableHandlerMethod createServletInvocableHandlerMethod(Object handler, Method method) {
-		
 		ServletInvocableHandlerMethod servletInvocableHandlerMethod = new ServletInvocableHandlerMethod(handler, method);
 		servletInvocableHandlerMethod.setDataBinderFactory(getWebDataBinderFactory(handler));
 		servletInvocableHandlerMethod.setHandlerMethodArgumentResolvers(requestMappingHandlerAdapter.getArgumentResolvers());

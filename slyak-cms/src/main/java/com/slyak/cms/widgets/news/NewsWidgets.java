@@ -44,7 +44,7 @@ public class NewsWidgets {
 			@Setting(key = "fetchSize", value = "10"),
 			@Setting(key = "template",value = "list1.tpl",options={"list1.tpl","list2.tpl"}),
 			@Setting(key = "diy",value ="",inputType = InputType.TEXTAREA ,desCode="news.list.diy")
-			},onEdit="addType",onRemove="removeType")
+			},onAdd="addType",onEdit="updateType",onRemove="removeType")
 	public Object list(Settings settings,ModelMap modelMap) throws IOException {
 		modelMap.put("comments", commentService.listComments(NumberUtils.parseNumber(settings.get("fetchSize"), Integer.class), BIZ, settings.get("type")));
 		String diy = settings.get("diy");
@@ -74,6 +74,13 @@ public class NewsWidgets {
 	}
 	
 	public void addType(com.slyak.cms.core.model.Widget widget){
+		Map<String, String> settings = widget.getSettings();
+		if(!CollectionUtils.isEmpty(settings)){
+			String type = settings.get("type");
+		}
+	}
+	
+	public void updateType(com.slyak.cms.core.model.Widget widget){
 		Map<String, String> settings = widget.getSettings();
 		if(!CollectionUtils.isEmpty(settings)){
 			String type = settings.get("type");
