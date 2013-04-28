@@ -8,13 +8,14 @@
 </c:if>
 
 <div id="wrap" class="container">
+
 	<div class="row">
 		<!-- navbar start -->
 		<c:set var="navPage" value="${currentPage.parent==null?currentPage:currentPage.parent}" scope="request"/>
 		<div class="navbar">
 			<div class="navbar-inner">
 				<div class="container">
-					<a data-target=".nav-collapse" data-toggle="collapse" class="btn btn-navbar">Menu</a>
+					<a data-target=".nav-collapse" data-toggle="collapse" class="btn btn-navbar">菜单</a>
 					<a href="/" class="brand">SLYAK</a>
 					<div class="nav-collapse">
 						<ul class="nav">
@@ -48,5 +49,6 @@
 	<div id="content" class="row">
 		<tiles:insertAttribute name="content" />
 	</div>
+	
 	<div id="footer"></div>
 </div>

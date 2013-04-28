@@ -51,13 +51,13 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	public List<Comment> listComments(int fetchSize, String biz, String owner) {
 		Pageable pageable = new PageRequest(1, fetchSize);
-		return commentDao.listComments(pageable, owner, biz);
+		return commentDao.listComments(pageable, biz, owner);
 	}
 
 
 	@Override
 	public Page<Comment> getComments(Pageable pageable, String biz, String owner) {
-		return commentDao.getComments(pageable, owner, biz);
+		return commentDao.getComments(pageable, biz, owner);
 	}
 
 

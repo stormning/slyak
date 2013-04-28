@@ -13,7 +13,7 @@
 <link rel="stylesheet" type="text/css" href="/static/css/cssreset-min.css">
 <link rel="stylesheet" type="text/css" href="/static/thirdparty/bootstrap/css/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="/static/thirdparty/bootstrap/css/bootstrap-responsive.css">
-<link rel="stylesheet" type="text/css" href="/static/thirdparty/bootstrap/theme/black-green/theme.css">
+<!-- <link rel="stylesheet" type="text/css" href="/static/thirdparty/bootstrap/theme/black-green/theme.css"> -->
 <link rel="stylesheet" type="text/css" href="/static/css/global.css">
 
 <script src="/static/thirdparty/jquery/jquery-1.9.1.min.js"></script>

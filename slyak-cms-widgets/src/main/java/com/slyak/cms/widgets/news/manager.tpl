@@ -1,6 +1,6 @@
 <div class="row-fluid">
 	<div class="span3">
-		<ul class="nav nav-list bs-docs-sidenav affix">
+		<ul class="nav nav-list bs-docs-sidenav">
 		  <#if newsTypes??>
 			<#list newsTypes as t>
 				<li <#if t['id']==newsType>class="active"</#if>><a href="${view}/news/manager?newsType=${t['id']}">${t['name']}</a></li>		
@@ -10,28 +10,42 @@
     </div>
     
     <div class="span9">
-		<table class="table table-bordered table-striped table-hover">
-			<tr><th><input type="checkbox" class="no-margin"></th><th>标题</th><th>创建时间</th><th>操作</th></tr>
-			<#if page??&&page.content??>
-				<#list page.content as c>
-					<tr><td><input type="checkbox" class="no-margin"></td><td>${c.title}</td><td>${c.createAt}</td><td></td></tr>			
-				</#list>
-			</#if>
-		</table>
-		<#include "pagination.tpl">
-		<form action="${action}/news/addNews" method="post">
-			<fieldset>
-				<legend>发布内容</legend>
-				<input type="hidden" name="owner" value="${newsType!!}"/>
-				<input type="hidden" name="biz" value="news"/>
-				<label>标题</label>
-				<input type="text" name="title" placeholder="必填"/>
-				<label>内容</label>
-				<textarea name="content" style="width:100%;height:250px;"></textarea>
-				<hr>
-				<button type="submit" class="btn">发布</button>
-			</fieldset>
-		</form>
+    	<div class="row-fluid">
+	    	<div class="btn-group pull-right">
+			  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+			    Action
+			    <span class="caret"></span>
+			  </a>
+			  <ul class="dropdown-menu">
+			    <!-- dropdown menu links -->
+			  </ul>
+			</div>
+		</div>
+    	
+    	<div class="row-fluid">
+			<table class="table table-bordered table-striped table-hover">
+				<tr><th><input type="checkbox" class="no-margin"></th><th>标题</th><th>创建时间</th><th>作者</th></tr>
+				<#if page??&&page.content??>
+					<#list page.content as c>
+						<tr><td><input type="checkbox" class="no-margin"></td><td>${c.title}</td><td>${c.createAt}</td><td>${c}</td></tr>			
+					</#list>
+				</#if>
+			</table>
+			<#include "pagination.tpl">
+			<form action="${action}/news/addNews" method="post">
+				<fieldset>
+					<legend>发布内容</legend>
+					<input type="hidden" name="owner" value="${newsType!!}"/>
+					<input type="hidden" name="biz" value="news"/>
+					<label>标题</label>
+					<input type="text" name="title" placeholder="必填"/>
+					<label>内容</label>
+					<textarea name="content" style="width:100%;height:250px;"></textarea>
+					<hr>
+					<button type="submit" class="btn">发布</button>
+				</fieldset>
+			</form>
+		</div>
 	</div>	
 </div>
 <link rel="stylesheet" href="${ctx}/static/thirdparty/kindeditor/themes/default/default.css" />

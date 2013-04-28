@@ -91,7 +91,7 @@ public class NewsWidgets {
 			biz = new Biz();
 			biz.setBiz(BIZ);
 		}else{
-			nts = om.readValue(biz.getData(), new TypeReference<List<NewsType>>() {});
+			nts = om.readValue(biz.getData(), List.class);
 		}
 		NewsType nt = new NewsType();
 		nt.setName(StringUtils.isNotBlank(widget.getTitle())?widget.getTitle():widget.getId().toString());
@@ -133,7 +133,7 @@ public class NewsWidgets {
 				newsType = (Integer)newsTypes.get(0).get("id");
 			}
 			modelMap.put("newsType", newsType);
-			PageRequest pageRequest = new PageRequest(page, NumberUtils.parseNumber(settings.get("pageSize"), Integer.class));
+			PageRequest pageRequest = new PageRequest(page-1, NumberUtils.parseNumber(settings.get("pageSize"), Integer.class));
 			modelMap.put("page", commentService.getComments(pageRequest, BIZ, newsType.toString()));
 		}
 		return "manager.tpl";
