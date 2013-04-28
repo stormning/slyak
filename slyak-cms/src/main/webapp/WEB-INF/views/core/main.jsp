@@ -12,6 +12,7 @@
 <script type="text/javascript" src="/static/js/html5.js"></script>
 <link rel="stylesheet" type="text/css" href="/static/css/cssreset-min.css">
 <link rel="stylesheet" type="text/css" href="/static/thirdparty/bootstrap/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="/static/thirdparty/bootstrap/css/bootstrap-responsive.css">
 <link rel="stylesheet" type="text/css" href="/static/thirdparty/bootstrap/theme/black-green/theme.css">
 <link rel="stylesheet" type="text/css" href="/static/css/global.css">
 

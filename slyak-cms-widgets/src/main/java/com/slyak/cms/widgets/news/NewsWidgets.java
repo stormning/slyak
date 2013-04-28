@@ -2,13 +2,11 @@ package com.slyak.cms.widgets.news;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -16,7 +14,6 @@ import org.codehaus.jackson.type.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.NumberUtils;
 
 import com.slyak.biz.model.Biz;
@@ -25,7 +22,6 @@ import com.slyak.cms.core.annotation.Setting;
 import com.slyak.cms.core.annotation.Widgets;
 import com.slyak.cms.core.annotation.Widget;
 import com.slyak.cms.core.enums.InputType;
-import com.slyak.cms.core.model.Settings;
 import com.slyak.comment.model.Comment;
 import com.slyak.comment.service.CommentService;
 
@@ -33,6 +29,7 @@ import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
 
 @Widgets("news")
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class NewsWidgets {
 	
 	private static final String BIZ="news";
@@ -136,7 +133,7 @@ public class NewsWidgets {
 				newsType = (Integer)newsTypes.get(0).get("id");
 			}
 			modelMap.put("newsType", newsType);
-			PageRequest pageRequest = new PageRequest(page-1, NumberUtils.parseNumber(settings.get("pageSize"), Integer.class));
+			PageRequest pageRequest = new PageRequest(page, NumberUtils.parseNumber(settings.get("pageSize"), Integer.class));
 			modelMap.put("page", commentService.getComments(pageRequest, BIZ, newsType.toString()));
 		}
 		return "manager.tpl";
