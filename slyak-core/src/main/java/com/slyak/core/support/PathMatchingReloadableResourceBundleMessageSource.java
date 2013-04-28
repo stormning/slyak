@@ -31,15 +31,4 @@ public class PathMatchingReloadableResourceBundleMessageSource extends
 		}
 	}
 
-	@Override
-	protected PropertiesHolder refreshProperties(String filename,
-			PropertiesHolder propHolder) {
-		System.out.println(filename);
-		return super.refreshProperties(filename, propHolder);
-	}
-	
-	
-	
-	
-
 }
