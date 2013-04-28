@@ -6,10 +6,10 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.ServletContextAware;
@@ -203,6 +203,13 @@ public class CmsServiceImpl implements CmsService,InitializingBean,ServletContex
 			FileUtils.writeStringToFile(global.getCss(), GLOBAL_CSS_LOCATION, servletContext);
 			FileUtils.writeStringToFile(global.getJsp(), GLOBAL_JSP_LOCATION, servletContext);
 		}
+		
+		//compress js and css
+		List<Page> pages = findRootPages();
+		if(CollectionUtils.isEmpty(pages)){
+			
+		}
+		
 	}
 	
 	@Override

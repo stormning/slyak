@@ -33,6 +33,7 @@
 	    <!-- Single realm app.  If you have multiple realms, use the 'realms' property instead. -->
 	   <property name="realms">
 	    	<list>
+	    		<ref bean="superAdminRealm"/>
 	    		<ref bean="jpaRealm"/>
 	    	</list>
 	    </property>
@@ -58,6 +59,11 @@
 		<property name="cacheManager" ref="shiroCacheManager"/>
 		<property name="cachingEnabled" value="true"/>
 	</bean> -->
+	
+	
+	<bean id="superAdminRealm" class="org.apache.shiro.realm.text.PropertiesRealm">
+		<property name="credentialsMatcher" ref="credentialsMatcher"/>
+	</bean>
 	
 	<bean id="jpaRealm" class="com.slyak.core.web.JpaAuthorizingRealm">
 		<property name="cacheManager" ref="shiroCacheManager"/>

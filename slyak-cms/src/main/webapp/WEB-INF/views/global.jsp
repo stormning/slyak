@@ -8,7 +8,6 @@
 </c:if>
 
 <div id="wrap" class="container">
-
 	<div class="row">
 		<!-- navbar start -->
 		<c:set var="navPage" value="${currentPage.parent==null?currentPage:currentPage.parent}" scope="request"/>
@@ -38,6 +37,12 @@
 									</c:otherwise>
 								</c:choose>
 							</c:forEach>
+							
+							<shiro:hasAnyRoles name="admin,superadmin">
+								<li <c:if test="${currentPage.alias eq 'admin'}">class="active"</c:if>>
+									<a href="${ctx}/admin">网站管理</a>
+								</li>
+							</shiro:hasAnyRoles>
 						</ul>
 					</div>
 				</div>

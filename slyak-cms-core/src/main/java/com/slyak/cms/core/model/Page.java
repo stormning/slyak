@@ -63,6 +63,8 @@ public class Page implements Serializable{
 	@Column(name="can_show",nullable=false)
 	private boolean show = true;
 	
+	private int version;
+	
 	public String getCustomCss() {
 		return customCss;
 	}
@@ -157,5 +159,13 @@ public class Page implements Serializable{
 
 	public void setShow(Boolean show) {
 		this.show = show;
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
 	}
 }

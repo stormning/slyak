@@ -2,6 +2,7 @@ package com.slyak.cms.widgets.news;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +11,6 @@ import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.ui.ModelMap;
@@ -85,17 +85,17 @@ public class NewsWidgets {
 	public void addType(com.slyak.cms.core.model.Widget widget) throws JsonGenerationException, JsonMappingException, IOException{
 		Biz biz = bizService.findOne(BIZ);
 		ObjectMapper om = new ObjectMapper();
-		List<NewsType> nts = null;
+		List<Map> nts = null;
 		if(biz==null){
-			nts = new ArrayList<NewsType>();
+			nts = new ArrayList<Map>();
 			biz = new Biz();
 			biz.setBiz(BIZ);
 		}else{
 			nts = om.readValue(biz.getData(), List.class);
 		}
-		NewsType nt = new NewsType();
-		nt.setName(StringUtils.isNotBlank(widget.getTitle())?widget.getTitle():widget.getId().toString());
-		nt.setId(widget.getId());
+		Map nt = new HashMap();
+		nt.put("name",StringUtils.isNotBlank(widget.getTitle())?widget.getTitle():widget.getId().toString());
+		nt.put("id",widget.getId());
 		nts.add(nt);
 		biz.setData(om.writeValueAsString(nts));
 		bizService.save(biz);
@@ -112,6 +112,8 @@ public class NewsWidgets {
 		}
 		biz.setData(om.writeValueAsString(nts));
 		bizService.save(biz);
+		//clear template cache
+		configuration.clearTemplateCache();
 	}
 	
 	public void removeType(com.slyak.cms.core.model.Widget widget){
@@ -141,22 +143,5 @@ public class NewsWidgets {
 	
 	public void removeNews(Long newsId){
 		commentService.remove(newsId);
-	}
-	
-	public class NewsType{
-		private String name;
-		private Long id;
-		public String getName() {
-			return name;
-		}
-		public void setName(String name) {
-			this.name = name;
-		}
-		public Long getId() {
-			return id;
-		}
-		public void setId(Long id) {
-			this.id = id;
-		}
 	}
 }

@@ -11,14 +11,16 @@
     
     <div class="span9">
     	<div class="row-fluid">
-	    	<div class="btn-group pull-right">
-			  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-			    Action
-			    <span class="caret"></span>
-			  </a>
-			  <ul class="dropdown-menu">
-			    <!-- dropdown menu links -->
-			  </ul>
+	    	<div class="span8 pull-right">
+	    		<div class="btn-group">
+	    			<button class="btn">修改</button>
+	    		</div>
+	    		<div class="btn-group">
+	    			<button class="btn">删除</button>
+	    		</div>
+	    		<div>	
+	    			<button class="btn">置顶</button>
+	    		</div>	
 			</div>
 		</div>
     	
@@ -49,7 +51,6 @@
 	</div>	
 </div>
 <link rel="stylesheet" href="${ctx}/static/thirdparty/kindeditor/themes/default/default.css" />
-<link rel="stylesheet" href="${ctx}/static/thirdparty/kindeditor/plugins/code/prettify.css" />
 <script charset="utf-8" src="${ctx}/static/thirdparty/kindeditor/kindeditor-min.js"></script>
 <script charset="utf-8" src="${ctx}/static/thirdparty/kindeditor/lang/zh_CN.js"></script>
 <script charset="utf-8" src="${ctx}/static/thirdparty/kindeditor/plugins/code/prettify.js"></script>
@@ -63,18 +64,7 @@
 			uploadJson : '${ctx}/file/textEditor/upload',
 			filePostName: 'file',
 			fileManagerJson : '${ctx}/file/textEditor',
-			allowFileManager : true,
-			afterCreate : function() {
-				var self = this;
-				KindEditor.ctrl(document, 13, function() {
-					self.sync();
-					document.forms['example'].submit();
-				});
-				KindEditor.ctrl(self.edit.doc, 13, function() {
-					self.sync();
-					document.forms['example'].submit();
-				});
-			}	 
+			allowFileManager : true
 		});
 		prettyPrint();
 	});
