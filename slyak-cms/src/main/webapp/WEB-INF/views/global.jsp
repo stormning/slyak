@@ -14,9 +14,7 @@
 		<div class="navbar">
 			<div class="navbar-inner">
 				<div class="container">
-					<a data-target=".nav-collapse" data-toggle="collapse" class="btn btn-navbar">
-						<span class="icon-bar">Menu</span>
-					</a>
+					<a data-target=".nav-collapse" data-toggle="collapse" class="btn btn-navbar">Menu</a>
 					<a href="/" class="brand">SLYAK</a>
 					<div class="nav-collapse">
 						<ul class="nav">
