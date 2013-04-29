@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX `alias` ON `t_page` (`alias`) USING BTREE;

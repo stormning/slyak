@@ -23,7 +23,12 @@
 	    <property name="filterChainDefinitions">
 	        <value>
 	            /resources/**=anon
-	            /admin/** = authc, roles[admin]
+	            /admin/** = authc, roles[superadmin,admin]
+	            /action/** = authc, roles[superadmin,admin]
+	            /page/** = authc, roles[superadmin]
+	            /global/** = authc, roles[superadmin]
+	            /widget/** = authc, roles[superadmin]
+	            /layout/** = authc, roles[superadmin]
 	            /** = anon
 	        </value>
 	    </property>

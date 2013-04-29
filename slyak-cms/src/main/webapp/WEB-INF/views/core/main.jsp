@@ -20,8 +20,7 @@
 <link rel="stylesheet" type="text/css" href="${ctx}/static/thirdparty/bootstrap/css/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="${ctx}/static/thirdparty/bootstrap/css/bootstrap-responsive.css">
 <link rel="stylesheet" type="text/css" href="${ctx}/static/css/global.css">
-<!-- <link rel="stylesheet" type="text/css" href="/static/thirdparty/bootstrap/theme/black-green/theme.css"> -->
-<!-- <link rel="stylesheet" type="text/css" href="/static/thirdparty/bootstrap/theme/black-green/theme.css"> -->
+<link rel="stylesheet" type="text/css" href="/static/thirdparty/bootstrap/theme/black-green/theme.css">
 
 <!-- admin area start-->
 <shiro:hasRole name="superadmin">

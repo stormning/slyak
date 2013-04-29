@@ -1,3 +1,7 @@
+.widget>header{
+	cursor: move
+}
+
 .ace_editor {
 	position: relative !important;
 	border: 1px solid lightgray;

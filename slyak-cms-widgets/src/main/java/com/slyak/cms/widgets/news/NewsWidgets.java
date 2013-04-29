@@ -1,10 +1,12 @@
 package com.slyak.cms.widgets.news;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.JsonGenerationException;
@@ -19,14 +21,15 @@ import org.springframework.util.NumberUtils;
 import com.slyak.biz.model.Biz;
 import com.slyak.biz.service.BizService;
 import com.slyak.cms.core.annotation.Setting;
-import com.slyak.cms.core.annotation.Widgets;
 import com.slyak.cms.core.annotation.Widget;
+import com.slyak.cms.core.annotation.Widgets;
 import com.slyak.cms.core.enums.InputType;
 import com.slyak.comment.model.Comment;
 import com.slyak.comment.service.CommentService;
 
 import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
+import freemarker.template.Template;
 
 @Widgets("news")
 @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -40,14 +43,8 @@ public class NewsWidgets {
 	@Autowired
 	private BizService bizService;
 	
-	private static final StringTemplateLoader loader = new StringTemplateLoader();
+	private Map<String,Template> templateCache = new ConcurrentHashMap<String, Template>();
 	
-	private static final Configuration configuration = new Configuration();
-	
-	static{
-		configuration.setTemplateLoader(loader);
-	}
-
 	@Widget(settings = {
 			@Setting(key = "fetchSize", value = "10"),
 			@Setting(key = "template",value = "list1.tpl",options={"list1.tpl","list2.tpl"}),
@@ -56,14 +53,15 @@ public class NewsWidgets {
 	public Object list(com.slyak.cms.core.model.Widget widget,ModelMap modelMap) throws IOException {
 		Map<String,String> settings = widget.getSettings();
 		String type = widget.getId().toString();
-		modelMap.put("comments", commentService.listComments(NumberUtils.parseNumber(settings.get("fetchSize"), Integer.class), BIZ, settings.get("type")));
+		modelMap.put("comments", commentService.listComments(NumberUtils.parseNumber(settings.get("fetchSize"), Integer.class), BIZ, type));
 		String diy = settings.get("diy");
 		if(StringUtils.isNotBlank(diy)){
-			Object tempsource = loader.findTemplateSource(type);
-			if(tempsource == null){
-				loader.putTemplate(type, diy);
+			Template t = templateCache.get(type);
+			if(t==null){
+				t = new Template("diy", new StringReader(diy),new Configuration(),"UTF-8");
+				templateCache.put(type, t);
 			}
-			return configuration.getTemplate(diy);
+			return t;
 		} else {
 			return settings.get("template");
 		}
@@ -113,7 +111,7 @@ public class NewsWidgets {
 		biz.setData(om.writeValueAsString(nts));
 		bizService.save(biz);
 		//clear template cache
-		configuration.clearTemplateCache();
+		templateCache.remove(widget.getId().toString());
 	}
 	
 	public void removeType(com.slyak.cms.core.model.Widget widget){
