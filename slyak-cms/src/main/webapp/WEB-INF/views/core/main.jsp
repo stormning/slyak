@@ -24,7 +24,7 @@
 <!-- <link rel="stylesheet" type="text/css" href="/static/thirdparty/bootstrap/theme/black-green/theme.css"> -->
 
 <!-- admin area start-->
-<shiro:hasRole name="superAdmin">
+<shiro:hasRole name="superadmin">
 	<link rel="stylesheet" type="text/css" href="/static/css/admin.css">
 	<script src="/static/thirdparty/jquery/jquery-ui.min.js"></script>
 	<script src="/static/thirdparty/ace/ace.js"></script>

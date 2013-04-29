@@ -61,9 +61,7 @@
 	</bean> -->
 	
 	
-	<bean id="superAdminRealm" class="org.apache.shiro.realm.text.PropertiesRealm">
-		<property name="credentialsMatcher" ref="credentialsMatcher"/>
-	</bean>
+	<bean id="superAdminRealm" class="org.apache.shiro.realm.text.PropertiesRealm"/>
 	
 	<bean id="jpaRealm" class="com.slyak.core.web.JpaAuthorizingRealm">
 		<property name="cacheManager" ref="shiroCacheManager"/>
