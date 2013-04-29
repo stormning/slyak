@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ include file="../include.jsp"%>
 
-<form action="/widget/edit" method="post" class="form-horizontal">
+<form action="${ctx}/widget/edit" method="post" class="form-horizontal">
 	<div class="control-group">
 		<label for="widgetId" class="control-label">编号</label>
 		<div class="controls">

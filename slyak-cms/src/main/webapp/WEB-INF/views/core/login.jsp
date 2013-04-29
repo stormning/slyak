@@ -6,22 +6,22 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Login | Bitsy Admin</title>
+		<title>SLYAK-Login</title>
 		<meta name="description" content="">
 		<meta name="author" content="cuongv">
 		<meta name="robots" content="index, follow">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 				
 		<!-- CSS styles -->
-		<link rel="stylesheet" type="text/css" href="/static/css/cssreset-min.css">
-		<link rel="stylesheet" type="text/css" href="/static/thirdparty/bootstrap/css/bootstrap.css">
-		<link rel="stylesheet" type="text/css" href="/static/thirdparty/bootstrap/css/bootstrap-responsive.css">
+		<link rel="stylesheet" type="text/css" href="${ctx}/static/css/cssreset-min.css">
+		<link rel="stylesheet" type="text/css" href="${ctx}/static/thirdparty/bootstrap/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="${ctx}/static/thirdparty/bootstrap/css/bootstrap-responsive.css">
 		<link rel="stylesheet" type="text/css" href="${ctx}/static/css/login.css">
 		
 		<!-- JS Libs -->
 		<script type="text/javascript" src="/static/js/html5.js"></script>
-		<script src="/static/thirdparty/jquery/jquery-1.9.1.min.js"></script>
-		<script src="/static/thirdparty/bootstrap/js/bootstrap.min.js"></script>
+		<script src="${ctx}/static/thirdparty/jquery/jquery-1.9.1.min.js"></script>
+		<script src="${ctx}/static/thirdparty/bootstrap/js/bootstrap.min.js"></script>
 		
 	</head>
 	<body class="single-page">

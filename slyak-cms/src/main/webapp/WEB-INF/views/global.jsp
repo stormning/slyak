@@ -25,14 +25,14 @@
 											<a href="#" class="dropdown-toggle" data-toggle="dropdown">${p.name}<b class="caret"></b></a>
 											<ul class="dropdown-menu">
 												<c:forEach items="${p.children}" var="cp">
-													<li><a href="/${cp.alias}">${cp.name}</a></li>
+													<li><a href="${ctx}/${cp.alias}">${cp.name}</a></li>
 												</c:forEach>
 											</ul>
 										</li>
 									</c:when>
 									<c:otherwise>
 										<li <c:if test="${p.id eq navPage.id}">class="active"</c:if>>
-											<a href="/${status.first?'':p.alias}">${p.name}</a>
+											<a href="${ctx}/${status.first?'':p.alias}">${p.name}</a>
 										</li>
 									</c:otherwise>
 								</c:choose>

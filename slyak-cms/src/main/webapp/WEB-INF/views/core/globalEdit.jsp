@@ -6,7 +6,7 @@
 		<li class="active"><a href="#globalCssTab" data-toggle="tab">全局样式</a></li>
 		<li><a href="#globalJspTab" data-toggle="tab">全局布局</a></li>
 	</ul>
-	<form method="post" action="/global/edit">
+	<form method="post" action="${ctx}/global/edit">
 		<input type="hidden" name="pageId" value="${param.pageId}">
 		<div class="tab-content">
 			<div class="alert alert-info"><strong>提示:</strong>按F11进行全屏编辑切换</div>

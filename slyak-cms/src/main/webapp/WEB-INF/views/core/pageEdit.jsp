@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<form action="/page/edit" method="post" class="form-horizontal">
+<form action="${ctx}/page/edit" method="post" class="form-horizontal">
 	<input type="hidden" name="id" class="input-xlarge" value="${param.id}">
 	<div class="control-group">
 		<label for="pageName" class="control-label">名称</label>

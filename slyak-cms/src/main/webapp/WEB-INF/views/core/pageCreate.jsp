@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@include file="../include.jsp" %>	
-<form action="/page/create" method="post" class="form-horizontal">
+<form action="${ctx}/page/create" method="post" class="form-horizontal">
 	<input type="hidden" name="pageId" value="${param.pageId}">
 	<div class="control-group">
 		<label for="pageName" class="control-label">名称</label>
