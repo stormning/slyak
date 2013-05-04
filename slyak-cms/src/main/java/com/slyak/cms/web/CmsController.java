@@ -172,17 +172,21 @@ public class CmsController implements ServletContextAware,InitializingBean{
 			executor.submit(new Callable<Widget>() {
 				@Override
 				public Widget call() throws Exception {
-					//render
-					renderWidget(sharedModel,widget,request,locale,false, null);
-					//put
-					String container = widget.getContainer();
-					List<Widget> widgets = containerMap.get(container);
-					if(widgets == null){
-						widgets = new ArrayList<Widget>();
-						containerMap.put(container, widgets);
+					
+					try{
+						//render
+						renderWidget(sharedModel,widget,request,locale,false, null);
+						//put
+						String container = widget.getContainer();
+						List<Widget> widgets = containerMap.get(container);
+						if(widgets == null){
+							widgets = new ArrayList<Widget>();
+							containerMap.put(container, widgets);
+						}
+						widgets.add(widget);
+					} finally{
+						latch.countDown();
 					}
-					widgets.add(widget);
-					latch.countDown();
 					return widget;
 				}
 			});

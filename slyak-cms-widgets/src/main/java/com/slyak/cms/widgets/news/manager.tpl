@@ -29,7 +29,7 @@
 				<tr><th><input type="checkbox" class="no-margin"></th><th>标题</th><th>创建时间</th><th>作者</th></tr>
 				<#if page??&&page.content??>
 					<#list page.content as c>
-						<tr><td><input type="checkbox" class="no-margin"></td><td>${c.title}</td><td>${c.createAt}</td><td>${c}</td></tr>			
+						<tr><td><input type="checkbox" class="no-margin"></td><td>${c.title}</td><td>${c.createAt}</td><td><#if c.creator??>${c.creator.name!!}</#if></td></tr>			
 					</#list>
 				</#if>
 			</table>

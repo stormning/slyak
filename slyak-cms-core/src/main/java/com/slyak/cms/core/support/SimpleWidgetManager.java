@@ -40,6 +40,7 @@ import com.slyak.cms.core.annotation.Widget;
 import com.slyak.cms.core.annotation.Widgets;
 import com.slyak.cms.core.enums.InputType;
 
+import freemarker.cache.NullCacheStorage;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 
@@ -108,6 +109,7 @@ public class SimpleWidgetManager implements WidgetManager,ApplicationContextAwar
 							fcfb.setTemplateLoaderPaths(widgetRoot,WIDGETS_ROOT);
 							fcfb.setDefaultEncoding("UTF-8");
 							Configuration cfg = fcfb.createConfiguration();
+							cfg.setCacheStorage(new NullCacheStorage());
 							HANLDER_CONFIGURATIONS.put(handler, cfg);
 							
 							//init static resources
