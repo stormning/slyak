@@ -22,7 +22,17 @@
   	</dependency>
   	<dependency>
   		<groupId>com.slyak</groupId>
-  		<artifactId>slyak-cms-widgets</artifactId>
+  		<artifactId>slyak-user</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.slyak</groupId>
+  		<artifactId>slyak-comment</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.slyak</groupId>
+  		<artifactId>slyak-biz</artifactId>
   		<version>0.0.1-SNAPSHOT</version>
   	</dependency>
   </dependencies>
