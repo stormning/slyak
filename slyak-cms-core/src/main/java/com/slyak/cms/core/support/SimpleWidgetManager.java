@@ -219,7 +219,8 @@ public class SimpleWidgetManager implements WidgetManager,ApplicationContextAwar
 
 	@Override
 	public WidgetInfo getWidgetInfo(String region,String widgetName) {
-		return WIDGET_INFOS.get(region).get(widgetName);
+		Map<String,WidgetInfo> infos =WIDGET_INFOS.get(region);
+		return infos==null?null:infos.get(widgetName);
 	}
 
 	@Override

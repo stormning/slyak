@@ -35,6 +35,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.util.CollectionUtils;
@@ -315,6 +316,7 @@ public class CmsController implements ServletContextAware,InitializingBean{
 	
 	@RequestMapping(value="/widget/add",method=RequestMethod.POST)
 	@ResponseBody
+	@Transactional
 	public boolean widgetAdd(Long pageId,String widgetName,final NativeWebRequest request,final ModelAndViewContainer container) throws Exception{
 		Page page = cmsService.findPageById(pageId);
 		Widget widget = createWidget(page,widgetName);
@@ -331,20 +333,18 @@ public class CmsController implements ServletContextAware,InitializingBean{
 	
 	@RequestMapping(value="/widget/remove",method=RequestMethod.POST)
 	@ResponseBody
+	@Transactional
 	public boolean widgetRemove(Long widgetId,final NativeWebRequest request,final ModelAndViewContainer container) throws Exception{
-		
 		Widget widget = cmsService.findWidgetById(widgetId);
 		WidgetInfo widgetInfo = findWidgetInfoByWidgetName(widget.getName());
-		
-		//on widget remove
-		Method onRemove = widgetInfo.getOnRemove();
-		if(onRemove!=null){		
-			handleWidgetEvent(widgetInfo.getHandler(),onRemove,widget,request,container);
+		if(widgetInfo!=null){
+			//on widget remove
+			Method onRemove = widgetInfo.getOnRemove();
+			if(onRemove!=null){		
+				handleWidgetEvent(widgetInfo.getHandler(),onRemove,widget,request,container);
+			}
 		}
-		
 		cmsService.removeWidgetById(widgetId);
-		
-		
 		return true;
 	}
 	
@@ -387,6 +387,7 @@ public class CmsController implements ServletContextAware,InitializingBean{
 	
 	@RequestMapping(value="/widget/edit",method=RequestMethod.POST)
 	@ResponseBody
+	@Transactional
 	public boolean widgetEdit(@RequestBody Widget widget,final NativeWebRequest request,final ModelAndViewContainer container) throws Exception{
 		Long widgetId = widget.getId();
 		Widget stored = cmsService.findWidgetById(widgetId);
@@ -446,43 +447,46 @@ public class CmsController implements ServletContextAware,InitializingBean{
 		long start = System.currentTimeMillis();
 		String[] regionAndName = StringUtils.split(widget.getName(),".");
 		WidgetInfo widgetInfo = widgetManager.getWidgetInfo(regionAndName[0],regionAndName[1]);
-		
-		Map<String,String> mergedSettings = mergeSettings(widgetInfo.getSettingsMap(),widget.getSettings());
-		//invoke
-		//TODO : optimize it
-		Object handler = widgetInfo.getHandler();
-		ServletInvocableHandlerMethod handlerMethod = createServletInvocableHandlerMethod(handler,widgetInfo.getMethod());
-		
-		ModelAndViewContainer container = new ModelAndViewContainer();
-		
 		String content = null;
-		try{
-			widget.setSettings(mergedSettings);
-			
-			Object mtpl = handlerMethod.invokeForRequest(request,container,widget);
-			
-			ModelMap model = container.getModel();
-			model.addAllAttributes(sharedModel);
-			String ctx = urlPathHelper.getContextPath(request.getNativeRequest(HttpServletRequest.class));
-			//common attrs
-			model.addAttribute("ctx", ctx);
-			model.addAttribute("view", ctx+"/view/"+widget.getPage().getAlias());
-			model.addAttribute("action", ctx+"/action/"+widget.getPage().getAlias());
-			model.addAttribute("resource", ctx+"/widgetResource/"+regionAndName[0]);
-			model.addAttribute("widget", widget);
-			
-			Template fmTemplate = null;
-			if(mtpl.getClass().isAssignableFrom(Template.class)){
-				fmTemplate = (Template)mtpl;
-			}else{
-				//render content
-				Configuration widgetConfiguration = widgetManager.getConfiguration(handler);
-				fmTemplate = widgetConfiguration.getTemplate((String)mtpl,locale);
-			}
-			content = FreeMarkerTemplateUtils.processTemplateIntoString(fmTemplate, model);
+		if(widgetInfo == null){
+			content = "The widget "+widget.getName()+" is missing,add related jars or remove it?";
 			widget.setContent(content);
-		}catch(Exception e){
-			widget.setContent(e.getMessage());
+		}else{
+			Map<String,String> mergedSettings = mergeSettings(widgetInfo.getSettingsMap(),widget.getSettings());
+			//invoke
+			//TODO : optimize it
+			Object handler = widgetInfo.getHandler();
+			ServletInvocableHandlerMethod handlerMethod = createServletInvocableHandlerMethod(handler,widgetInfo.getMethod());
+			
+			ModelAndViewContainer container = new ModelAndViewContainer();
+			try{
+				widget.setSettings(mergedSettings);
+				
+				Object mtpl = handlerMethod.invokeForRequest(request,container,widget);
+				
+				ModelMap model = container.getModel();
+				model.addAllAttributes(sharedModel);
+				String ctx = urlPathHelper.getContextPath(request.getNativeRequest(HttpServletRequest.class));
+				//common attrs
+				model.addAttribute("ctx", ctx);
+				model.addAttribute("view", ctx+"/view/"+widget.getPage().getAlias());
+				model.addAttribute("action", ctx+"/action/"+widget.getPage().getAlias());
+				model.addAttribute("resource", ctx+"/widgetResource/"+regionAndName[0]);
+				model.addAttribute("widget", widget);
+				
+				Template fmTemplate = null;
+				if(mtpl.getClass().isAssignableFrom(Template.class)){
+					fmTemplate = (Template)mtpl;
+				}else{
+					//render content
+					Configuration widgetConfiguration = widgetManager.getConfiguration(handler);
+					fmTemplate = widgetConfiguration.getTemplate((String)mtpl,locale);
+				}
+				content = FreeMarkerTemplateUtils.processTemplateIntoString(fmTemplate, model);
+				widget.setContent(content);
+			}catch(Exception e){
+				widget.setContent(e.getMessage());
+			}
 		}
 		
 		if(!noborder){
