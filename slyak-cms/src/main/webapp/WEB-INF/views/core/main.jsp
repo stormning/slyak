@@ -9,35 +9,33 @@
 <meta name="description" content="${currentPage.description}">
 <meta name="keywords" content="${currentPage.keywords}">
 <c:set var="ctx" value="<%=request.getContextPath()%>" scope="request"/>
-<!-- html5 -->
-<script type="text/javascript" src="${ctx}/static/js/html5.js"></script>
-<script src="${ctx}/static/thirdparty/jquery/jquery-1.9.1.min.js"></script>
-<script src="${ctx}/static/thirdparty/bootstrap/js/bootstrap.min.js"></script>
-<script src="${ctx}/static/js/base.js"></script>
-
-
 <link rel="stylesheet" type="text/css" href="${ctx}/static/css/cssreset-min.css">
 <link rel="stylesheet" type="text/css" href="${ctx}/static/thirdparty/bootstrap/css/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="${ctx}/static/thirdparty/bootstrap/css/bootstrap-responsive.css">
 <link rel="stylesheet" type="text/css" href="${ctx}/static/css/global.css">
 <link rel="stylesheet" type="text/css" href="/static/thirdparty/bootstrap/theme/black-green/theme.css">
-
-<!-- admin area start-->
-<shiro:hasRole name="superadmin">
-	<link rel="stylesheet" type="text/css" href="${ctx}/static/css/admin.css">
-	<script src="${ctx}/static/thirdparty/jquery/jquery-ui.min.js"></script>
-	<script src="${ctx}/static/thirdparty/ace/ace.js"></script>
-	<script src="${ctx}/static/thirdparty/jquery/jquery.json.js"></script>
-	<script src="${ctx}/static/js/admin.js"></script>
-	<script>
-		$(function(){
-			$.admin({ctx:'${ctx}',currentPageId:'${currentPage.id}'});
-		});
-	</script>
-</shiro:hasRole>
-<!-- admin area end -->
 </head>
 <body>
 	<tiles:insertAttribute name="content" />
+	
+	<!-- html5 -->
+	<script type="text/javascript" src="${ctx}/static/js/html5.js"></script>
+	<script src="${ctx}/static/thirdparty/jquery/jquery-1.9.1.min.js"></script>
+	<script src="${ctx}/static/thirdparty/bootstrap/js/bootstrap.min.js"></script>
+	<script src="${ctx}/static/js/base.js"></script>
+	<!-- admin area start-->
+	<shiro:hasRole name="superadmin">
+		<link rel="stylesheet" type="text/css" href="${ctx}/static/css/admin.css">
+		<script src="${ctx}/static/thirdparty/jquery/jquery-ui.min.js"></script>
+		<script src="${ctx}/static/thirdparty/ace/ace.js"></script>
+		<script src="${ctx}/static/thirdparty/jquery/jquery.json.js"></script>
+		<script src="${ctx}/static/js/admin.js"></script>
+		<script>
+			$(function(){
+				$.admin({ctx:'${ctx}',currentPageId:'${currentPage.id}'});
+			});
+		</script>
+	</shiro:hasRole>
+	<!-- admin area end -->
 </body>
 </html>
