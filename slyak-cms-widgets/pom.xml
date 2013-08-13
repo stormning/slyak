@@ -22,10 +22,5 @@
   		<artifactId>slyak-comment</artifactId>
   		<version>0.0.1-SNAPSHOT</version>
   	</dependency>
-  	<dependency>
-  		<groupId>com.slyak</groupId>
-  		<artifactId>slyak-biz</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
   </dependencies>
 </project>

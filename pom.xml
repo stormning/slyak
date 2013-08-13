@@ -27,6 +27,7 @@
 		<org.apache.tiles-version>3.0.1</org.apache.tiles-version>
 		<org.apache.shiro-version>1.2.2</org.apache.shiro-version>
 		<ch.qos.logback-version>1.0.9</ch.qos.logback-version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<dependencies>
 		<!-- spring -->
