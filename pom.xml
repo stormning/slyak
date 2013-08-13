@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.slyak</groupId>
 	<artifactId>slyak-parent</artifactId>
@@ -18,7 +19,7 @@
 		<module>slyak-config</module>
 		<module>slyak-event</module>
 	</modules>
-	
+
 	<properties>
 		<org.springframework-version>3.2.3.RELEASE</org.springframework-version>
 		<org.slf4j-version>1.6.4</org.slf4j-version>
@@ -66,11 +67,8 @@
 			<artifactId>spring-context-support</artifactId>
 			<version>${org.springframework-version}</version>
 		</dependency>
-		<!-- <dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-jdbc</artifactId>
-			<version>${org.springframework-version}</version>
-		</dependency> -->
+		<!-- <dependency> <groupId>org.springframework</groupId> <artifactId>spring-jdbc</artifactId> 
+			<version>${org.springframework-version}</version> </dependency> -->
 		<dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib-nodep</artifactId>
@@ -122,7 +120,7 @@
 			<artifactId>aspectjweaver</artifactId>
 			<version>${org.aspectj-version}</version>
 		</dependency>
-		
+
 		<!-- javax -->
 		<dependency>
 			<groupId>javax.inject</groupId>
@@ -153,16 +151,10 @@
 		</dependency>
 
 		<!-- json -->
-		<!-- <dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-core-asl</artifactId>
-			<version>${org.codehaus.jackson-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-mapper-asl</artifactId>
-			<version>${org.codehaus.jackson-version}</version>
-		</dependency> -->
+		<!-- <dependency> <groupId>org.codehaus.jackson</groupId> <artifactId>jackson-core-asl</artifactId> 
+			<version>${org.codehaus.jackson-version}</version> </dependency> <dependency> 
+			<groupId>org.codehaus.jackson</groupId> <artifactId>jackson-mapper-asl</artifactId> 
+			<version>${org.codehaus.jackson-version}</version> </dependency> -->
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
@@ -218,8 +210,8 @@
 			<artifactId>jta</artifactId>
 			<version>1.1</version>
 		</dependency>
-		
-		<!-- spring data jpa with hibernate-->
+
+		<!-- spring data jpa with hibernate -->
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-jpa</artifactId>
@@ -235,13 +227,13 @@
 			<artifactId>hibernate-ehcache</artifactId>
 			<version>4.2.3.Final</version>
 		</dependency>
-		
+
 		<!-- bean validation -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
 			<version>4.3.1.Final</version>
-		</dependency>	
+		</dependency>
 
 		<!-- shiro -->
 		<dependency>
@@ -264,21 +256,26 @@
 			<artifactId>shiro-ehcache</artifactId>
 			<version>${org.apache.shiro-version}</version>
 		</dependency>
-		
+
 		<dependency>
-	  		<groupId>org.mozilla</groupId>
-	  		<artifactId>rhino</artifactId>
-	  		<version>1.7R4</version>
-	  	</dependency>
-	  	
+			<groupId>org.mozilla</groupId>
+			<artifactId>rhino</artifactId>
+			<version>1.7R4</version>
+		</dependency>
+
 		<!-- spring data solr -->
-		<!-- <dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-solr</artifactId>
-			<version>1.0.0.M1</version>
-		</dependency> -->
+		<!-- <dependency> <groupId>org.springframework.data</groupId> <artifactId>spring-data-solr</artifactId> 
+			<version>1.0.0.M1</version> </dependency> -->
 	</dependencies>
 	<build>
+		<resources>
+			<resource>
+				<directory>${javaSourceDirectory}</directory>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</resource>
+		</resources>
 		<pluginManagement>
 			<plugins>
 				<!-- compiler -->
@@ -312,7 +309,7 @@
 					<version>2.5</version>
 					<configuration>
 						<encoding>UTF-8</encoding>
-						<outputDirectory/>
+						<outputDirectory />
 					</configuration>
 				</plugin>
 			</plugins>
