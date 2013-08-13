@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -34,6 +35,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
@@ -45,6 +47,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.DefaultDataBinderFactory;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -64,10 +67,12 @@ import com.slyak.cms.core.model.Page;
 import com.slyak.cms.core.model.Widget;
 import com.slyak.cms.core.service.CmsService;
 import com.slyak.cms.core.support.ClassUtils;
+import com.slyak.cms.core.support.Option;
 import com.slyak.cms.core.support.Setting;
 import com.slyak.cms.core.support.WidgetInfo;
 import com.slyak.cms.core.support.WidgetManager;
 import com.slyak.core.io.FileUtils;
+import com.slyak.core.web.util.WebUtils;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -218,7 +223,7 @@ public class CmsController implements ServletContextAware,InitializingBean{
 	}
 	
 	@RequestMapping(value="/page/create",method=RequestMethod.POST)
-	public String pageCreate(Page page,boolean copy,boolean isChildren,Long pageId){
+	public String pageCreate(Page page,boolean copy,boolean isChildren,@RequestParam(required=false,defaultValue="0") Long pageId){
 		if(isChildren){
 			page.setParent(cmsService.findPageById(pageId));
 		}
@@ -319,11 +324,17 @@ public class CmsController implements ServletContextAware,InitializingBean{
 	@Transactional
 	public boolean widgetAdd(Long pageId,String widgetName,final NativeWebRequest request,final ModelAndViewContainer container) throws Exception{
 		Page page = cmsService.findPageById(pageId);
+		
 		Widget widget = createWidget(page,widgetName);
 		cmsService.saveWidget(widget);
 		
-		//on widget add
 		WidgetInfo widgetInfo = findWidgetInfoByWidgetName(widgetName);
+		if(!widgetInfo.isShow()){
+			page.setShow(false);
+		}
+		
+		cmsService.savePage(page);
+		//on widget add
 		Method onAdd = widgetInfo.getOnAdd();
 		if(onAdd!=null){		
 			handleWidgetEvent(widgetInfo.getHandler(),onAdd,widget,request,container);
@@ -337,6 +348,7 @@ public class CmsController implements ServletContextAware,InitializingBean{
 	public boolean widgetRemove(Long widgetId,final NativeWebRequest request,final ModelAndViewContainer container) throws Exception{
 		Widget widget = cmsService.findWidgetById(widgetId);
 		WidgetInfo widgetInfo = findWidgetInfoByWidgetName(widget.getName());
+		
 		if(widgetInfo!=null){
 			//on widget remove
 			Method onRemove = widgetInfo.getOnRemove();
@@ -345,6 +357,24 @@ public class CmsController implements ServletContextAware,InitializingBean{
 			}
 		}
 		cmsService.removeWidgetById(widgetId);
+		
+		//update page
+		Page page = widget.getPage();
+		List<Widget> widgets = cmsService.findWidgetsByPageId(page.getId());
+		boolean showPage = true;
+		for (Widget w : widgets) {
+			if(!w.getId().equals(widgetId)){
+				WidgetInfo wi = findWidgetInfoByWidgetName(w.getName());
+				if(!wi.isShow()){
+					showPage = false;
+					break;
+				}
+			}
+		}
+		if(showPage){
+			page.setShow(showPage);
+			cmsService.savePage(page);
+		}
 		return true;
 	}
 	
@@ -355,13 +385,13 @@ public class CmsController implements ServletContextAware,InitializingBean{
 		WidgetInfo widgetInfo = findWidgetInfoByWidgetName(widget.getName());
 		Map<String,String> mergedSettings = mergeSettings(widgetInfo.getSettingsMap(),widget.getSettings());
 		modelMap.put("mergedSettings", mergedSettings);
-		modelMap.put("settings", prepare(widgetInfo.getHandler(),widgetInfo.getSettings(), request, container));
+		modelMap.put("settings", prepare(widget,widgetInfo.getHandler(),widgetInfo.getSettings(), request, container));
 		return "alone:core.widgetEdit";
 	}
 	
-	private List<Setting> prepare(Object handler,List<Setting> settings,final NativeWebRequest request,final ModelAndViewContainer container) throws Exception{
+	private List<Setting> prepare(Widget widget,Object handler,List<Setting> settings,final NativeWebRequest request,final ModelAndViewContainer container) throws Exception{
 		if(CollectionUtils.isEmpty(settings)){
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}else{
 			List<Setting> prepared = new ArrayList<Setting>();
 			for (Setting setting : settings) {
@@ -372,13 +402,12 @@ public class CmsController implements ServletContextAware,InitializingBean{
 					Setting s = new Setting();
 					BeanUtils.copyProperties(setting, s,new String[]{"options"});
 					InvocableHandlerMethod handlerMethod = createInitBinderMethod(handler, optionsLoader);
-					Object result = handlerMethod.invokeForRequest(request, container);
-					Object[] array = ObjectUtils.toObjectArray(result);
-					String[] casted = new String[array.length];
-					for (int i = 0; i < array.length; i++) {
-						casted[i] = ObjectUtils.getDisplayString(array[i]);
+					Object result = handlerMethod.invokeForRequest(request, container,widget);
+					if(result!=null){
+						Option[] options = (Option[])ObjectUtils.toObjectArray(result);
+						s.setOptions(options);
+						prepared.add(s);
 					}
-					s.setOptions(casted);
 				}
 			}
 			return prepared;
@@ -438,8 +467,8 @@ public class CmsController implements ServletContextAware,InitializingBean{
 	
 	@RequestMapping("/widget/sort")
 	@ResponseBody
-	public boolean widgetSort(@RequestBody List<Widget> widgets){
-		cmsService.updateWidgets(widgets,true);
+	public boolean widgetSort(@RequestBody Widget[] widgets){
+		cmsService.updateWidgets(Arrays.asList(widgets),true);
 		return true;
 	}
 	
@@ -470,7 +499,7 @@ public class CmsController implements ServletContextAware,InitializingBean{
 				//common attrs
 				model.addAttribute("ctx", ctx);
 				model.addAttribute("view", ctx+"/view/"+widget.getPage().getAlias());
-				model.addAttribute("action", ctx+"/action/"+widget.getPage().getAlias());
+				model.addAttribute("action", ctx+"/action/"+widget.getId());
 				model.addAttribute("resource", ctx+"/widgetResource/"+regionAndName[0]);
 				model.addAttribute("widget", widget);
 				
@@ -533,28 +562,25 @@ public class CmsController implements ServletContextAware,InitializingBean{
 		}
 	}
 	
-	@RequestMapping("/view/{parentPageAlias}/{region}/{widgetName}")
-	public String renderPageByWidget(@PathVariable String parentPageAlias,@PathVariable String region,@PathVariable String widgetName,final NativeWebRequest request,final Locale locale,ModelMap modelMap) throws InterruptedException, TemplateException, IOException{
-		String wname = region+'.'+widgetName;
-		Page page = cmsService.findPageByWidgetName(wname);
-		if(page == null){
-			//create a child page
-//			page = new Page();
-//			page.setName(region+widgetName);
-//			page.setParent(cmsService.findPageByAlias(parentPageAlias));
-//			WidgetInfo widgetInfo = widgetManager.getWidgetInfo(region, widgetName);
-//			page.setShow(widgetInfo.isShow());
-//			List<Widget> widgets = new ArrayList<Widget>();
-//			widgets.add(createWidget(page, wname));
-//			page.setWidgets(widgets);
-//			cmsService.savePage(page);
-		}	
+	@RequestMapping("/view/{parentPageAlias}/**")
+	@Transactional
+	public String renderPageByWidget(@PathVariable String parentPageAlias,final NativeWebRequest request,final HttpServletResponse response,final Locale locale,ModelMap modelMap) throws InterruptedException, TemplateException, IOException{
+		Page page = cmsService.findPageByAlias(parentPageAlias);
 		return renderPage(page, request, locale, modelMap);
 	}
 	
-	@RequestMapping("/action/{currentPageAlias}/{region}/{methodName}")
-	public ModelAndView actionByWidget(@PathVariable String currentPageAlias,@PathVariable String region,@PathVariable String methodName,final NativeWebRequest request,final ModelAndViewContainer container) throws Exception{
-		Page page = cmsService.findPageByAlias(currentPageAlias);
+	@RequestMapping("/action/{widgetId}/{region}/{methodName}")
+	@Transactional
+	public ModelAndView actionByWidget(@PathVariable Long widgetId,@PathVariable String region,@PathVariable String methodName,final NativeWebRequest request,final ModelAndViewContainer container,final HttpServletResponse response,Locale locale) throws Exception{
+		
+		//action from widget
+		Widget actionForm = cmsService.findWidgetById(widgetId);
+		String[] regionAndName = StringUtils.split(actionForm.getName(),".");
+		WidgetInfo widgetInfo = widgetManager.getWidgetInfo(regionAndName[0],regionAndName[1]);
+		Map<String,String> mergedSettings = mergeSettings(widgetInfo.getSettingsMap(),actionForm.getSettings());
+		actionForm.setSettings(mergedSettings);
+		
+		Page page = actionForm.getPage();
 		Object handler = widgetManager.getRegionHandler(region);
 		Method method = null;
 		if(handler!=null){
@@ -562,9 +588,30 @@ public class CmsController implements ServletContextAware,InitializingBean{
 		}
 		if(method!=null){
 			ServletInvocableHandlerMethod handlerMethod = createServletInvocableHandlerMethod(handler, method);
-			handlerMethod.invokeForRequest(request, container,page);
+			Object result = handlerMethod.invokeForRequest(request, container,page,actionForm);
+			//ajax request
+			if(WebUtils.isAjaxRequest(request.getNativeRequest(HttpServletRequest.class))){
+				response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+				response.setCharacterEncoding("UTF-8");
+				if(result.getClass().isAssignableFrom(String.class)&&((String)result).indexOf("tpl")!=-1){
+					String ctx = urlPathHelper.getContextPath(request.getNativeRequest(HttpServletRequest.class));
+					ModelMap model = container.getModel();
+					//common attrs
+					model.addAttribute("ctx", ctx);
+					model.addAttribute("view", ctx+"/view/"+page.getAlias());
+					model.addAttribute("action", ctx+"/action/"+widgetId);
+					model.addAttribute("resource", ctx+"/widgetResource/"+region);
+					
+					Configuration widgetConfiguration = widgetManager.getConfiguration(handler);
+					Template fmTemplate = widgetConfiguration.getTemplate((String)result,locale);
+					WebUtils.writeToResponse(FreeMarkerTemplateUtils.processTemplateIntoString(fmTemplate, container.getModel()), response);
+				}else{
+					WebUtils.writeJson(result,response.getWriter());
+				}
+				return null;
+			}
 		}
-		return new ModelAndView(new RedirectView("/"+currentPageAlias),container.getModel());
+		return new ModelAndView(new RedirectView("/"+page.getAlias()),container.getModel());
 	}
 	
 	@RequestMapping("/core/error404")

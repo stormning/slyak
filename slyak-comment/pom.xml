@@ -9,7 +9,22 @@
   <dependencies>
   	<dependency>
   		<groupId>com.slyak</groupId>
+  		<artifactId>slyak-core</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.slyak</groupId>
   		<artifactId>slyak-user</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.slyak</groupId>
+  		<artifactId>slyak-tag</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.slyak</groupId>
+  		<artifactId>slyak-event</artifactId>
   		<version>0.0.1-SNAPSHOT</version>
   	</dependency>
   </dependencies>

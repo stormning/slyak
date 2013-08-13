@@ -12,6 +12,17 @@
 		<mvc:argument-resolvers>
 			<bean class="org.springframework.data.web.PageableArgumentResolver"/>
 		</mvc:argument-resolvers>
+		<mvc:message-converters register-defaults="true">
+			<bean id="jsonMessageConverter" class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+		    	<property name="charset" value="UTF-8"/>
+		    	<property name="supportedMediaTypes">
+		    		<list>
+		    			<value>application/json</value>
+		    			<value>application/*+json</value>
+		    		</list>
+		    	</property>
+		    </bean>
+		</mvc:message-converters>
 	</mvc:annotation-driven>
 		
 	<context:component-scan base-package="com.slyak">
@@ -51,9 +62,4 @@
         <property name="defaultErrorView" value="core.errorDefault" />
         <property name="exceptionAttribute" value="exception"/>
 	</bean>
- 	
- 	<!-- 直接视图 -->
- 	<mvc:view-controller path="/login" view-name="alone:public.login"/>
- 	<mvc:view-controller path="/regist" view-name="alone:public.regist"/>
-	
 </beans>

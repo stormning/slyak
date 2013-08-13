@@ -25,6 +25,7 @@ public interface CmsService {
 	
 	Widget findWidgetById(Long widgetId);
 
+	@CacheEvict(value={PAGE_WIDGET},allEntries=true)
 	void updateWidgets(List<Widget> widgets, boolean ignoreNullValue);
 
 	@CacheEvict(value={ALIAS_CACHE,ID_CACHE,ROOT_CACHE},allEntries=true)
@@ -39,7 +40,7 @@ public interface CmsService {
 	@CacheEvict(value={ALIAS_CACHE,ID_CACHE,ROOT_CACHE},allEntries=true)
 	void removePageById(Long id);
 
-	@CacheEvict(value={ALIAS_CACHE,ID_CACHE,ROOT_CACHE},allEntries=true)
+	@CacheEvict(value={ALIAS_CACHE,ID_CACHE,ROOT_CACHE,PAGE_WIDGET},allEntries=true)
 	void changePageLayout(Page page, String newLayout);
 
 	@CacheEvict(value=PAGE_WIDGET,allEntries=true)
@@ -57,6 +58,11 @@ public interface CmsService {
 	@Cacheable(PAGE_WIDGET)
 	List<Widget> findWidgetsByPageId(Long id);
 
+	@CacheEvict(value=PAGE_WIDGET,allEntries=true)
 	void saveWidgets(List<Widget> newWidgets);
+
+
+	List<com.slyak.cms.core.model.Widget> findWidgetsByNameAndAttribute(
+			String name, String attrName, String attrValue);
 
 }

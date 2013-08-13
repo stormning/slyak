@@ -4,7 +4,7 @@ $(function() {
 				var ctx = args.ctx||'';
 				var currentPageId = args.currentPageId;
 				var ajaxSort = function(widgetsData){
-					$.ajax(ctx+"/widget/sort",{type:'post',contentType:'application/json',data:$.toJSON(widgetsData)});
+					$.ajax(ctx+"/widget/sort",{type:'post',contentType:'application/json;charset=UTF-8',data:$.toJSON(widgetsData)});
 				};
 				$(".column").sortable({
 					connectWith : ".column",
@@ -14,9 +14,9 @@ $(function() {
 							var data = new Array();
 							//to another container , update self and siblings
 							var rank = ui.item.index();
-							data.push({"id":ui.item.attr("id").replace("widget-",""),"rank":rank,"container":$(this).attr("id")});
-							ui.item.siblings(".widget").each(function(){
-								data.push({"id":$(this).attr("id").replace("widget-",""),"rank":$(this).index()});
+							data.push({"id":ui.item.attr("id").replace("panel-",""),"rank":rank,"container":$(this).attr("id")});
+							ui.item.siblings(".panel").each(function(){
+								data.push({"id":$(this).attr("id").replace("panel-",""),"rank":$(this).index()});
 							});
 							ajaxSort(data);
 						}else{
@@ -24,12 +24,12 @@ $(function() {
 								var data = new Array();
 								//just change rank , update self and rank changed siblings(do unitl newRank==oldRank) 
 								var rank = ui.item.index();
-								data.push({"id":ui.item.attr("id").replace("widget-",""),"rank":rank});
-								ui.item.siblings(".widget").each(function(){
+								data.push({"id":ui.item.attr("id").replace("panel-",""),"rank":rank});
+								ui.item.siblings(".panel").each(function(){
 									if($(this).index()!= rank+1){
 										return false; 
 									}
-									data.push({"id":$(this).attr("id").replace("widget-",""),"rank":++rank});
+									data.push({"id":$(this).attr("id").replace("panel-",""),"rank":++rank});
 								});
 								ajaxSort(data);
 							}else{
@@ -56,30 +56,39 @@ $(function() {
 					onHidden:function(){$(this).removeData('modal');},
 					onSubmit:function(e){
 						var _this = $("#widgetEdit");
-						e.preventDefault();
 						var tpl = _this.find("select[name=border]").val();
 						var bc = tpl=='none.tpl'?"":_this.find(".btn-selected").attr("data-widget-setstyle");
 						var stts = {};
 						_this.find(".settings").each(function(index,el){
 							var _key = $(el).children("div:eq(0)").attr("key");
-							stts[_key]=$(el).find("[name=stvalue]").val();
+							if($(el).attr("inputType")=='CHECKBOX'){
+								var arr = new Array();
+								$(el).find("[name=stvalue]:checked").each(function(index,el){
+									arr.push($(el).val());
+								});
+								if(arr.length>0){
+									stts[_key]= arr;
+								}
+							}else{
+								stts[_key]=$(el).find("[name=stvalue]").val();
+							}
 						});
 						var data = {id:_this.find("input[name=id]").val(),title:_this.find("input[name=title]").val(),borderTpl:tpl,borderClass:bc,settings:stts};
-						$.ajax(_this.find("form").attr("action"),{type:'post',contentType:'application/json',data:$.toJSON(data),complete:function(){
+						$.ajax(_this.find("form").attr("action"),{type:'post',contentType:'application/json;charset=UTF-8',data:$.toJSON(data),complete:function(){
 							location.reload();
 						}});
 					}
 				});
-				var widgetHelper = $("<div id='widgetHelper'><a class='icon icon-edit' data-toggle='modal' data-target='#widgetEdit'></a><a class='icon icon-remove' href='javascript:void(0)'></a></div>").appendTo("body");
-				$(".widget").hover(function(){widgetHelper.appendTo($(this)).show();},function(){widgetHelper.hide();});
+				var panelHelper = $("<div id='panelHelper' style='display:none'><a class='icon icon-edit' data-toggle='modal' data-target='#widgetEdit'></a><a class='icon icon-remove' href='javascript:void(0)'></a></div>").appendTo("body");
+				$(".panel[id]").hover(function(){panelHelper.appendTo($(this)).show();},function(){panelHelper.hide();});
 				
-				$("#widgetHelper .icon-remove").click(function(){
-					$.post(ctx+"/widget/remove", {widgetId:$(this).parents(".widget").attr("id").replace("widget-","")},function(){
+				$("#panelHelper .icon-remove").click(function(){
+					$.post(ctx+"/widget/remove", {widgetId:$(this).parents(".panel").attr("id").replace("panel-","")},function(){
 						location.reload();
 					});
 				});
-				$("#widgetHelper .icon-edit").click(function(){
-					$(this).attr("href",ctx+"/widget/edit?widgetId="+$(this).parents(".widget").attr("id").replace("widget-",""));
+				$("#panelHelper .icon-edit").click(function(){
+					$(this).attr("href",ctx+"/widget/edit?widgetId="+$(this).parents(".panel").attr("id").replace("panel-",""));
 				});
 				
 				//widget toolbar
@@ -109,19 +118,21 @@ $(function() {
 						});
 					}});
 					SLYAK.modal({id:"layoutChange",header:"修改布局",nofooter:true,onShown:function(){
-						$(".layout-demo").hover(
-							  function () {
-							    $(this).addClass("layout-demo-hover");
-							  },
-							  function () {
-							    $(this).removeClass("layout-demo-hover");
-							  }
-						).on("click",function(){
-							var layout =$(this).attr("layout");
-							$.post(ctx+"/layout/change", {newLayout:layout,pageId:currentPageId},function(){
-								location.reload();
+						setTimeout(function(){
+							$(".layout-demo").hover(
+								  function () {
+								    $(this).addClass("layout-demo-hover");
+								  },
+								  function () {
+								    $(this).removeClass("layout-demo-hover");
+								  }
+							).on("click",function(){
+								var layout =$(this).attr("layout");
+								$.post(ctx+"/layout/change", {newLayout:layout,pageId:currentPageId},function(){
+									location.reload();
+								});
 							});
-						});
+						},500);
 					}});
 				}
 				ace.require("ace/commands/default_commands").commands.push({

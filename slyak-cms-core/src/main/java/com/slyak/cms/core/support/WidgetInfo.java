@@ -28,6 +28,10 @@ public class WidgetInfo {
 	
 	private boolean show;
 	
+	private String[] js;
+	
+	private String[] css;
+	
 	public String getName() {
 		return name;
 	}
@@ -51,8 +55,6 @@ public class WidgetInfo {
 	public void setMethod(Method method) {
 		this.method = method;
 	}
-
-
 	
 	public String getRegion() {
 		return region;
@@ -106,5 +108,21 @@ public class WidgetInfo {
 
 	public void setShow(boolean show) {
 		this.show = show;
+	}
+
+	public String[] getJs() {
+		return js;
+	}
+
+	public void setJs(String[] js) {
+		this.js = js;
+	}
+
+	public String[] getCss() {
+		return css;
+	}
+
+	public void setCss(String[] css) {
+		this.css = css;
 	}
 }

@@ -1,0 +1,155 @@
+.post_wrapper
+{
+	margin: 25px 0 0 7px;
+	background: #ffffff;
+	border: 1px solid #dddddd;
+	-moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.post_wrapper.half
+{
+	width: 290px;
+	float: left;
+	margin-bottom: 0px;
+}
+
+.post_wrapper.half.last
+{
+	float: right;
+}
+
+.post_wrapper:last-child
+{
+	padding-bottom: 20px;
+}
+
+body.single .post_wrapper:last-child
+{
+	padding-bottom: 0px;
+}
+
+body.home .post_inner_wrapper
+{
+	width: 570px;
+	margin: auto;
+	margin-top: -23px;
+	margin-bottom: 15px;
+}
+
+body.single .post_inner_wrapper
+{
+	margin-top: 10px;
+}
+
+.post_inner_wrapper
+{
+	width: 570px;
+	margin: auto;
+	margin-bottom: 15px;
+	margin-top: -23px;
+}
+
+.post_inner_wrapper.half, body.home .post_inner_wrapper.half
+{
+	width: 260px;
+}
+
+.post_header_wrapper
+{
+	width: 450px;
+	float: left;
+}
+
+.post_header_wrapper.half
+{
+	width: 260px;
+	float: left;
+}
+
+.post_header_wrapper.single
+{
+	width: 300px;
+}
+
+.post_social
+{
+	width: 98px;
+	float: right;
+	margin-top: 7px;
+}
+
+.post_social.single
+{
+	width: 195px;
+}
+
+.post_wrapper.single
+{
+	width: 100%;
+	margin: 0;
+}
+
+.post_header
+{
+	width: 100%;
+	float: left;
+	margin-bottom: 10px;
+}
+
+.post_header h2 a
+{
+	color: #000;
+}
+
+.post_detail
+{
+	font-size: 11px;
+	word-spacing: 1px;
+	margin-top: -10px;
+	color: #ccc;
+	font-family: Georgia,Times,"Times New Roman",serif;
+}
+
+.post_detail.half
+{
+	margin:-top: 0;
+}
+
+.post_img img{
+	width: 100%;
+}
+
+.post_img_date
+{
+	padding: 5px;
+	background: #000;
+	position: relative;
+	top: -60px;
+	left: 7px;
+	width: 150px;
+	text-transform: uppercase;
+	color: #fff;
+	text-shadow: 0 0 0 #fff;
+	text-align: center;
+}
+
+.post_header .post_comment
+{
+	float: right;
+	margin: 10px 0 0 0;
+	font-size: 11px;
+	padding: 5px 15px 5px 15px;
+	text-align: right;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	-moz-box-shadow: 0 1px 3px #ebebeb;
+ 	-webkit-box-shadow: 0 1px 3px #ebebeb;
+ 	box-shadow: 0px 1px 3px #ebebeb;
+ 	background: #cccccc url("../images/bt_g.png") repeat-x top;
+	text-align: left;
+	text-shadow: 0 1px 1px #fff;
+	border: 1px solid #ccc;
+}

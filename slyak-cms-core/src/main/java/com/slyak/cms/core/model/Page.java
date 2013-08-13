@@ -15,7 +15,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Where;
 
 @Entity
 @Table(name="t_page")
@@ -54,6 +57,8 @@ public class Page implements Serializable{
 //	private List<Widget> widgets;
 	
 	@OneToMany(mappedBy="parent",cascade={CascadeType.ALL},fetch=FetchType.EAGER)
+	@Where(clause="can_show=1")
+	@OrderBy("rank desc")
 	private List<Page> children;
 
 	@ManyToOne
@@ -63,7 +68,11 @@ public class Page implements Serializable{
 	@Column(name="can_show",nullable=false)
 	private boolean show = true;
 	
+	@Column
+	private int rank;
+	
 	private int version;
+	
 	
 	public String getCustomCss() {
 		return customCss;
@@ -168,4 +177,13 @@ public class Page implements Serializable{
 	public void setVersion(int version) {
 		this.version = version;
 	}
+
+	public int getRank() {
+		return rank;
+	}
+
+	public void setRank(int rank) {
+		this.rank = rank;
+	}
+	
 }

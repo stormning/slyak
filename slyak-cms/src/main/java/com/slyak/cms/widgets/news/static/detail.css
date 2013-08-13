@@ -1,0 +1,15 @@
+.post-info ul{
+	margin-left: 0px;
+}
+
+.post-info .icon{
+	margin-right: 5px;
+}
+
+.post-info .pull-left{
+	margin-right: 10px;
+}
+
+.post-info .pull-right{
+	margin-left: 10px;
+}

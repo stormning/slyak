@@ -1,6 +1,7 @@
 package com.slyak.cms.core.support;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 import com.slyak.cms.core.enums.InputType;
 
@@ -10,7 +11,7 @@ public class Setting {
 	
 	private String value;
 
-	private String[] options;
+	private Option[] options;
 	
 	private Method optionsLoader;
 
@@ -32,16 +33,16 @@ public class Setting {
 		this.value = value;
 	}
 
-	public String[] getOptions() {
+	public InputType getInputType() {
+		return inputType;
+	}
+
+	public Option[] getOptions() {
 		return options;
 	}
 
-	public void setOptions(String[] options) {
+	public void setOptions(Option[] options) {
 		this.options = options;
-	}
-
-	public InputType getInputType() {
-		return inputType;
 	}
 
 	public void setInputType(InputType inputType) {

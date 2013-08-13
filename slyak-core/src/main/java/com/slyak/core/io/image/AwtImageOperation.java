@@ -52,6 +52,11 @@ public class AwtImageOperation implements ImageOperation {
     }
 
     public BufferedImage resizeWithContainer(BufferedImage src, int containerWidth, int containerHeight) {
+    	
+    	if(containerHeight<0||containerHeight<0){
+    		return src;
+    	}
+    	
         double iw = src.getWidth();
         double ih = src.getHeight();
         if (containerWidth > iw && containerHeight > ih) {

@@ -11,19 +11,21 @@
 		<module>slyak-user</module>
 		<module>slyak-comment</module>
 		<module>slyak-cms</module>
-		<module>slyak-forum</module>
-		<module>slyak-biz</module>
 		<module>slyak-cms-widgets</module>
 		<module>slyak-cms-core</module>
+		<module>slyak-group</module>
+		<module>slyak-tag</module>
+		<module>slyak-config</module>
+		<module>slyak-event</module>
 	</modules>
 	
 	<properties>
-		<org.springframework-version>3.2.2.RELEASE</org.springframework-version>
+		<org.springframework-version>3.2.3.RELEASE</org.springframework-version>
 		<org.slf4j-version>1.6.4</org.slf4j-version>
 		<org.aspectj-version>1.7.0</org.aspectj-version>
-		<org.codehaus.jackson-version>1.9.12</org.codehaus.jackson-version>
+		<!-- <org.codehaus.jackson-version>1.9.13</org.codehaus.jackson-version> -->
 		<org.apache.tiles-version>3.0.1</org.apache.tiles-version>
-		<org.apache.shiro-version>1.2.1</org.apache.shiro-version>
+		<org.apache.shiro-version>1.2.2</org.apache.shiro-version>
 		<ch.qos.logback-version>1.0.9</ch.qos.logback-version>
 	</properties>
 	<dependencies>
@@ -63,11 +65,11 @@
 			<artifactId>spring-context-support</artifactId>
 			<version>${org.springframework-version}</version>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
 			<version>${org.springframework-version}</version>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib-nodep</artifactId>
@@ -143,9 +145,14 @@
 			<version>2.1</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4.5</version>
+		</dependency>
 
 		<!-- json -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-core-asl</artifactId>
 			<version>${org.codehaus.jackson-version}</version>
@@ -154,6 +161,11 @@
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>${org.codehaus.jackson-version}</version>
+		</dependency> -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.1.35</version>
 		</dependency>
 
 		<!-- tiles -->
@@ -210,17 +222,17 @@
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-jpa</artifactId>
-			<version>1.3.0.RELEASE</version>
+			<version>1.3.3.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
-			<version>4.1.10.Final</version>
+			<version>4.2.3.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-ehcache</artifactId>
-			<version>4.1.10.Final</version>
+			<version>4.2.3.Final</version>
 		</dependency>
 		
 		<!-- bean validation -->
@@ -264,27 +276,6 @@
 			<artifactId>spring-data-solr</artifactId>
 			<version>1.0.0.M1</version>
 		</dependency> -->
-		
-		<!-- java mail -->
-		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>mail</artifactId>
-			<version>1.4.5</version>
-		</dependency>
-		
-		<!-- server provided -->
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet.jsp</groupId>
-			<artifactId>jsp-api</artifactId>
-			<version>2.1</version>
-			<scope>provided</scope>
-		</dependency>
 	</dependencies>
 	<build>
 		<pluginManagement>

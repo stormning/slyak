@@ -14,11 +14,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.util.ClassUtils;
 
 @Entity
 @Table(name="t_widget")
@@ -58,6 +60,10 @@ public class Widget implements Serializable,Comparable<Widget>{
 	private Map<String,String> settings;
 	
 	private int rank;
+	
+	@OneToOne
+	@JoinColumn(name="id")
+	private Page linkTo;
 
 	@Transient
 	private String content;
@@ -78,7 +84,7 @@ public class Widget implements Serializable,Comparable<Widget>{
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	
 	public Map<String, String> getSettings() {
 		return settings;
 	}

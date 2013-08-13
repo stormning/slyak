@@ -1,7 +1,5 @@
+<%@page import="com.slyak.core.util.JsonUtils"%>
 <%@page import="com.slyak.core.io.image.CommonImage"%>
-<%@page import="org.codehaus.jackson.util.TokenBuffer"%>
-<%@page import="org.codehaus.jackson.JsonGenerator"%>
-<%@page import="org.codehaus.jackson.map.ObjectMapper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.*,java.io.*" %>
 <%@ page import="java.text.SimpleDateFormat" %>
@@ -107,22 +105,20 @@ while (itr.hasNext()) {
 			out.println(getError("上传文件失败。"));
 			return;
 		}
-		ObjectMapper obj = new ObjectMapper();
 		Map<String,Object> result = new HashMap<String,Object>();
 		result.put("error", 0);
 		result.put("url", saveUrl + newFileName);
-		out.println(obj.writeValueAsString(result));
+		out.println(JsonUtils.toJSON(result));
 	}
 }
 %>
 <%!
 private String getError(String message) {
-	ObjectMapper obj = new ObjectMapper();
 	Map<String,Object> result = new HashMap<String,Object>();
 	result.put("error", 1);
 	result.put("message", message);
 	try{
-		return obj.writeValueAsString(result);
+		return JsonUtils.toJSON(result);
 	}catch(Exception e){
 		throw new RuntimeException(e);
 	}

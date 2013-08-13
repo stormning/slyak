@@ -1,0 +1,11 @@
+.list-imges{
+    margin-bottom:0px;
+}
+
+.list-imges h6{
+	margin-bottom:0px;
+	height:20px;
+	text-align: center;
+	word-break: break-all;
+	overflow: hidden;
+}

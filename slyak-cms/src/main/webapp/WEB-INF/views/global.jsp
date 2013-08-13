@@ -7,50 +7,42 @@
 	</style>
 </c:if>
 
-<div id="wrap" class="container">
-	<div class="row">
-		<!-- navbar start -->
-		<c:set var="navPage" value="${currentPage.parent==null?currentPage:currentPage.parent}" scope="request"/>
-		<div class="navbar">
-			<div class="navbar-inner">
-				<div class="container">
-					<a data-target=".nav-collapse" data-toggle="collapse" class="btn btn-navbar">菜单</a>
-					<a href="/" class="brand">SLYAK</a>
-					<div class="nav-collapse">
-						<ul class="nav">
-							<c:forEach items="${pages}" var="p" varStatus="status">
-								<c:choose>
-									<c:when test="${not empty p.children}">
-										<li class="dropdown">
-											<a href="#" class="dropdown-toggle" data-toggle="dropdown">${p.name}<b class="caret"></b></a>
-											<ul class="dropdown-menu">
-												<c:forEach items="${p.children}" var="cp">
-													<li><a href="${ctx}/${cp.alias}">${cp.name}</a></li>
-												</c:forEach>
-											</ul>
-										</li>
-									</c:when>
-									<c:otherwise>
-										<li <c:if test="${p.id eq navPage.id}">class="active"</c:if>>
-											<a href="${ctx}/${status.first?'':p.alias}">${p.name}</a>
-										</li>
-									</c:otherwise>
-								</c:choose>
-							</c:forEach>
-							
-							<shiro:hasAnyRoles name="admin,superadmin">
-								<li <c:if test="${currentPage.alias eq 'admin'}">class="active"</c:if>>
-									<a href="${ctx}/admin">网站管理</a>
+<!-- navbar start -->
+<c:set var="navPage" value="${currentPage.parent==null?currentPage:currentPage.parent}" scope="request"/>
+<div class="navbar navbar-static-top">
+	<div class="navbar-inner">
+		<div class="container">
+			<a data-target=".nav-collapse" data-toggle="collapse" class="btn btn-navbar">菜单</a>
+			<a href="/" class="brand">SLYAK</a>
+			<div class="nav-collapse">
+				<ul class="nav">
+					<c:forEach items="${pages}" var="p" varStatus="status">
+						<c:choose>
+							<c:when test="${not empty p.children}">
+								<li class="dropdown">
+									<a href="#" class="dropdown-toggle" data-toggle="dropdown">${p.name}<b class="caret"></b></a>
+									<ul class="dropdown-menu">
+										<c:forEach items="${p.children}" var="cp">
+											<li><a href="${ctx}/${cp.alias}">${cp.name}</a></li>
+										</c:forEach>
+									</ul>
 								</li>
-							</shiro:hasAnyRoles>
-						</ul>
-					</div>
+							</c:when>
+							<c:otherwise>
+								<li <c:if test="${p.id eq navPage.id}">class="active"</c:if>>
+									<a href="${ctx}/${status.first?'':p.alias}">${p.name}</a>
+								</li>
+							</c:otherwise>
+						</c:choose>
+					</c:forEach>
+					</ul>
 				</div>
 			</div>
-		</div>
-		<!-- navbar end -->
+		</div>	
 	</div>
+	<!-- navbar end -->
 
+<div id="wrap" class="container">
 	<div id="content" class="row">
 		<tiles:insertAttribute name="content" />
 	</div>

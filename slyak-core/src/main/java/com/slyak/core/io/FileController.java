@@ -1,9 +1,7 @@
 package com.slyak.core.io;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -16,37 +14,28 @@ import javax.servlet.ServletContext;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
-import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 import org.springframework.web.util.WebUtils;
 
 @Controller
 @RequestMapping("/file")
-public class FileController implements ServletContextAware,ApplicationContextAware,InitializingBean{
+public class FileController implements ServletContextAware,ApplicationContextAware{
+	
+	@Autowired
+	private StaticResourceMappingManager fileUplodaeManager;
 	
 	private ServletContext servletContext;
 	
 	private ApplicationContext applicationContext;
-	
-	private static final String DEFAULT_UPLOAD_PATH="/WEB-INF/upload";
-	
-	private int cacheSeconds = 31556926;
-	
-	private String uploadPath = DEFAULT_UPLOAD_PATH;
 	
 	private TextEditor textEditor = new Kindeditor();
 	
@@ -78,17 +67,17 @@ public class FileController implements ServletContextAware,ApplicationContextAwa
 	@ResponseBody
 	public Map<String,Object> textEditorFiles(String order,String path){
 		try{
-			String rootPath = WebUtils.getRealPath(servletContext,preparePath(uploadPath)+"/textEditor");
+			String rootPath = WebUtils.getRealPath(servletContext,com.slyak.core.util.StringUtils.preparePath(fileUplodaeManager.getUploadPath())+"/textEditor");
 			return textEditor.listFiles(rootPath,path,order);
 		} catch (Exception e) {
-			return Collections.EMPTY_MAP;
+			return Collections.emptyMap();
 		}
 	}
 	
 	private String uploadAndGetUrl(MultipartFile file,String owner) throws IOException{
 		CommonFile cf = new CommonFile(file.getInputStream());
 		String relativePath = generatePath(file,owner);
-		String realPath = servletContext.getRealPath(preparePath(uploadPath))+relativePath;
+		String realPath = servletContext.getRealPath(com.slyak.core.util.StringUtils.preparePath(fileUplodaeManager.getUploadPath()))+relativePath;
 		cf.save(realPath);
 		//url for web
 		return "/file"+relativePath.replace('\\', '/');
@@ -98,19 +87,8 @@ public class FileController implements ServletContextAware,ApplicationContextAwa
 		if(owner == null){
 			return generateDataFolder()+File.separator+file.getOriginalFilename();
 		}else{
-			return preparePath(generatePathByOwner(file,owner));
+			return com.slyak.core.util.StringUtils.preparePath(generatePathByOwner(file,owner));
 		}
-	}
-	
-	private String preparePath(String path){
-		if(path==null){
-			return StringUtils.EMPTY;
-		}
-		path = StringUtils.replaceEach(path, new String[]{"/","\\"}, new String[]{File.separator,File.separator});
-		if(!path.startsWith(File.separator)){
-			path = File.separator+path;
-		}
-		return path;
 	}
 	
 	private String generateDataFolder() {
@@ -130,31 +108,6 @@ public class FileController implements ServletContextAware,ApplicationContextAwa
 			}
 		}
 		return File.separator+owner+generateDataFolder()+File.separator+file.getOriginalFilename();
-	}
-
-	private void initStaticResourceHandlerMapping(){
-		Map<String, HttpRequestHandler> urlMap = new LinkedHashMap<String, HttpRequestHandler>();
-		ResourceHttpRequestHandler requestHandler = new ResourceHttpRequestHandler();
-		requestHandler.setLocations(Collections.singletonList(applicationContext.getResource(preparePath(uploadPath)+"/")));
-		requestHandler.setCacheSeconds(cacheSeconds);
-		requestHandler.setServletContext(servletContext);
-		requestHandler.setApplicationContext(applicationContext);
-		urlMap.put("/file/**", requestHandler);
-		
-		SimpleUrlHandlerMapping handlerMapping = new SimpleUrlHandlerMapping();
-		handlerMapping.setUrlMap(urlMap);
-		applicationContext.getAutowireCapableBeanFactory().initializeBean(handlerMapping, null);
-		ConfigurableApplicationContext configurableApplicationContext = (ConfigurableApplicationContext) applicationContext;  
-		DefaultListableBeanFactory defaultListableBeanFactory = (DefaultListableBeanFactory) configurableApplicationContext.getBeanFactory();
-		defaultListableBeanFactory.registerSingleton("fileResourceHandlerMapping", handlerMapping);
-		
-		//refresh context
-		applicationContext.publishEvent(new ContextRefreshedEvent(applicationContext));
-	}
-	
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		initStaticResourceHandlerMapping();
 	}
 
 	@Override

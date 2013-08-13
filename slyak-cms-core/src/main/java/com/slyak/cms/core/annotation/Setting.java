@@ -16,7 +16,7 @@ public @interface Setting {
 	
 	String value() default "";
 	
-	String[] options() default {};
+	ValueAndName[] options() default {};
 	
 	String optionsLoader() default "";
 	

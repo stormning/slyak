@@ -289,7 +289,7 @@ public class AccountController {
 			categories.add(i);
 		}
 		
-		modelMap.put("categories", JsonUtils.parseJSON(categories));
+		modelMap.put("categories", JsonUtils.toJSON(categories));
 		
 
 		List<String> owners = new ArrayList<String>();
@@ -338,7 +338,7 @@ public class AccountController {
 			}
 		}
 		
-		modelMap.put("series", JsonUtils.parseJSON(series));
+		modelMap.put("series", JsonUtils.toJSON(series));
 		
 		//averages
 		
@@ -355,7 +355,7 @@ public class AccountController {
 					averages.set(i, averages.get(i).add(unitsList.get(i).divide(divisor,BigDecimal.ROUND_HALF_UP)));
 				}
 			}
-			modelMap.put("averages", JsonUtils.parseJSON(averages));
+			modelMap.put("averages", JsonUtils.toJSON(averages));
 		}
 		//pie
 		Map<String,BigDecimal> pieData = new HashMap<String, BigDecimal>();
@@ -379,7 +379,7 @@ public class AccountController {
 				pie.add(pieItem);
 			}
 		}
-		modelMap.put("pie", JsonUtils.parseJSON(pie));
+		modelMap.put("pie", JsonUtils.toJSON(pie));
 		
 		return "account.logReport";
 	}

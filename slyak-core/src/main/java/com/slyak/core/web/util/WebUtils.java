@@ -1,6 +1,13 @@
 package com.slyak.core.web.util;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.alibaba.fastjson.JSON;
 
 public class WebUtils extends org.springframework.web.util.WebUtils {
 
@@ -37,5 +44,13 @@ public class WebUtils extends org.springframework.web.util.WebUtils {
 			ip = request.getRemoteAddr();
 		}
 		return ip;
+	}
+	
+	public static void writeJson(Object result,Writer writer) throws IOException{
+		writer.write(JSON.toJSONString(result));
+	}
+	
+	public static void writeToResponse(String result,HttpServletResponse response) throws IOException{
+		response.getWriter().write(result);
 	}
 }

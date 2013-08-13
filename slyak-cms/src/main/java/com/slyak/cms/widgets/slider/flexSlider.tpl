@@ -7,16 +7,15 @@
 	    animation: "slide",
 	    animationLoop: false
 	     <#if itemWidth??>,itemWidth: ${itemWidth}</#if>
-	    <#if thumbnails??>,controlNav: "thumbnails"</#if>
 	  });
 	});
 </script>
 
 <div class="flexslider">
   <ul class="slides">
-  	  <#list images as img>
+  	  <#list items as item>
   	  	  <li>
-  	  	  	<img src="<#if img?starts_with("http")>${img}<#else>${ctx}${img}</#if>"/>
+  	  	  	${item}
   	  	  </li>
   	  </#list>
   </ul>

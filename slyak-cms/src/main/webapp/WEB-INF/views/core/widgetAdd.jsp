@@ -21,18 +21,18 @@
 				<c:forEach items="${widgetInfoMap}" var="item" varStatus="status">
 					<div class="tab-pane <c:if test="${status.first}">active</c:if>" id="widget-pane-${item.key}">
 						<c:forEach items="${widgetInfoMap[item.key]}" var="widgetInfo">
-							<c:if test="${widgetInfo.value.show}">
+							<%-- <c:if test="${widgetInfo.value.show}"> --%>
 								<div class="media">
 								  <div class="pull-left widget-snapshot">
 								  	 暂无截图
 								  </div>  
 								  <div class="media-body">
-								    <h4 class="media-heading"><spring:message code="${widgetInfo.value.region}.${widgetInfo.value.name}"/></h4>
+								    <h4 class="media-heading"><spring:message code="${widgetInfo.value.region}.${widgetInfo.value.name}"/><c:if test="${!widgetInfo.value.show}">[隐藏页]</c:if></h4>
 								    <%-- <p><spring:message code="${widgetInfo.value.region}.${widgetInfo.value.name}.description"/></p> --%>
 								    <p><button class="btn btn-small" widgetName="${widgetInfo.value.region}.${widgetInfo.value.name}">马上添加</button></p>
 								  </div>
 								</div>
-							</c:if>
+							<%-- </c:if> --%>
 						</c:forEach>
 					</div>
 				</c:forEach>

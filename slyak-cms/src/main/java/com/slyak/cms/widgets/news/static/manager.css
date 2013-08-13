@@ -1,0 +1,20 @@
+.resizeList{
+	position: relative;
+}
+#typeHelper{
+	display:none;
+	position: absolute;
+	right: 0;
+	top:0;
+	overflow: hidden;
+	z-index: 9999;
+}
+
+#typeHelper button{
+	float: left;
+	margin-left: 5px;
+}
+
+.resizeList .form-inline{
+	position: relative;
+}

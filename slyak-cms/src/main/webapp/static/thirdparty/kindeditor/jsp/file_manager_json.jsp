@@ -1,4 +1,4 @@
-<%@page import="org.codehaus.jackson.map.ObjectMapper"%>
+<%@page import="com.slyak.core.util.JsonUtils"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.*,java.io.*" %>
 <%@ page import="java.text.SimpleDateFormat" %>
@@ -97,7 +97,6 @@ if ("size".equals(order)) {
 	Collections.sort(fileList, new NameComparator());
 }
 
-ObjectMapper obj = new ObjectMapper();
 
 Map<String,Object> result = new HashMap<String,Object>();
 result.put("moveup_dir_path", moveupDirPath);
@@ -107,7 +106,7 @@ result.put("total_count", fileList.size());
 result.put("file_list", fileList);
 
 response.setContentType("application/json; charset=UTF-8");
-out.println(obj.writeValueAsString(result));
+out.println(JsonUtils.toJSON(result));
 %>
 <%!
 public class NameComparator implements Comparator {

@@ -3,9 +3,11 @@ package com.slyak.cms.core.support;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.PersistenceException;
@@ -36,11 +38,11 @@ import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
 import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 
 import com.slyak.cms.core.annotation.Setting;
+import com.slyak.cms.core.annotation.ValueAndName;
 import com.slyak.cms.core.annotation.Widget;
 import com.slyak.cms.core.annotation.Widgets;
 import com.slyak.cms.core.enums.InputType;
 
-import freemarker.cache.NullCacheStorage;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 
@@ -109,7 +111,6 @@ public class SimpleWidgetManager implements WidgetManager,ApplicationContextAwar
 							fcfb.setTemplateLoaderPaths(widgetRoot,WIDGETS_ROOT);
 							fcfb.setDefaultEncoding("UTF-8");
 							Configuration cfg = fcfb.createConfiguration();
-							cfg.setCacheStorage(new NullCacheStorage());
 							HANLDER_CONFIGURATIONS.put(handler, cfg);
 							
 							//init static resources
@@ -133,11 +134,10 @@ public class SimpleWidgetManager implements WidgetManager,ApplicationContextAwar
 											com.slyak.cms.core.support.Setting st = new com.slyak.cms.core.support.Setting();
 											st.setKey(setting.key());
 											st.setInputType(setting.inputType());
-											st.setOptions(setting.options());
-											String[] options = setting.options();
+											ValueAndName[] options = setting.options();
 											String optionLoader = StringUtils.trimToEmpty(setting.optionsLoader());
 											boolean hasOptionLoader = !StringUtils.isEmpty(optionLoader);
-											if(hasOptionLoader||(options.length>1&&(setting.inputType()!=InputType.RADIO||setting.inputType()!=InputType.CHECKBOX))){
+											if((hasOptionLoader|| options.length>1)&&setting.inputType()!=InputType.RADIO&&setting.inputType()!=InputType.CHECKBOX){
 												st.setInputType(InputType.SELECT);
 											}else{
 												st.setInputType(setting.inputType());
@@ -145,13 +145,26 @@ public class SimpleWidgetManager implements WidgetManager,ApplicationContextAwar
 											if(hasOptionLoader){
 												st.setOptionsLoader(com.slyak.cms.core.support.ClassUtils.getMethodByName(clazz, optionLoader));
 											}
-											st.setOptions(options);
+											if(options.length>1){
+												List<Option> opts = new ArrayList<Option>();
+												for (ValueAndName valueAndName : options) {
+													Option opt = new Option();
+													opt.setValue(valueAndName.value());
+													opt.setName(StringUtils.isBlank(valueAndName.name())?valueAndName.value():valueAndName.name());
+													opts.add(opt);
+												}
+												st.setOptions(opts.toArray(new Option[opts.size()]));
+											}
 											st.setValue(setting.value());
 											info.addSetting(st);
 										}
 									}
 									
 									info.setShow(widget.show());
+									
+									info.setJs(widget.js());
+									
+									info.setCss(widget.css());
 									
 									if(StringUtils.isNotBlank(widget.onAdd())){
 										info.setOnAdd(com.slyak.cms.core.support.ClassUtils.getMethodByName(clazz, widget.onAdd()));

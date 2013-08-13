@@ -1,19 +1,14 @@
 package com.slyak.core.util;
 
-import java.io.IOException;
 
-import org.apache.commons.lang.StringUtils;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.alibaba.fastjson.JSON;
 
 public class JsonUtils {
 	
-	private static final ObjectMapper MAPPER = new ObjectMapper();
-	
-	public static final String parseJSON(Object object){
+	public static final String toJSON(Object object){/*
+		ObjectMapper mapper = new ObjectMapper();
 		try {
-			return MAPPER.writeValueAsString(object);
+			return mapper.writeValueAsString(object);
 		} catch (JsonGenerationException e) {
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
@@ -22,6 +17,16 @@ public class JsonUtils {
 			e.printStackTrace();
 		}
 		return StringUtils.EMPTY;
+	*/
+		return JSON.toJSONString(object);
+	}
+	
+	public static final <T> T toType(String jsonString,Class<T> clazz){/*
+		ObjectMapper mapper = new ObjectMapper();
+		return mapper.convertValue(object, clazz);
+	*/
+//		JSON.toJavaObject(n, clazz);
+		return JSON.parseObject(jsonString, clazz);
 	}
 
 }

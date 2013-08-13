@@ -1,7 +1,5 @@
-@IMPORT url("widget.css");
-
-#wrap {
-	/* margin-top: 60px; */
+#wrap{
+	margin-top: 20px;
 }
 
 .inline {
@@ -13,4 +11,17 @@ html{
 
 body {
 	background: transparent;
+	font-family:"Microsoft YaHei",Arial,Helvetica,sans-serif,"宋体";
+}
+
+
+.breadcrumb{
+	margin-bottom: 0px;
+}
+
+.noborder{
+	padding: 0px !important;
+	border:0px !important;
+	-webkit-box-shadow: none !important;
+          box-shadow:none !important;
 }

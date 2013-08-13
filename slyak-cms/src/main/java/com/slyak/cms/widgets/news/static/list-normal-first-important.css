@@ -1,0 +1,25 @@
+.post_wrapper{
+	margin: 0px;
+}
+.post_wrapper li{
+	padding: 3px 0px;
+}
+
+.post_wrapper .first h4{
+	margin-bottom: 0px;
+}
+
+.post_wrapper .first{
+	text-align: center;
+	margin-bottom: 0px;
+}
+
+.post_wrapper .first p{
+	
+}
+
+.post_wrapper .time{
+	float: right;
+	color: #888;
+	font-weight: lighter;
+}

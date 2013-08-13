@@ -16,6 +16,10 @@ public @interface Widget {
 	
 	Setting[] settings() default {};
 	
+	String[] js() default {};
+	
+	String[] css() default {};
+	
 	String onAdd() default "";
 	
 	String onEdit() default "";

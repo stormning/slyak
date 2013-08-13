@@ -122,7 +122,7 @@ public class CmsServiceImpl implements CmsService,InitializingBean,ServletContex
 
 	@Override
 	public List<Page> findRootPages() {
-		return pageDao.findByParentId(null);
+		return pageDao.findByParentIdAndShowOrderByRankDesc(null,true);
 	}
 
 	@Override
@@ -228,5 +228,11 @@ public class CmsServiceImpl implements CmsService,InitializingBean,ServletContex
 			pageDao.save(widget.getPage());
 		}
 		widgetDao.save(newWidgets);
+	}
+
+	@Override
+	public List<Widget> findWidgetsByNameAndAttribute(String name,
+			String attrName, String attrValue) {
+		return widgetDao.findByNameAndSettingsKeyAndSettingsValue(name,attrName,attrValue);
 	}
 }

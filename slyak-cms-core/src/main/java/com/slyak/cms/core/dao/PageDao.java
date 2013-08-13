@@ -14,7 +14,7 @@ public interface PageDao extends JpaRepository<Page, Long> {
 
 	List<Page> findAll();
 
-	List<Page> findByParentId(Long parentId);
+	List<Page> findByParentIdAndShowOrderByRankDesc(Long parentId,boolean show);
 
 	@Query("select p from Page p,Widget w where p = w.page and w.name=?1")
 	Page findByWidgetName(String widgetName);

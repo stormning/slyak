@@ -1,3 +1,3 @@
-<div id="widget-${widget.id}" class="widget noborder">
+<div id="panel-${widget.id}" class="panel noborder">
 	${widget.content}
 </div>

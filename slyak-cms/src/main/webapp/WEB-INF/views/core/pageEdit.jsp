@@ -21,6 +21,13 @@
 			<p class="help-block">若未设置则用页面ID作为别名（唯一）</p>
 		</div>
 	</div>
+	<div class="control-group">
+		<label for="pageRank" class="control-label">排序</label>
+		<div class="controls">
+			<input type="text" id="pageRank" class="input-xlarge" name="rank" value="${currentPage.rank}">
+			<p class="help-block">按RANK降序排列</p>
+		</div>
+	</div>
 	
 	<div class="control-group">
 		<label for="pageAlias" class="control-label">自定义样式</label>
