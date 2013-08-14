@@ -9,6 +9,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import com.slyak.comment.dao.CommentDao;
@@ -66,21 +67,20 @@ public class CommentSaveComsumer implements EventComsumer {
 					//ignore
 				}
 				if(ci!=null){
-					String realPath = resourceMappingManager.getRealPathByBizAndOwner(com.slyak.cms.widgets.news.Constants.BIZ_NEWSIMG, String.valueOf(comment.getId()));
+					Resource parent = resourceMappingManager.getRealPathByBizAndOwner(com.slyak.cms.widgets.news.Constants.BIZ_NEWSIMG, String.valueOf(comment.getId()));
 					ImgConfig imgConfig = configService.findData(new ConfigPK(com.slyak.cms.widgets.news.Constants.BIZ_NEWSTYPE, comment.getOwner()), ImgConfig.class);
-					String directory = realPath+File.separator+index;
-					FileUtils.forceMkdir(new File(directory));
-					
+					String resouceWithIndex = parent.getFile().getPath()+File.separator+index;
+					FileUtils.forceMkdir(new File(resouceWithIndex));
 					if(imgConfig == null){
-						ci.save(directory+File.separator+"orginal.jpg");
+						ci.save(resouceWithIndex+File.separator+"orginal.jpg");
 					} else{
-						ci.resizeWithContainer(imgConfig.getMaxWidth(), imgConfig.getMaxHeight()).save(directory+File.separator+"orginal.jpg");
+						ci.resizeWithContainer(imgConfig.getMaxWidth(), imgConfig.getMaxHeight()).save(resouceWithIndex+File.separator+"orginal.jpg");
 						List<ImgSize> imgSizes = imgConfig.getImgSizes();
 						if(!CollectionUtils.isEmpty(imgSizes)){
 							int sizeIndex=0;
 							for (ImgSize imgSize : imgSizes) {
-								if(imgSize.getWidth()!=null&&imgSize.getHeight()!=null){
-									ci.cropWithContainer(imgSize.getWidth(), imgSize.getHeight()).save(directory+File.separator+sizeIndex+".jpg");
+								if(imgSize.getWidth()!=null&&imgSize.getHeight()!=null&&imgSize.getWidth()>0&&imgSize.getHeight()>0){
+									ci.cropWithContainer(imgSize.getWidth(), imgSize.getHeight()).save(resouceWithIndex+File.separator+sizeIndex+".jpg");
 									sizeIndex++;
 								}
 							}

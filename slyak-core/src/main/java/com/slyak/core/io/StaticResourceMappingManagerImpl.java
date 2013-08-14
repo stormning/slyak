@@ -17,6 +17,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.util.StringUtils;
 import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
@@ -34,6 +38,8 @@ public class StaticResourceMappingManagerImpl implements StaticResourceMappingMa
 	private int cacheSeconds = 31556926;
 
 	private String uploadPath = DEFAULT_UPLOAD_PATH;
+	
+	private ResourceLoader resourceLoader = new DefaultResourceLoader();
 
 	@Override
 	public String getUploadPath() {
@@ -53,7 +59,7 @@ public class StaticResourceMappingManagerImpl implements StaticResourceMappingMa
 		Map<String, HttpRequestHandler> urlMap = new LinkedHashMap<String, HttpRequestHandler>();
 		ResourceHttpRequestHandler requestHandler = new ResourceHttpRequestHandler();
 		//file system
-		requestHandler.setLocations(Collections.singletonList(applicationContext.getResource(com.slyak.core.util.StringUtils.preparePath(uploadPath) + "/")));
+		requestHandler.setLocations(Collections.singletonList(resourceLoader.getResource(StringUtils.cleanPath(uploadPath) + File.separator)));
 		requestHandler.setCacheSeconds(cacheSeconds);
 		requestHandler.setServletContext(servletContext);
 		requestHandler.setApplicationContext(applicationContext);
@@ -91,11 +97,14 @@ public class StaticResourceMappingManagerImpl implements StaticResourceMappingMa
 	}
 
 	@Override
-	public String getRealPathByBizAndOwner(String biz, String owner) {
-		String path = com.slyak.core.util.StringUtils.preparePath(getUploadPath())+File.separator+biz+devideOwner(owner,"/");
+	public Resource getRealPathByBizAndOwner(String biz, String owner) {
+		String path = StringUtils.cleanPath(getUploadPath()+File.separator+biz+devideOwner(owner,File.separator));
+		Resource resource = resourceLoader.getResource(path);
 		try {
-			FileUtils.forceMkdir(new File(path));
-			return WebUtils.getRealPath(servletContext, path);
+			if(!resource.exists()){
+				FileUtils.forceMkdir(resource.getFile());
+			}
+			return resource;
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

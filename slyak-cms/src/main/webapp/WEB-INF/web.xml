@@ -11,7 +11,7 @@
 
 	<!-- Creates the Spring Container shared by all Servlets and Filters -->
 	<listener>
-		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+		<listener-class>com.slyak.core.web.SlyakContextLoaderListener</listener-class>
 	</listener>
 
 	<!-- jpa open entity manager -->

@@ -51,8 +51,13 @@ public class CommonFile implements FileOperation {
     }
 
     public void save(String destination) throws IOException {
-        FileOutputStream output = FileUtils.openOutputStream(new File(destination));
-        send(output);
+    	save(new File(destination));
+    }
+    
+    @Override
+    public void save(File file) throws IOException {
+    	 FileOutputStream output = FileUtils.openOutputStream(file);
+         send(output);
     }
 
     public void send(OutputStream outputStream) throws IOException {
@@ -66,6 +71,7 @@ public class CommonFile implements FileOperation {
     public void close() {
         IOUtils.closeQuietly(inputStream);
     }
+
 
     // TODO more methods , like getMimeType ...
 }

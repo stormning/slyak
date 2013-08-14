@@ -122,8 +122,4 @@
 		<property name="defaultEncoding" value="UTF-8"/>
 	</bean>
 	
-	<!-- 文件上传目录 -->
- 	<bean class="com.slyak.core.io.StaticResourceMappingManagerImpl">
- 		<property name="uploadPath" value="/upload/file"/>
- 	</bean>
 </beans>

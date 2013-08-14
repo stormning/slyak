@@ -7,37 +7,36 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
-
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.util.WebUtils;
 
 @Controller
 @RequestMapping("/file")
-public class FileController implements ServletContextAware,ApplicationContextAware{
+public class FileController implements ApplicationContextAware{
 	
 	@Autowired
 	private StaticResourceMappingManager fileUplodaeManager;
 	
-	private ServletContext servletContext;
-	
 	private ApplicationContext applicationContext;
 	
 	private TextEditor textEditor = new Kindeditor();
+	
+	
+	private ResourceLoader resourceLoader = new DefaultResourceLoader();
 	
 	
 	@RequestMapping(method=RequestMethod.GET)
@@ -67,8 +66,8 @@ public class FileController implements ServletContextAware,ApplicationContextAwa
 	@ResponseBody
 	public Map<String,Object> textEditorFiles(String order,String path){
 		try{
-			String rootPath = WebUtils.getRealPath(servletContext,com.slyak.core.util.StringUtils.preparePath(fileUplodaeManager.getUploadPath())+"/textEditor");
-			return textEditor.listFiles(rootPath,path,order);
+			Resource resource = resourceLoader.getResource(StringUtils.cleanPath(fileUplodaeManager.getUploadPath()+File.separator+"textEditor"));
+			return textEditor.listFiles(resource.getFile().getAbsolutePath(),path,order);
 		} catch (Exception e) {
 			return Collections.emptyMap();
 		}
@@ -77,8 +76,8 @@ public class FileController implements ServletContextAware,ApplicationContextAwa
 	private String uploadAndGetUrl(MultipartFile file,String owner) throws IOException{
 		CommonFile cf = new CommonFile(file.getInputStream());
 		String relativePath = generatePath(file,owner);
-		String realPath = servletContext.getRealPath(com.slyak.core.util.StringUtils.preparePath(fileUplodaeManager.getUploadPath()))+relativePath;
-		cf.save(realPath);
+		Resource resource = resourceLoader.getResource(StringUtils.cleanPath(fileUplodaeManager.getUploadPath()+File.separator+relativePath));
+		cf.save(resource.getFile());
 		//url for web
 		return "/file"+relativePath.replace('\\', '/');
 	}
@@ -87,7 +86,7 @@ public class FileController implements ServletContextAware,ApplicationContextAwa
 		if(owner == null){
 			return generateDataFolder()+File.separator+file.getOriginalFilename();
 		}else{
-			return com.slyak.core.util.StringUtils.preparePath(generatePathByOwner(file,owner));
+			return StringUtils.cleanPath(generatePathByOwner(file,owner));
 		}
 	}
 	
@@ -111,17 +110,17 @@ public class FileController implements ServletContextAware,ApplicationContextAwa
 	}
 
 	@Override
-	public void setServletContext(ServletContext servletContext) {
-		this.servletContext = servletContext;
-	}
-
-	@Override
 	public void setApplicationContext(ApplicationContext applicationContext)
 			throws BeansException {
 		this.applicationContext = applicationContext;
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(StringUtils.replaceEach("/WEB-INF\\a", new String[]{"/","\\"}, new String[]{File.separator,File.separator}));
+//		System.out.println(StringUtils.replaceEach("/WEB-INF\\a", new String[]{"/","\\"}, new String[]{File.separator,File.separator}));
+//		FileSystemResourceLoader fileSystemResourceLoader = new FileSystemResourceLoader();
+//		Path
+//		ResourceLoader resourceLoader = new DefaultResourceLoader();
+//		Resource resource = resourceLoader.getResource("file:///opt/aaa/bbb");
+//		System.out.println(resource.exists());
 	}
 }

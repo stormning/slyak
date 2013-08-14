@@ -51,17 +51,6 @@ public class StringUtils extends org.springframework.util.StringUtils {
 		return imgSrcs;
 	}
 	
-	public static String preparePath(String path){
-		if(path==null){
-			return org.apache.commons.lang.StringUtils.EMPTY;
-		}
-		path = org.apache.commons.lang.StringUtils.replaceEach(path, new String[]{"/","\\"}, new String[]{File.separator,File.separator});
-		if(!path.startsWith(File.separator)&&!path.startsWith("file")){
-			path = File.separator+path;
-		}
-		return path;
-	}
-	
 	public static void main(String[] args) {
 		//<img class="current" src="http://f.any123.com/pagelet/ad/index/Banner1.jpg" />aaa<img src="">
 		//<img data-ke-src="http://static.oschina.net/uploads/img/201211/13065445_YtoG.png" src="http://static.oschina.net/uploads/img/201211/13065445_YtoG.png" alt="eXo Platform">

@@ -127,9 +127,13 @@ public class CommonImage implements FileOperation {
      * @see com.slyak.base.io.FileOperation#save(java.lang.String)
      */
     public void save(String destination) throws IOException {
-        ImageIO.write(bufferedImage, formatName, new File(destination));
+    	save(new File(destination));
     }
 
+    @Override
+    public void save(File file) throws IOException {
+    	ImageIO.write(bufferedImage, formatName, file);
+    }
     /*
      * (non-Javadoc)
      * 
@@ -156,4 +160,5 @@ public class CommonImage implements FileOperation {
 			e.printStackTrace();
 		}
     }
+
 }
