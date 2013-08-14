@@ -158,6 +158,7 @@ public class CmsController implements ServletContextAware,InitializingBean{
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			return null;
 		}else{
+			modelMap.put("global", cmsService.findGlobal());
 			return renderPage(page, request, locale, modelMap);
 		}
 	}

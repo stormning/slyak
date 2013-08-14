@@ -20,7 +20,7 @@
 <link rel="stylesheet" type="text/css" href="${rs}/css/cssreset-min.css">
 <link rel="stylesheet" type="text/css" href="${rs}/thirdparty/bootstrap/css/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="${rs}/thirdparty/bootstrap/css/bootstrap-responsive.css">
-<link rel="stylesheet" type="text/css" href="${rs}/css/global.css">
+<link rel="stylesheet" type="text/css" href="${rs}/css/global.css?ver=${global.ver}">
 <link rel="stylesheet" type="text/css" href="${rs}/css/widget.css">
 <!-- admin area start-->
 <shiro:hasRole name="superadmin">

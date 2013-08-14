@@ -9,6 +9,7 @@ import javax.servlet.ServletContext;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
@@ -170,12 +171,14 @@ public class CmsServiceImpl implements CmsService,InitializingBean,ServletContex
 	}
 
 	@Override
+	@Transactional
 	public synchronized void saveGlobal(Global golbel) throws IOException {
 		Global globalToSave = findGlobal();
 		if(globalToSave == null){
 			globalToSave = golbel;
 		} else{
-			BeanUtils.copyProperties(golbel, globalToSave, new String[]{"id"});
+			BeanUtils.copyProperties(golbel, globalToSave, new String[]{"id","ver"});
+			globalToSave.setVer(globalToSave.getVer()+1);
 		}
 		globalDao.save(globalToSave);
 		FileUtils.writeStringToFile(globalToSave.getCss(), GLOBAL_CSS_LOCATION, servletContext);

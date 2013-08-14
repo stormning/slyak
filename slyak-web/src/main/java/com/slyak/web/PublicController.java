@@ -17,6 +17,7 @@ package com.slyak.web;
 
 import javax.validation.Valid;
 
+import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,49 +33,51 @@ import com.slyak.user.util.LoginUserHelper;
 /**
  * Those pages are public.
  * <p/>
- *
+ * 
  * @author <a href="mailto:stormning@163.com">stormning</a>
  * @version V1.0, 2012-12-14
  */
 @Controller
 @RequestMapping("/public")
 public class PublicController {
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	@RequestMapping("/doRegist")
 	@ResponseBody
-	public int doRegist(@Valid User user,BindingResult bindingResult){
-		if(bindingResult.hasErrors()){
+	public int doRegist(@Valid User user, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
 			return 3;
 		}
-		if(userService.exist(user.getEmail())){
+		if (userService.exist(user.getEmail())) {
 			return 2;
-		}else{
+		} else {
 			userService.regist(user);
 			return 0;
 		}
 	}
-	
+
 	@RequestMapping("/doLogin")
 	@ResponseBody
-	public int doLogin(User user,boolean rememberMe){
-		try{
-			LoginUserHelper.login(user.getEmail(), user.getPassword(), rememberMe);
+	public int doLogin(User user, boolean rememberMe) {
+		try {
+			LoginUserHelper.login(user.getEmail(), user.getPassword(),
+					rememberMe);
 			return 0;
 		} catch (UnknownAccountException uae) {
 			return 1;
-		} catch (IncorrectCredentialsException ice){
+		} catch (IncorrectCredentialsException ice) {
+			return 1;
+		} catch (AuthenticationException ae) {
 			return 1;
 		}
 	}
-	
-	
+
 	@RequestMapping("/logout")
-	public String logout(User user,boolean rememberMe){
+	public String logout(User user, boolean rememberMe) {
 		LoginUserHelper.logout();
 		return "redirect:/";
 	}
-	
+
 }

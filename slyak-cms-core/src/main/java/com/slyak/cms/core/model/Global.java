@@ -40,6 +40,9 @@ public class Global implements Serializable{
 	@Basic(fetch=FetchType.LAZY)
 	private String jsp;
 	
+	@Column
+	private int ver=0;
+	
 	public Long getId() {
 		return id;
 	}
@@ -64,4 +67,11 @@ public class Global implements Serializable{
 		this.jsp = jsp;
 	}
 
+	public int getVer() {
+		return ver;
+	}
+
+	public void setVer(int ver) {
+		this.ver = ver;
+	}
 }

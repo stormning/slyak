@@ -16,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.slyak.comment.model.Comment;
 
@@ -59,22 +58,18 @@ public interface CommentDao extends JpaRepository<Comment, Long> {
 
 	@Query("delete from Comment c where c.id in ?1")
 	@Modifying
-	@Transactional
 	void deleteComments(List<Long> commentIds);
 
 	@Query("delete from Comment where biz=?1 and owner=?2")
 	@Modifying
-	@Transactional
 	void removeCommentsByBizAndOwner(String biz,String owner);
 
 	@Query("update Comment set owner=?2 where owner=?1")
 	@Modifying
-	@Transactional
 	void changeOwner(String oldOwner, String newOwner);
 
 	@Query("update Comment set owner=?2 where id=?1")
 	@Modifying
-	@Transactional
 	void changeCommentOwner(Long commentId, String newOwner);
 
 }
