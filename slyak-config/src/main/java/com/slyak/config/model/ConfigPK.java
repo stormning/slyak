@@ -13,10 +13,10 @@ public class ConfigPK implements Serializable {
 	//default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-	@Column(unique=true, nullable=false, length=50)
+	@Column(nullable=false, length=50)
 	private String biz;
 
-	@Column(unique=true, nullable=false, length=50)
+	@Column(nullable=false, length=50)
 	private String owner;
 
     public ConfigPK() {

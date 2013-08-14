@@ -2,7 +2,12 @@ package com.slyak.config.model;
 
 import java.io.Serializable;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Lob;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 
 /**
@@ -10,7 +15,7 @@ import javax.persistence.*;
  * 
  */
 @Entity
-@Table(name="t_config")
+@Table(name="t_config",uniqueConstraints={@UniqueConstraint(columnNames={"biz","owner"})})
 public class Config implements Serializable {
 	private static final long serialVersionUID = 1L;
 
