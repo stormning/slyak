@@ -31,7 +31,7 @@
 		<property name="persistenceProviderClass" value="org.hibernate.ejb.HibernatePersistence"/>
 		<property name="jpaProperties">
 	        <props>
-	            <prop key="hibernate.default_schema">cms</prop>
+	            <prop key="hibernate.default_schema">${db.schema}</prop>
                 <prop key="hibernate.dialect">${hibernate.dialect}</prop>
                 <prop key="hibernate.jdbc.fetch_size">50</prop>
                 <prop key="hibernate.jdbc.batch_size">25</prop>
