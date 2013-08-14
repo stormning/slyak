@@ -29,6 +29,7 @@
 		<org.apache.shiro-version>1.2.2</org.apache.shiro-version>
 		<ch.qos.logback-version>1.0.9</ch.qos.logback-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<javaSourceDirectory>src/main/java</javaSourceDirectory>
 	</properties>
 	<dependencies>
 		<!-- spring -->
