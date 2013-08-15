@@ -79,7 +79,7 @@ public class NewsWidgets {
 					@NameAndValue(name = "第二个缩放类型", value = "1"),
 					@NameAndValue(name = "第三个缩放类型", value = "2"),
 					@NameAndValue(name = "第四个缩放类型", value = "3") }),
-			@Setting(key = "logic", value = "", name = "逻辑", options = {
+			@Setting(key = "logic", value = "0", name = "逻辑", options = {
 					@NameAndValue(name = "最新", value = "0"),
 					@NameAndValue(name = "最多查看", value = "1"),
 					@NameAndValue(name = "最多回复", value = "2"),
