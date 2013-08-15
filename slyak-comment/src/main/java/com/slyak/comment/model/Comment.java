@@ -2,6 +2,7 @@ package com.slyak.comment.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -98,6 +99,9 @@ public class Comment implements Serializable {
 	
 	@Column(name = "tag_ids")
 	private String tagIds;
+
+	//TODO
+//	private List<Comment> children;
 
 	public Comment() {
 	}
