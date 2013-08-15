@@ -26,11 +26,11 @@
 	<logger name="org.springframework.orm" level="INFO"/>
 	<logger name="org.hibernate" level="INFO"/> -->
 	
-	<logger name="com.slyak" level="INFO"/>
-	<logger name="org.apache.shiro" level="INFO"/>
+	<!-- <logger name="com.slyak" level="INFO"/>
+	<logger name="org.apache.shiro" level="INFO"/> -->
 	
 	<root>
-		<level value="INFO" />
+		<level value="ERROR" />
 		<appender-ref ref="STDOUT" />
 		<!--<appender-ref ref="FILE" /> -->
 	</root>
