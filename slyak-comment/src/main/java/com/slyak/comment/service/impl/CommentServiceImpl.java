@@ -158,8 +158,10 @@ public class CommentServiceImpl implements CommentService {
 		long current = new Date().getTime();
 		if (vd == null) {
 			Comment comment = commentDao.findOne(commentId);
-			hotCommentViewed.put(commentId, new ViewDetail(comment.getViewed(),
-					current));
+			if(comment!=null){
+				hotCommentViewed.put(commentId, new ViewDetail(comment.getViewed(),
+						current));
+			}
 		} else {
 			vd.setCount(vd.getCount() + 1);
 			vd.setLastViewed(current);
@@ -170,11 +172,17 @@ public class CommentServiceImpl implements CommentService {
 	@Scheduled(fixedDelay = 300000, initialDelay = 10000)
 	public void asyncViewed() {
 		for (Long commentId : hotCommentViewed.keySet()) {
-			ViewDetail vd = hotCommentViewed.get(commentId);
-			Comment comment = commentDao.findOne(commentId);
-			comment.setViewed(vd.getCount());
-			commentDao.save(comment);
-			hotCommentViewed.remove(commentId);
+			if(commentId!=null){
+				ViewDetail vd = hotCommentViewed.get(commentId);
+				if(vd!=null){
+					Comment comment = commentDao.findOne(commentId);
+					if(comment!=null){
+						comment.setViewed(vd.getCount());
+						commentDao.save(comment);
+						hotCommentViewed.remove(commentId);
+					}
+				}
+			}
 		}
 	}
 
