@@ -101,6 +101,7 @@ public class Comment implements Serializable {
 	private String tagIds;
 
 	//TODO
+	//单个comment可以由多个子comment组成（比如某篇文章比较长、图集、相册等多页概念）
 //	private List<Comment> children;
 
 	public Comment() {
