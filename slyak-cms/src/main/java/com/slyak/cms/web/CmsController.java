@@ -158,13 +158,13 @@ public class CmsController implements ServletContextAware,InitializingBean{
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			return null;
 		}else{
-			modelMap.put("global", cmsService.findGlobal());
 			return renderPage(page, request, locale, modelMap);
 		}
 	}
 	
 	// render page
 	private String renderPage(Page page,final NativeWebRequest request,final Locale locale,final ModelMap sharedModel) throws InterruptedException,TemplateException, IOException {
+		sharedModel.put("global", cmsService.findGlobal());
 		sharedModel.put("pages", cmsService.findRootPages());
 		sharedModel.put("currentPage", page);
 		

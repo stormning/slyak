@@ -268,6 +268,11 @@
 		<!-- spring data solr -->
 		<!-- <dependency> <groupId>org.springframework.data</groupId> <artifactId>spring-data-solr</artifactId> 
 			<version>1.0.0.M1</version> </dependency> -->
+		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache-core</artifactId>
+			<version>2.6.6</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<resources>

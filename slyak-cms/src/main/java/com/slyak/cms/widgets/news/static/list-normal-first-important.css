@@ -2,24 +2,22 @@
 	margin: 0px;
 }
 .post_wrapper li{
+	height:20px;
+	overflow:hidden;
 	padding: 3px 0px;
 }
 
-.post_wrapper .first h4{
-	margin-bottom: 0px;
-}
-
-.post_wrapper .first{
+.post_wrapper li.first{
 	text-align: center;
 	margin-bottom: 0px;
+	height: auto;
 }
 
-.post_wrapper .first p{
+.post_wrapper li.first h4{
+	margin-bottom: 0px;
 	
 }
 
-.post_wrapper .time{
-	float: right;
-	color: #888;
-	font-weight: lighter;
+.post_wrapper li.first p{
+	
 }

@@ -18,6 +18,8 @@ public interface CmsService {
 	
 	String PAGE_WIDGET="PAGE_WIDGET";
 	
+	String GLOBAL = "GLOBAL";
+	
 	
 	@Cacheable(ALIAS_CACHE)
 	Page findPageByAlias(String alias);
@@ -51,8 +53,10 @@ public interface CmsService {
 	@CacheEvict(value=PAGE_WIDGET,allEntries=true)
 	void removeWidgetById(Long widgetId);
 
+	@CacheEvict(value=GLOBAL,allEntries=true)
 	void saveGlobal(Global golbel) throws IOException;
 	
+	@Cacheable(GLOBAL)
 	Global findGlobal();
 
 	@Cacheable(PAGE_WIDGET)
@@ -60,7 +64,6 @@ public interface CmsService {
 
 	@CacheEvict(value=PAGE_WIDGET,allEntries=true)
 	void saveWidgets(List<Widget> newWidgets);
-
 
 	List<com.slyak.cms.core.model.Widget> findWidgetsByNameAndAttribute(
 			String name, String attrName, String attrValue);

@@ -71,24 +71,29 @@ public class NewsWidgets {
 	}
 
 	@Widget(settings = {
-			@Setting(key = "offset", value = "0",name="偏移量"),
-			@Setting(key = "limit", value = "10",name="显示个数"),
-			@Setting(key = "showType", value = "true",name="是否显示类型"),
-			@Setting(key = "logic", value = "", name="逻辑", options = {
+			@Setting(key = "offset", value = "0", name = "偏移量"),
+			@Setting(key = "limit", value = "10", name = "显示个数"),
+			@Setting(key = "showType", value = "true", name = "是否显示类型"),
+			@Setting(key = "imgSizeType", name = "图片缩放类型(在管理端进行相应配置)", options = {
+					@NameAndValue(name = "第一个缩放类型", value = "0"),
+					@NameAndValue(name = "第二个缩放类型", value = "1"),
+					@NameAndValue(name = "第三个缩放类型", value = "2"),
+					@NameAndValue(name = "第四个缩放类型", value = "3") }),
+			@Setting(key = "logic", value = "", name = "逻辑", options = {
 					@NameAndValue(name = "最新", value = "0"),
 					@NameAndValue(name = "最多查看", value = "1"),
 					@NameAndValue(name = "最多回复", value = "2"),
 					@NameAndValue(name = "最多喜欢", value = "3"),
 					@NameAndValue(name = "别人正在看", value = "4") }),
-			@Setting(key = "types", value = "[]",name="类型", optionsLoader = "findLeafTypes", inputType = InputType.CHECKBOX),
-			@Setting(key = "sizePerLine", value = "4",name="每行显示几个", options = {
+			@Setting(key = "types", value = "[]", name = "类型", optionsLoader = "findLeafTypes", inputType = InputType.CHECKBOX),
+			@Setting(key = "sizePerLine", value = "4", name = "每行显示几个", options = {
 					@NameAndValue(value = "1", name = "每行1个"),
 					@NameAndValue(value = "2", name = "每行2个"),
 					@NameAndValue(value = "3", name = "每行3个"),
 					@NameAndValue(value = "4", name = "每行4个"),
 					@NameAndValue(value = "6", name = "每行6个"),
 					@NameAndValue(value = "12", name = "每行12个") }),
-			@Setting(key = "view", value = "listNormal",name="视图展现形式", options = {
+			@Setting(key = "view", value = "listNormal", name = "视图展现形式", options = {
 					@NameAndValue(name = "默认标题列表", value = "listNormal"),
 					@NameAndValue(name = "标题列表(第一个突出显示)", value = "listNormalFirstImportant"),
 					@NameAndValue(name = "图片列表(仅显示分类下拥有图片的文章)", value = "listImages"),
@@ -174,9 +179,9 @@ public class NewsWidgets {
 	}
 
 	@Widget(settings = {
-			@Setting(key = "type", value = "0", name="类型",optionsLoader = "findLeafTypes", inputType = InputType.SELECT),
-			@Setting(key = "pageSize", value = "20",name="每页显示多少个"),
-			@Setting(key = "view", value = "paginationNormal",name="视图展现形式",options = {
+			@Setting(key = "type", value = "0", name = "类型", optionsLoader = "findLeafTypes", inputType = InputType.SELECT),
+			@Setting(key = "pageSize", value = "20", name = "每页显示多少个"),
+			@Setting(key = "view", value = "paginationNormal", name = "视图展现形式", options = {
 					@NameAndValue(name = "默认分页列表", value = "paginationNormal"),
 					@NameAndValue(name = "TABLE分页列表", value = "paginationTable"),
 					@NameAndValue(name = "大图加概述", value = "paginationBigimg"),
@@ -219,7 +224,7 @@ public class NewsWidgets {
 		}
 	}
 
-	@Widget(show = false, settings = { @Setting(key = "type", value = "0", name="类型",optionsLoader = "findLeafTypes", inputType = InputType.SELECT) })
+	@Widget(show = false, settings = { @Setting(key = "type", value = "0", name = "类型", optionsLoader = "findLeafTypes", inputType = InputType.SELECT) })
 	public String detail(Long newsId, ModelMap modelMap) {
 		if (newsId != null) {
 			Comment comment = commentService.findOne(newsId);
@@ -299,7 +304,7 @@ public class NewsWidgets {
 		commentService.batchDeleteComments(Arrays.asList(newsIds));
 	}
 
-	@Widget(settings = { @Setting(key = "pageSize", value = "10",name="每页显示个数") })
+	@Widget(settings = { @Setting(key = "pageSize", value = "10", name = "每页显示个数") })
 	public String manager(@RequestParam(defaultValue = "1") Integer page,
 			@RequestParam(defaultValue = "0") Long newsType,
 			@RequestParam(defaultValue = "") String keyword,

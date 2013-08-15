@@ -9,6 +9,9 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 
 /**
  * The persistent class for the t_config database table.
@@ -16,6 +19,7 @@ import javax.persistence.UniqueConstraint;
  */
 @Entity
 @Table(name="t_config",uniqueConstraints={@UniqueConstraint(columnNames={"biz","owner"})})
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Config implements Serializable {
 	private static final long serialVersionUID = 1L;
 

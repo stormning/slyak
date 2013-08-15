@@ -21,7 +21,6 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.slyak.user.dao.UserDao;
 import com.slyak.user.model.User;
 import com.slyak.user.service.UserService;
 

@@ -5,7 +5,7 @@
 		<ul class="post_wrapper">
 			<#if index==0>
 				<li class="first">
-					<h4>${comment.title}</h4>
+					<h4><a href="<#if types[comment.owner]??><#assign t = types[comment.owner]><#if (t.detailPage)??>${ctx}/${t.detailPage.alias}?newsId=${comment.id}</#if></#if>" target="_blank">${comment.title}</a></h4>
 					<p>
 						<#if comment.imgCount gt 0>
 							${comment.fragment}
@@ -20,7 +20,7 @@
 							<a href="<#if (t.page)??>${ctx}/${t.page.alias}</#if>" target="_blank">[${t.type.name}]</a>&nbsp;
 						</#if>
 					</#if>	
-					<a href="<#if types[comment.owner]??><#assign t = types[comment.owner]><#if (t.page)??>${ctx}/${t.page.alias}?newsId=${comment.id}</#if></#if>" target="_blank">
+					<a href="<#if types[comment.owner]??><#assign t = types[comment.owner]><#if (t.detailPage)??>${ctx}/${t.detailPage.alias}?newsId=${comment.id}</#if></#if>" target="_blank">
 						${comment.title}
 					</a>
 				</li>
