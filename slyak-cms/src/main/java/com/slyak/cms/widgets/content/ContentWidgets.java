@@ -8,7 +8,7 @@ import com.slyak.cms.core.enums.InputType;
 @Widgets("content")
 public class ContentWidgets {
 
-	@Widget(settings={@Setting(key="content",value="",inputType=InputType.TEXTAREA)})
+	@Widget(settings={@Setting(key="content",value="",name="内容",inputType=InputType.TEXTAREA)})
 	public String simple(){
 		return "simple.tpl";
 	}

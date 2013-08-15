@@ -31,9 +31,9 @@ public class CommentWidgets {
 	@Autowired
 	private EventPublisher eventPublisher;
 	
-	@Widget(settings = { @Setting(key = "limit", value = "10"),
-			@Setting(key = "biz", value = ""),
-			@Setting(key = "ownerParam", value = "") })
+	@Widget(settings = { @Setting(key = "limit", value = "10",name="数量"),
+			@Setting(key = "biz", value = "",name="业务标识"),
+			@Setting(key = "ownerParam", value = "",name="接受来自页面的参数作为owenr") })
 	public String pagination(com.slyak.cms.core.model.Widget widget,
 			@RequestParam(defaultValue="1")Integer page, WebRequest request, ModelMap modelMap) {
 		Map<String, String> settings = widget.getSettings();

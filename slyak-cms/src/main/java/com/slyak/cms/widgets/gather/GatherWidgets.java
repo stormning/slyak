@@ -27,15 +27,15 @@ public class GatherWidgets{
 	@Autowired
 	private JavaScriptHandler javaScriptHandler;
 
-	@Widget(settings = { @Setting(key = "url", value = ""),
-			@Setting(key = "width", value = "100%"),
-			@Setting(key = "height", value = "100%") })
+	@Widget(settings = { @Setting(key = "url", value = "",name="网址"),
+			@Setting(key = "width", value = "100%",name="宽度"),
+			@Setting(key = "height", value = "100%",name="高度") })
 	public String iframe() {
 		return "iframe.tpl";
 	}
 
-	@Widget(settings = { @Setting(key = "uri", value = ""),
-			@Setting(key = "method", value = "GET"),@Setting(key="callback",value="",inputType=InputType.TEXTAREA)})
+	@Widget(settings = { @Setting(key = "uri", value = "",name="网址"),
+			@Setting(key = "method", value = "GET",name="请求方式"),@Setting(key="callback",value="",name="JS回调函数(处理内容并返回)",inputType=InputType.TEXTAREA)})
 	public String proxy(com.slyak.cms.core.model.Widget widget, ModelMap modelMap) {
 		Map<String,String> settings = widget.getSettings();
 		String uri = StringUtils.trimWhitespace(settings.get("uri"));

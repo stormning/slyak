@@ -38,7 +38,7 @@ import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
 import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 
 import com.slyak.cms.core.annotation.Setting;
-import com.slyak.cms.core.annotation.ValueAndName;
+import com.slyak.cms.core.annotation.NameAndValue;
 import com.slyak.cms.core.annotation.Widget;
 import com.slyak.cms.core.annotation.Widgets;
 import com.slyak.cms.core.enums.InputType;
@@ -134,7 +134,7 @@ public class SimpleWidgetManager implements WidgetManager,ApplicationContextAwar
 											com.slyak.cms.core.support.Setting st = new com.slyak.cms.core.support.Setting();
 											st.setKey(setting.key());
 											st.setInputType(setting.inputType());
-											ValueAndName[] options = setting.options();
+											NameAndValue[] options = setting.options();
 											String optionLoader = StringUtils.trimToEmpty(setting.optionsLoader());
 											boolean hasOptionLoader = !StringUtils.isEmpty(optionLoader);
 											if((hasOptionLoader|| options.length>1)&&setting.inputType()!=InputType.RADIO&&setting.inputType()!=InputType.CHECKBOX){
@@ -147,7 +147,7 @@ public class SimpleWidgetManager implements WidgetManager,ApplicationContextAwar
 											}
 											if(options.length>1){
 												List<Option> opts = new ArrayList<Option>();
-												for (ValueAndName valueAndName : options) {
+												for (NameAndValue valueAndName : options) {
 													Option opt = new Option();
 													opt.setValue(valueAndName.value());
 													opt.setName(StringUtils.isBlank(valueAndName.name())?valueAndName.value():valueAndName.name());

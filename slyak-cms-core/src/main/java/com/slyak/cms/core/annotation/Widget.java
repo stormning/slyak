@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Widget {
-
+	
 	String tag() default "";
 	
 	Setting[] settings() default {};

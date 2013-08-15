@@ -21,7 +21,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.NumberUtils;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.slyak.cms.core.annotation.ValueAndName;
+import com.slyak.cms.core.annotation.NameAndValue;
 import com.slyak.cms.core.annotation.Setting;
 import com.slyak.cms.core.annotation.Widget;
 import com.slyak.cms.core.annotation.Widgets;
@@ -64,23 +64,36 @@ public class NewsWidgets {
 		VIEW_TEMPLATE_MAP.put("tabImages", "tab-images.tpl");
 
 		VIEW_TEMPLATE_MAP.put("paginationNormal", "pagination-normal.tpl");
+		VIEW_TEMPLATE_MAP.put("paginationTable", "pagination-table.tpl");
 		VIEW_TEMPLATE_MAP.put("paginationBigimg", "pagination-bigimg.tpl");
 		VIEW_TEMPLATE_MAP.put("paginationLeftimg", "pagination-leftimg.tpl");
 		VIEW_TEMPLATE_MAP.put("paginationImgs", "pagination-imgs.tpl");
 	}
 
 	@Widget(settings = {
-			@Setting(key = "offset", value = "0"),
-			@Setting(key = "limit", value = "10"),
-			@Setting(key = "showType", value = "true"),
-			@Setting(key = "types", value = "[]", optionsLoader = "findLeafTypes", inputType = InputType.CHECKBOX),
-			@Setting(key = "sizePerLine", value = "4" ,options={@ValueAndName(value="1",name="每行1个"),@ValueAndName(value="2",name="每行2个"),@ValueAndName(value="3",name="每行3个"),@ValueAndName(value="4",name="每行4个"),@ValueAndName(value="6",name="每行6个"),@ValueAndName(value="12",name="每行12个")}),
-			@Setting(key = "view", value = "list-normal.tpl", options = {
-					@ValueAndName(name = "默认标题列表", value = "listNormal"),
-					@ValueAndName(name = "标题列表(第一个突出显示)", value = "listNormalFirstImportant"),
-					@ValueAndName(name = "图片列表(仅显示分类下拥有图片的文章)", value = "listImages"),
-					@ValueAndName(name = "可切换的tab页标题列表", value = "tabNormal"),
-					@ValueAndName(name = "可切换的tab页图片列表(仅显示分类下拥有图片的文章)", value = "tabImages") }) })
+			@Setting(key = "offset", value = "0",name="偏移量"),
+			@Setting(key = "limit", value = "10",name="显示个数"),
+			@Setting(key = "showType", value = "true",name="是否显示类型"),
+			@Setting(key = "logic", value = "", name="逻辑", options = {
+					@NameAndValue(name = "最新", value = "0"),
+					@NameAndValue(name = "最多查看", value = "1"),
+					@NameAndValue(name = "最多回复", value = "2"),
+					@NameAndValue(name = "最多喜欢", value = "3"),
+					@NameAndValue(name = "别人正在看", value = "4") }),
+			@Setting(key = "types", value = "[]",name="类型", optionsLoader = "findLeafTypes", inputType = InputType.CHECKBOX),
+			@Setting(key = "sizePerLine", value = "4",name="每行显示几个", options = {
+					@NameAndValue(value = "1", name = "每行1个"),
+					@NameAndValue(value = "2", name = "每行2个"),
+					@NameAndValue(value = "3", name = "每行3个"),
+					@NameAndValue(value = "4", name = "每行4个"),
+					@NameAndValue(value = "6", name = "每行6个"),
+					@NameAndValue(value = "12", name = "每行12个") }),
+			@Setting(key = "view", value = "listNormal",name="视图展现形式", options = {
+					@NameAndValue(name = "默认标题列表", value = "listNormal"),
+					@NameAndValue(name = "标题列表(第一个突出显示)", value = "listNormalFirstImportant"),
+					@NameAndValue(name = "图片列表(仅显示分类下拥有图片的文章)", value = "listImages"),
+					@NameAndValue(name = "可切换的tab页标题列表", value = "tabNormal"),
+					@NameAndValue(name = "可切换的tab页图片列表(仅显示分类下拥有图片的文章)", value = "tabImages") }) })
 	public Object list(com.slyak.cms.core.model.Widget widget, ModelMap modelMap)
 			throws IOException {
 		Map<String, String> settings = widget.getSettings();
@@ -95,35 +108,37 @@ public class NewsWidgets {
 		String view = settings.get("view");
 
 		List<Comment> comments = new ArrayList<Comment>();
-		
+
 		Pageable pageable = new OffsetLimitRequest(NumberUtils.parseNumber(
 				settings.get("offset"), Integer.class),
-				NumberUtils.parseNumber(settings.get("limit"),
-						Integer.class));
+				NumberUtils.parseNumber(settings.get("limit"), Integer.class));
 		if ("listImages".equals(view)) {
 			comments.addAll(commentService.getCommentsWithImg(pageable,
 					Constants.CPK_NEWS.getBiz(), types).getContent());
-		} else if("tabImages".equals(view)){
-			Map<String,List<Comment>> commentMap = new HashMap<String, List<Comment>>();
+		} else if ("tabImages".equals(view)) {
+			Map<String, List<Comment>> commentMap = new HashMap<String, List<Comment>>();
 			for (String type : types) {
 				List<Comment> cs = commentService.getCommentsWithImg(pageable,
-						Constants.CPK_NEWS.getBiz(), Collections.singletonList(type)).getContent();
-				commentMap.put(type,cs);
+						Constants.CPK_NEWS.getBiz(),
+						Collections.singletonList(type)).getContent();
+				commentMap.put(type, cs);
 				comments.addAll(cs);
 			}
 			modelMap.put("commentsMap", commentMap);
-		}else {
+		} else {
 			comments.addAll(commentService.getComments(pageable,
 					Constants.CPK_NEWS.getBiz(), types).getContent());
 		}
 		modelMap.put("comments", comments);
-		initTypeAndDetailMap(comments,"true".equalsIgnoreCase(settings.get("showType")),modelMap);
+		initTypeAndDetailMap(comments,
+				"true".equalsIgnoreCase(settings.get("showType")), modelMap);
 		String tpl = VIEW_TEMPLATE_MAP.get(settings.get("view"));
 		return tpl == null ? "list-normal.tpl" : tpl;
 	}
-	
-	private void initTypeAndDetailMap(List<Comment> comments,boolean showType,ModelMap map){
-		if(!CollectionUtils.isEmpty(comments)){
+
+	private void initTypeAndDetailMap(List<Comment> comments, boolean showType,
+			ModelMap map) {
+		if (!CollectionUtils.isEmpty(comments)) {
 			Set<Long> groupIds = new HashSet<Long>();
 			for (Comment c : comments) {
 				groupIds.add(Long.valueOf(c.getOwner()));
@@ -131,11 +146,11 @@ public class NewsWidgets {
 			if (!CollectionUtils.isEmpty(groupIds)) {
 				List<Group> groups = groupService
 						.findByIdIn(new ArrayList<Long>(groupIds));
-				Map<String,TypeAndPage> tpmap = new HashMap<String, TypeAndPage>();
+				Map<String, TypeAndPage> tpmap = new HashMap<String, TypeAndPage>();
 				for (Group group : groups) {
 					TypeAndPage tap = new TypeAndPage();
 					tap.setType(group);
-					if(showType){
+					if (showType) {
 						List<com.slyak.cms.core.model.Widget> widgets = cmsService
 								.findWidgetsByNameAndAttribute(
 										"news.pagination", "type",
@@ -145,9 +160,8 @@ public class NewsWidgets {
 						}
 					}
 					List<com.slyak.cms.core.model.Widget> detailWidgets = cmsService
-							.findWidgetsByNameAndAttribute(
-									"news.detail", "type",
-									String.valueOf(group.getId()));
+							.findWidgetsByNameAndAttribute("news.detail",
+									"type", String.valueOf(group.getId()));
 					if (!CollectionUtils.isEmpty(detailWidgets)) {
 						tap.setDetailPage(detailWidgets.get(0).getPage());
 					}
@@ -156,17 +170,18 @@ public class NewsWidgets {
 				map.put("types", tpmap);
 			}
 		}
-	
+
 	}
 
 	@Widget(settings = {
-			@Setting(key = "type", value = "0", optionsLoader = "findLeafTypes", inputType = InputType.SELECT),
-			@Setting(key = "pageSize", value = "20"),
-			@Setting(key = "view", value = "list-normal.tpl", options = {
-					@ValueAndName(name = "默认分页列表", value = "paginationNormal"),
-					@ValueAndName(name = "大图加概述", value = "paginationBigimg"),
-					@ValueAndName(name = "左小图加概述", value = "paginationLeftimg"),
-					@ValueAndName(name = "图片列表", value = "paginationImgs") }) })
+			@Setting(key = "type", value = "0", name="类型",optionsLoader = "findLeafTypes", inputType = InputType.SELECT),
+			@Setting(key = "pageSize", value = "20",name="每页显示多少个"),
+			@Setting(key = "view", value = "paginationNormal",name="视图展现形式",options = {
+					@NameAndValue(name = "默认分页列表", value = "paginationNormal"),
+					@NameAndValue(name = "TABLE分页列表", value = "paginationTable"),
+					@NameAndValue(name = "大图加概述", value = "paginationBigimg"),
+					@NameAndValue(name = "左小图加概述", value = "paginationLeftimg"),
+					@NameAndValue(name = "图片列表", value = "paginationImgs") }) })
 	public String pagination(com.slyak.cms.core.model.Widget widget,
 			Integer page, ModelMap modelMap) {
 		Map<String, String> settings = widget.getSettings();
@@ -180,10 +195,8 @@ public class NewsWidgets {
 							Integer.class));
 			Page<Comment> cp = commentService.getComments(pageRequest,
 					Constants.CPK_NEWS.getBiz(), owner);
-			modelMap.put(
-					"page",cp
-					);
-			initTypeAndDetailMap(cp.getContent(),false,modelMap);
+			modelMap.put("page", cp);
+			initTypeAndDetailMap(cp.getContent(), false, modelMap);
 		}
 		String tpl = VIEW_TEMPLATE_MAP.get(settings.get("view"));
 		return tpl == null ? "pagination-normal.tpl" : tpl;
@@ -206,12 +219,12 @@ public class NewsWidgets {
 		}
 	}
 
-	@Widget(show = false,settings={@Setting(key="type",value="0",optionsLoader="findLeafTypes",inputType=InputType.SELECT)})
+	@Widget(show = false, settings = { @Setting(key = "type", value = "0", name="类型",optionsLoader = "findLeafTypes", inputType = InputType.SELECT) })
 	public String detail(Long newsId, ModelMap modelMap) {
 		if (newsId != null) {
 			Comment comment = commentService.findOne(newsId);
 			modelMap.put("newsId", newsId);
-			if(comment!=null){
+			if (comment != null) {
 				commentService.view(newsId);
 				modelMap.put("comment", commentService.findOne(newsId));
 			}
@@ -286,7 +299,7 @@ public class NewsWidgets {
 		commentService.batchDeleteComments(Arrays.asList(newsIds));
 	}
 
-	@Widget(settings = { @Setting(key = "pageSize", value = "10") })
+	@Widget(settings = { @Setting(key = "pageSize", value = "10",name="每页显示个数") })
 	public String manager(@RequestParam(defaultValue = "1") Integer page,
 			@RequestParam(defaultValue = "0") Long newsType,
 			@RequestParam(defaultValue = "") String keyword,

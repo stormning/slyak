@@ -12,11 +12,14 @@ import com.slyak.cms.core.enums.InputType;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Setting {
+	
+	String name();
+	
 	String key();
 	
 	String value() default "";
 	
-	ValueAndName[] options() default {};
+	NameAndValue[] options() default {};
 	
 	String optionsLoader() default "";
 	
