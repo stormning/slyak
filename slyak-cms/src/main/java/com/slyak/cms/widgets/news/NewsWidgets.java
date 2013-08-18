@@ -90,7 +90,7 @@ public class NewsWidgets {
 					@NameAndValue(name = "最多查看", value = "1"),
 					@NameAndValue(name = "最多回复", value = "2"),
 					@NameAndValue(name = "最多喜欢", value = "3"),
-					@NameAndValue(name = "别人正在看", value = "4") }, inputType = InputType.CHECKBOX),
+					@NameAndValue(name = "别人正在看", value = "4") }, inputType = InputType.SELECT),
 			@Setting(key = "types", value = "[]", name = "类型", optionsLoader = "findLeafTypes", inputType = InputType.CHECKBOX),
 			@Setting(key = "sizePerLine", value = "4", name = "每行显示几个", options = {
 					@NameAndValue(value = "1", name = "每行1个"),

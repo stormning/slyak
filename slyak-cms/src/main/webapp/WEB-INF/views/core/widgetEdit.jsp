@@ -1,3 +1,4 @@
+<%@page import="org.springframework.util.StringUtils"%>
 <%@page import="com.alibaba.fastjson.JSON"%>
 <%@page import="com.slyak.core.util.JsonUtils"%>
 <%@page import="java.util.List"%>
@@ -79,7 +80,7 @@
 								<%
 									List<String> chks = new ArrayList<String>();
 									String chkvalues = (String)request.getAttribute("chkvalues");
-									if(chkvalues!=null){
+									if(StringUtils.hasText(chkvalues)){
 										chks = JsonUtils.toType(chkvalues, List.class);
 									}
 								%>
