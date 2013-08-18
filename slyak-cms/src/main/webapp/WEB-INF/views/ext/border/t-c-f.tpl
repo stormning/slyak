@@ -2,5 +2,7 @@
 	<div class="panel-heading">
 		${widget.title!widget.name}
 	</div>
-	${widget.content}
+	<div class="panel-content">
+		${widget.content}
+	</div>
 </div>

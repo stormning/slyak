@@ -25,7 +25,6 @@ import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
 import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
-import org.springframework.web.util.WebUtils;
 
 public class StaticResourceMappingManagerImpl implements StaticResourceMappingManager,
 		ServletContextAware, ApplicationContextAware, InitializingBean {

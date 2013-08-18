@@ -79,8 +79,30 @@ $(function() {
 						}});
 					}
 				});
-				var panelHelper = $("<div id='panelHelper' style='display:none'><a class='icon icon-edit' data-toggle='modal' data-target='#widgetEdit'></a><a class='icon icon-remove' href='javascript:void(0)'></a></div>").appendTo("body");
-				$(".panel[id]").hover(function(){panelHelper.appendTo($(this)).show();},function(){panelHelper.hide();});
+				var panelHelper = $("<div id='panelHelper' style='display:none'><a class='icon icon-minimize' href='javascript:void(0)'></a><a class='icon icon-edit' data-toggle='modal' data-target='#widgetEdit'></a><a class='icon icon-remove' href='javascript:void(0)'></a></div>").appendTo("body");
+				$(".panel[id]").hover(function(){
+					if($(this).find(".panel-content").is(":hidden")){
+						$("#panelHelper a").first().removeClass("icon-minimize");
+						$("#panelHelper a").first().addClass("icon-normalize");
+					}else{
+						$("#panelHelper a").first().removeClass("icon-normalize");
+						$("#panelHelper a").first().addClass("icon-minimize");
+					}
+					panelHelper.appendTo($(this)).show();
+					},function(){panelHelper.hide();});
+				
+				$("#panelHelper a").first().click(function(){
+					var panel = $(this).parents(".panel");
+					if(panel.find(".panel-content").is(":hidden")){
+						$("#panelHelper a").first().removeClass("icon-normalize");
+						$("#panelHelper a").first().addClass("icon-minimize");
+						panel.find(".panel-content").show();
+					}else{
+						$("#panelHelper a").first().removeClass("icon-minimize");
+						$("#panelHelper a").first().addClass("icon-normalize");
+						panel.find(".panel-content").hide();
+					}
+				});
 				
 				$("#panelHelper .icon-remove").click(function(){
 					$.post(ctx+"/widget/remove", {widgetId:$(this).parents(".panel").attr("id").replace("panel-","")},function(){

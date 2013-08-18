@@ -74,17 +74,23 @@ public class NewsWidgets {
 			@Setting(key = "offset", value = "0", name = "偏移量"),
 			@Setting(key = "limit", value = "10", name = "显示个数"),
 			@Setting(key = "showType", value = "true", name = "是否显示类型"),
-			@Setting(key = "imgSizeType", name = "图片缩放类型(在管理端进行相应配置)", options = {
+			@Setting(key = "imgSizeType", name = "图片显示哪种缩放类型(在管理端进行相应配置)", options = {
 					@NameAndValue(name = "第一个缩放类型", value = "0"),
 					@NameAndValue(name = "第二个缩放类型", value = "1"),
 					@NameAndValue(name = "第三个缩放类型", value = "2"),
 					@NameAndValue(name = "第四个缩放类型", value = "3") }),
+			@Setting(key = "dateRegion", name = "时间范围", inputType = InputType.SELECT, options = {
+					@NameAndValue(name = "24小时内", value = "1"),
+					@NameAndValue(name = "一周内", value = "7"),
+					@NameAndValue(name = "一月内", value = "30"),
+					@NameAndValue(name = "一季度内", value = "90"),
+					@NameAndValue(name = "一年内", value = "365") }),
 			@Setting(key = "logic", value = "0", name = "逻辑", options = {
 					@NameAndValue(name = "最新", value = "0"),
 					@NameAndValue(name = "最多查看", value = "1"),
 					@NameAndValue(name = "最多回复", value = "2"),
 					@NameAndValue(name = "最多喜欢", value = "3"),
-					@NameAndValue(name = "别人正在看", value = "4") }),
+					@NameAndValue(name = "别人正在看", value = "4") }, inputType = InputType.CHECKBOX),
 			@Setting(key = "types", value = "[]", name = "类型", optionsLoader = "findLeafTypes", inputType = InputType.CHECKBOX),
 			@Setting(key = "sizePerLine", value = "4", name = "每行显示几个", options = {
 					@NameAndValue(value = "1", name = "每行1个"),
@@ -117,6 +123,10 @@ public class NewsWidgets {
 		Pageable pageable = new OffsetLimitRequest(NumberUtils.parseNumber(
 				settings.get("offset"), Integer.class),
 				NumberUtils.parseNumber(settings.get("limit"), Integer.class));
+
+		// logic
+		// commentService.
+
 		if ("listImages".equals(view)) {
 			comments.addAll(commentService.getCommentsWithImg(pageable,
 					Constants.CPK_NEWS.getBiz(), types).getContent());

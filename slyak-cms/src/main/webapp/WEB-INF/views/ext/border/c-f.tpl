@@ -1,3 +1,5 @@
 <div id="panel-${widget.id}" class="panel ${widget.borderClass!} ${golbalBorderClass!}">
-	${widget.content}
+	<div class="panel-content">
+		${widget.content}
+	</div>
 </div>

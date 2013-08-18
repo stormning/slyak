@@ -46,7 +46,11 @@
 }
 
 .column {
-	min-height: 100px;
+	min-height: 100px !important;
+}
+
+.panel-content{
+	min-height: 20px;
 }
 
 .ui-sortable-placeholder {
@@ -192,6 +196,14 @@ a.icon-edit {
 
 a.icon-remove {
 	background-position: 4px -293px !important;
+}
+
+a.icon-minimize {
+	background-position: 4px -139px !important;
+}
+
+a.icon-normalize {
+	background-position: 4px -227px !important;
 }
 
 .system-borders a{
