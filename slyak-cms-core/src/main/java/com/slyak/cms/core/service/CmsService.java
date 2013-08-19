@@ -24,7 +24,6 @@ public interface CmsService {
 	@Cacheable(ALIAS_CACHE)
 	Page findPageByAlias(String alias);
 	
-	
 	Widget findWidgetById(Long widgetId);
 
 	@CacheEvict(value={PAGE_WIDGET},allEntries=true)
