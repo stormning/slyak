@@ -106,6 +106,7 @@ public class NewsWidgets {
 					@NameAndValue(name = "图片列表(仅显示分类下拥有图片的文章)", value = "listImages") }) })
 	public Object list(com.slyak.cms.core.model.Widget widget, ModelMap modelMap)
 			throws IOException {
+		
 		Map<String, String> settings = widget.getSettings();
 		String typesStr = settings.get("types");
 		List<String> types = null;

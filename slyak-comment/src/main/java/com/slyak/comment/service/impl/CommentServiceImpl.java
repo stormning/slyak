@@ -90,8 +90,11 @@ public class CommentServiceImpl implements CommentService {
 				commentToSave = exist;
 			}
 		}
+		
+		if(fragmentSize>0){
 		commentToSave.setFragment(StringUtils.cut(commentToSave.getContent(),
 				fragmentSize));
+		}
 		commentDao.save(commentToSave);
 		// event
 		eventPublisher.publish(Constants.EventTopic.COMMENT_SAVE,
@@ -186,7 +189,7 @@ public class CommentServiceImpl implements CommentService {
 					if (comment != null) {
 						comment.setViewed(vd.getCount());
 						commentDao.save(comment);
-						hotCommentViewed.remove(commentId);
+//						hotCommentViewed.remove(commentId);
 					}
 				}
 			}
