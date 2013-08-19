@@ -52,11 +52,6 @@ public class AwtImageOperation implements ImageOperation {
     }
 
     public BufferedImage resizeWithContainer(BufferedImage src, int containerWidth, int containerHeight) {
-    	
-    	if(containerHeight<0||containerHeight<0){
-    		return src;
-    	}
-    	
         double iw = src.getWidth();
         double ih = src.getHeight();
         if (containerWidth > iw && containerHeight > ih) {
@@ -120,4 +115,21 @@ public class AwtImageOperation implements ImageOperation {
         }
         return crop(src, left, top, width, height);
     }
+
+	@Override
+	public BufferedImage resizeWithMaxWidth(BufferedImage src, int maxWidth) {
+		
+		if(src.getWidth()>maxWidth){
+			return resize(src, (double)maxWidth/(double)src.getWidth());
+		}
+		return src;
+	}
+
+	@Override
+	public BufferedImage resizeWithMaxHeight(BufferedImage src, int maxHeight) {
+		if(src.getHeight()>maxHeight){
+			return resize(src, (double)maxHeight/(double)src.getHeight());
+		}
+		return src;
+	}
 }

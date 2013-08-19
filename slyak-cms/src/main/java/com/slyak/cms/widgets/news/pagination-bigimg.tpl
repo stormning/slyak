@@ -9,7 +9,7 @@
 		    <div class="panel">
 		      <#if comment.imgCount gt 0>
 				  <a href="<#if types[comment.owner]??><#assign t = types[comment.owner]><#if (t.detailPage)??>${ctx}/${t.detailPage.alias}?newsId=${comment.id}</#if></#if>" target="_blank">
-			          <img src="${ctx}/file/newsImg/<@splitId idstr=comment.id/>/0/0.jpg?ver=${comment.ver}" style="width:100%">
+			          <img src="${ctx}/file/newsImg/<@splitId idstr=comment.id/>/0/c0.jpg?ver=${comment.ver}" style="width:100%">
 			      </a>
 		      </#if>
 			  <div>

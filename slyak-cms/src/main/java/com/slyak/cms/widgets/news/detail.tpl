@@ -10,7 +10,6 @@
 		<ul class="inline">
 			<li><i class="icon icon-calendar"></i>${comment.createAt?string("yyyy-MM-dd")}</li>
 			<li><i class="icon icon-user"></i>${comment.creator?default("admin")}</li>
-			<!--<li><i class="icon icon-tag"></i>新闻&nbsp;&nbsp;资讯</li>-->
 		</ul>
 		<div class="clearfix"></div>
 	</div>

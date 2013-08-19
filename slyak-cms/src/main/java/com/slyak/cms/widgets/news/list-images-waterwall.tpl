@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="${resource}/list-images.css" />
+<link rel="stylesheet" href="${resource}/list-images-waterwall.css" />
 
 <#include "img-url.tpl">
 <#if comments??>

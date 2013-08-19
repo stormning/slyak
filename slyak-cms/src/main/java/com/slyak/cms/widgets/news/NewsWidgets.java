@@ -1,16 +1,16 @@
 package com.slyak.cms.widgets.news;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,6 +32,7 @@ import com.slyak.comment.model.Comment;
 import com.slyak.comment.service.CommentService;
 import com.slyak.config.model.ConfigPK;
 import com.slyak.config.service.ConfigService;
+import com.slyak.core.io.image.CommonImage;
 import com.slyak.core.io.image.ImgConfig;
 import com.slyak.core.util.DateUtils;
 import com.slyak.core.util.JsonUtils;
@@ -103,10 +104,12 @@ public class NewsWidgets {
 			@Setting(key = "view", value = "listNormal", name = "视图展现形式", options = {
 					@NameAndValue(name = "默认标题列表", value = "listNormal"),
 					@NameAndValue(name = "标题列表(第一个突出显示)", value = "listNormalFirstImportant"),
-					@NameAndValue(name = "图片列表(仅显示分类下拥有图片的文章)", value = "listImages") }) })
+					@NameAndValue(name = "图片列表(仅显示分类下拥有图片的文章)", value = "listImages"),
+					@NameAndValue(name = "图片TAB页(仅显示分类下拥有图片的文章)", value = "tabImages"),
+					@NameAndValue(name = "普通TAB页", value = "tabNormal") }) })
 	public Object list(com.slyak.cms.core.model.Widget widget, ModelMap modelMap)
 			throws IOException {
-		
+
 		Map<String, String> settings = widget.getSettings();
 		String typesStr = settings.get("types");
 		List<String> types = null;
@@ -132,10 +135,34 @@ public class NewsWidgets {
 		}
 
 		int logic = Integer.parseInt(settings.get("logic"));
+
+		boolean tabView = "tabImages".equals(view) || "tabNormal".equals(view);
 		boolean onlyImg = "listImages".equals(view) || "tabImages".equals(view);
+
+		if (tabView) {
+			Map<String,List<Comment>> commentsMap = new HashMap<String, List<Comment>>();
+			for (String type : types) {
+				commentsMap.put(type, getCommentsByLogic(logic,types,onlyImg,start,end,offset,limit));
+			}
+			modelMap.put("commentsMap", commentsMap);
+		}else{
+			comments = getCommentsByLogic(logic,types,onlyImg,start,end,offset,limit);
+			modelMap.put("comments", comments);
+		}
+
+		initTypeAndDetailMap(types,
+				"true".equalsIgnoreCase(settings.get("showType")), modelMap);
+		String tpl = VIEW_TEMPLATE_MAP.get(settings.get("view"));
+		return tpl == null ? "list-normal.tpl" : tpl;
+	}
+
+	private List<Comment> getCommentsByLogic(int logic, List<String> types,
+			boolean onlyImg, Date start, Date end, int offset, int limit) {
+		List<Comment> comments = null;
 		switch (logic) {
 		// 最新
 		case 0:
+
 			comments = commentService.getLatest(types, onlyImg, start, end,
 					offset, limit);
 			break;
@@ -161,24 +188,16 @@ public class NewsWidgets {
 		default:
 			break;
 		}
-
-		modelMap.put("comments", comments);
-		initTypeAndDetailMap(comments,
-				"true".equalsIgnoreCase(settings.get("showType")), modelMap);
-		String tpl = VIEW_TEMPLATE_MAP.get(settings.get("view"));
-		return tpl == null ? "list-normal.tpl" : tpl;
+		return comments;
 	}
 
-	private void initTypeAndDetailMap(List<Comment> comments, boolean showType,
+	private void initTypeAndDetailMap(List<String> owners, boolean showType,
 			ModelMap map) {
-		if (!CollectionUtils.isEmpty(comments)) {
-			Set<Long> groupIds = new HashSet<Long>();
-			for (Comment c : comments) {
-				groupIds.add(Long.valueOf(c.getOwner()));
-			}
+		if (!CollectionUtils.isEmpty(owners)) {
 			List<Group> groups = new ArrayList<Group>();
 			Map<String, TypeAndPage> tpmap = new HashMap<String, TypeAndPage>();
-			for (Long gid : groupIds) {
+			for (String gidStr : owners) {
+				Long gid = Long.valueOf(gidStr);
 				Group group = groupService.findOne(gid);
 				groups.add(group);
 
@@ -229,7 +248,7 @@ public class NewsWidgets {
 			Page<Comment> cp = commentService.getComments(pageRequest,
 					Constants.CPK_NEWS.getBiz(), owner);
 			modelMap.put("page", cp);
-			initTypeAndDetailMap(cp.getContent(), false, modelMap);
+			initTypeAndDetailMap(Collections.singletonList(owner), false, modelMap);
 		}
 		String tpl = VIEW_TEMPLATE_MAP.get(settings.get("view"));
 		return tpl == null ? "pagination-normal.tpl" : tpl;
@@ -380,5 +399,37 @@ public class NewsWidgets {
 		modelMap.put("newsType", newsType);
 		modelMap.put("keyword", keyword);
 		return "manager.tpl";
+	}
+
+	public static void main(String[] args) {
+		File file = new File(
+				"E:\\cloudstore\\backup\\smart-cms\\2013-08-19\\upload");
+		loop(file);
+	}
+
+	public static void loop(File f) {
+		if (f.isDirectory()) {
+			File[] fs = f.listFiles();
+			for (File file : fs) {
+				loop(file);
+			}
+		} else {
+			String baseName = FilenameUtils.getBaseName(f.getName());
+			if (baseName.equals("orginal")) {
+				// f.renameTo(new File(f.getAbsolutePath().replace("0.jpg",
+				// "c0.jpg")));
+				// System.out.println(f.getAbsolutePath().replace("0.jpg",
+				// "c0.jpg"));
+				String abp = f.getAbsolutePath();
+				try {
+					new CommonImage(f).resizeWithMaxWidth(120).save(
+							abp.replace("orginal.jpg", "z0.jpg"));
+					;
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				// ci.resizeWithMaxWidth(maxWidth).;
+			}
+		}
 	}
 }

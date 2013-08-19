@@ -93,6 +93,14 @@ public class CommonImage implements FileOperation {
         return new CommonImage(imageOperation.cropWithContainer(bufferedImage, containerWidth, containerHeight),this.formatName);
     }
     
+    public CommonImage resizeWithMaxWidth(int maxWidth){
+    	return new CommonImage(imageOperation.resizeWithMaxWidth(bufferedImage, maxWidth),this.formatName);
+    }
+    
+    public CommonImage resizeWithMaxHeight(int maxHeight){
+    	return new CommonImage(imageOperation.resizeWithMaxHeight(bufferedImage, maxHeight),this.formatName);
+    }
+    
     private void initFormatName(ImageInputStream imageInputStream) {
         try {
             Iterator<ImageReader> ir = ImageIO.getImageReaders(imageInputStream);

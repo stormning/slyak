@@ -80,7 +80,8 @@ public class CommentSaveComsumer implements EventComsumer {
 							int sizeIndex=0;
 							for (ImgSize imgSize : imgSizes) {
 								if(imgSize.getWidth()!=null&&imgSize.getHeight()!=null&&imgSize.getWidth()>0&&imgSize.getHeight()>0){
-									ci.cropWithContainer(imgSize.getWidth(), imgSize.getHeight()).save(resouceWithIndex+File.separator+sizeIndex+".jpg");
+									ci.resizeWithMaxWidth(imgSize.getWidth()).save(resouceWithIndex+File.separator+'z'+sizeIndex+".jpg");
+									ci.cropWithContainer(imgSize.getWidth(), imgSize.getHeight()).save(resouceWithIndex+File.separator+'c'+sizeIndex+".jpg");
 									sizeIndex++;
 								}
 							}

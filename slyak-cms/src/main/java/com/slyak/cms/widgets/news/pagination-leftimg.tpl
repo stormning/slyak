@@ -8,7 +8,7 @@
 		    <li>
 		      <div class="span5">
 				<a class="thumbnail" href="">
-		          <img src="${ctx}/file/newsImg/<@splitId idstr=comment.id/>/0/0.jpg?ver=${comment.ver}" style="width:100%">
+		          <img src="${ctx}/file/newsImg/<@splitId idstr=comment.id/>/0/c0.jpg?ver=${comment.ver}" style="width:100%">
 		        </a>
 			  </div>
 			  <div class="span7">
