@@ -254,7 +254,7 @@ public class CmsController implements ServletContextAware,InitializingBean{
 				}
 				newWidget.setTitle(widget.getTitle());
 				newWidget.setBorderTpl(widget.getBorderTpl());
-				newWidget.setPage(page);
+				newWidget.setPageId(page.getId());
 				newWidgets.add(newWidget);
 			}
 //			page.setWidgets(newWidgets);
@@ -360,7 +360,7 @@ public class CmsController implements ServletContextAware,InitializingBean{
 		cmsService.removeWidgetById(widgetId);
 		
 		//update page
-		Page page = widget.getPage();
+		Page page = cmsService.findPageById(widget.getPageId());
 		List<Widget> widgets = cmsService.findWidgetsByPageId(page.getId());
 		boolean showPage = true;
 		for (Widget w : widgets) {
@@ -450,7 +450,7 @@ public class CmsController implements ServletContextAware,InitializingBean{
 	private Widget createWidget(Page page,String widgetName){
 		Widget w = new Widget();
 		//TODO
-		w.setPage(page);
+		w.setPageId(page.getId());
 		w.setName(widgetName);
 		w.setContainer("row0");
 		w.setRank(-1);
@@ -499,7 +499,7 @@ public class CmsController implements ServletContextAware,InitializingBean{
 				String ctx = urlPathHelper.getContextPath(request.getNativeRequest(HttpServletRequest.class));
 				//common attrs
 				model.addAttribute("ctx", ctx);
-				model.addAttribute("view", ctx+"/view/"+widget.getPage().getAlias());
+				model.addAttribute("view", ctx+"/view/"+cmsService.findPageById(widget.getPageId()).getAlias());
 				model.addAttribute("action", ctx+"/action/"+widget.getId());
 				model.addAttribute("resource", ctx+"/widgetResource/"+regionAndName[0]);
 				model.addAttribute("widget", widget);
@@ -581,7 +581,7 @@ public class CmsController implements ServletContextAware,InitializingBean{
 		Map<String,String> mergedSettings = mergeSettings(widgetInfo.getSettingsMap(),actionForm.getSettings());
 		actionForm.setSettings(mergedSettings);
 		
-		Page page = actionForm.getPage();
+		Page page = cmsService.findPageById(actionForm.getPageId());
 		Object handler = widgetManager.getRegionHandler(region);
 		Method method = null;
 		if(handler!=null){

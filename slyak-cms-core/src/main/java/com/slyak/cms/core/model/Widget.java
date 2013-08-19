@@ -41,10 +41,8 @@ public class Widget implements Serializable,Comparable<Widget>{
 	@Column(name="border_class",length=100)
 	private String borderClass;
 	
-	@ManyToOne
-	@JoinColumn(name="page_id")
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	private Page page;
+	@Column(name="page_id")
+	private Long pageId;
 	
 	@Column(name="container",nullable=true,length=50)
 	private String container;
@@ -61,10 +59,6 @@ public class Widget implements Serializable,Comparable<Widget>{
 	
 	private int rank;
 	
-	@OneToOne
-	@JoinColumn(name="id")
-	private Page linkTo;
-
 	@Transient
 	private String content;
 
@@ -99,14 +93,6 @@ public class Widget implements Serializable,Comparable<Widget>{
 
 	public void setContainer(String container) {
 		this.container = container;
-	}
-
-	public Page getPage() {
-		return page;
-	}
-
-	public void setPage(Page page) {
-		this.page = page;
 	}
 
 	public int getRank() {
@@ -147,6 +133,14 @@ public class Widget implements Serializable,Comparable<Widget>{
 
 	public void setBorderClass(String borderClass) {
 		this.borderClass = borderClass;
+	}
+	
+	public Long getPageId() {
+		return pageId;
+	}
+
+	public void setPageId(Long pageId) {
+		this.pageId = pageId;
 	}
 
 	@Override

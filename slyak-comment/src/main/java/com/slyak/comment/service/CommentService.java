@@ -24,20 +24,20 @@ public interface CommentService {
 
 	void view(long commentId);
 
-	List<Comment> getMostCommented(Date start, Date end, int fetchSize);
+	List<Comment> getMostCommented(List<String> owners, boolean onlyImg, Date start, Date end, int offset, int limit);
 	
-	List<Comment> getMostViewed(Date start, Date end, int fetchSize);
+	List<Comment> getMostViewed(List<String> owners, boolean onlyImg, Date start, Date end, int offset, int limit);
 	
-	List<Comment> getMostLiked(Date start, Date end, int fetchSize);
+	List<Comment> getMostLiked(List<String> owners, boolean onlyImg, Date start, Date end, int offset, int limit);
 	
-	List<Comment> getMostHot(Date start, Date end, int fetchSize);
+	List<Comment> getMostHot(Date start, Date end, int offset, int limit);
 
 	void asyncViewed();
 
 	List<String> listActiveOwners(String bizKey, Date start, Date end,
 			int fetchSize);
 	
-	List<Comment> randomListViewed(int fetchSize);
+	List<Comment> randomListViewed(List<String> owners, boolean onlyImg, int fetchSize);
 
 	void batchDeleteComments(List<Long> commentIds);
 
@@ -54,5 +54,7 @@ public interface CommentService {
 	void changeOwner(Long commentId, String newOwner);
 
 	Page<Comment> getCommentsWithImg(Pageable pageable, String biz,
-			List<String> types);
+			List<String> owners);
+
+	List<Comment> getLatest(List<String> owners, boolean onlyImg, Date start,Date end, int offset, int limit);
 }

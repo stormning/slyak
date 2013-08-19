@@ -53,9 +53,6 @@ public class Page implements Serializable{
 	@Column(name="custom_css")
 	private String customCss;
 	
-//	@OneToMany(mappedBy="page",cascade={CascadeType.ALL})
-//	private List<Widget> widgets;
-	
 	@OneToMany(mappedBy="parent",cascade={CascadeType.ALL},fetch=FetchType.EAGER)
 	@Where(clause="can_show=1")
 	@OrderBy("rank desc")

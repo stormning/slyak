@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -14,7 +15,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.CollectionUtils;
@@ -33,12 +33,13 @@ import com.slyak.comment.service.CommentService;
 import com.slyak.config.model.ConfigPK;
 import com.slyak.config.service.ConfigService;
 import com.slyak.core.io.image.ImgConfig;
+import com.slyak.core.util.DateUtils;
 import com.slyak.core.util.JsonUtils;
-import com.slyak.core.web.OffsetLimitRequest;
 import com.slyak.group.model.Group;
 import com.slyak.group.service.GroupService;
 
 @Widgets("news")
+@SuppressWarnings("unchecked")
 public class NewsWidgets {
 
 	@Autowired
@@ -102,48 +103,64 @@ public class NewsWidgets {
 			@Setting(key = "view", value = "listNormal", name = "视图展现形式", options = {
 					@NameAndValue(name = "默认标题列表", value = "listNormal"),
 					@NameAndValue(name = "标题列表(第一个突出显示)", value = "listNormalFirstImportant"),
-					@NameAndValue(name = "图片列表(仅显示分类下拥有图片的文章)", value = "listImages"),
-					@NameAndValue(name = "可切换的tab页标题列表", value = "tabNormal"),
-					@NameAndValue(name = "可切换的tab页图片列表(仅显示分类下拥有图片的文章)", value = "tabImages") }) })
+					@NameAndValue(name = "图片列表(仅显示分类下拥有图片的文章)", value = "listImages") }) })
 	public Object list(com.slyak.cms.core.model.Widget widget, ModelMap modelMap)
 			throws IOException {
 		Map<String, String> settings = widget.getSettings();
 		String typesStr = settings.get("types");
 		List<String> types = null;
+
 		if (!StringUtils.isEmpty(typesStr)) {
 			types = JsonUtils.toType(typesStr, List.class);
 		}
-		if (CollectionUtils.isEmpty(types)) {
-			types = Collections.singletonList("0");
-		}
+
 		String view = settings.get("view");
+		List<Comment> comments = null;
+		int offset = NumberUtils.parseNumber(settings.get("offset"),
+				Integer.class);
+		int limit = NumberUtils.parseNumber(settings.get("limit"),
+				Integer.class);
 
-		List<Comment> comments = new ArrayList<Comment>();
-
-		Pageable pageable = new OffsetLimitRequest(NumberUtils.parseNumber(
-				settings.get("offset"), Integer.class),
-				NumberUtils.parseNumber(settings.get("limit"), Integer.class));
-
-		// logic
-		// commentService.
-
-		if ("listImages".equals(view)) {
-			comments.addAll(commentService.getCommentsWithImg(pageable,
-					Constants.CPK_NEWS.getBiz(), types).getContent());
-		} else if ("tabImages".equals(view)) {
-			Map<String, List<Comment>> commentMap = new HashMap<String, List<Comment>>();
-			for (String type : types) {
-				List<Comment> cs = commentService.getCommentsWithImg(pageable,
-						Constants.CPK_NEWS.getBiz(),
-						Collections.singletonList(type)).getContent();
-				commentMap.put(type, cs);
-				comments.addAll(cs);
-			}
-			modelMap.put("commentsMap", commentMap);
-		} else {
-			comments.addAll(commentService.getComments(pageable,
-					Constants.CPK_NEWS.getBiz(), types).getContent());
+		Date start = null;
+		Date end = null;
+		String drs = settings.get("dateRegion");
+		if (!StringUtils.isBlank(drs)) {
+			end = new Date();
+			int ammount = -Integer.parseInt(drs);
+			start = DateUtils.addDays(end, ammount);
 		}
+
+		int logic = Integer.parseInt(settings.get("logic"));
+		boolean onlyImg = "listImages".equals(view) || "tabImages".equals(view);
+		switch (logic) {
+		// 最新
+		case 0:
+			comments = commentService.getLatest(types, onlyImg, start, end,
+					offset, limit);
+			break;
+		// 最多查看
+		case 1:
+			comments = commentService.getMostViewed(types, onlyImg, start, end,
+					offset, limit);
+			break;
+		// 最多回复
+		case 2:
+			comments = commentService.getMostCommented(types, onlyImg, start,
+					end, offset, limit);
+			break;
+		// 最多喜欢
+		case 3:
+			comments = commentService.getMostLiked(types, onlyImg, start, end,
+					offset, limit);
+			break;
+		// 别人正在看
+		case 4:
+			commentService.randomListViewed(types, onlyImg, limit);
+			break;
+		default:
+			break;
+		}
+
 		modelMap.put("comments", comments);
 		initTypeAndDetailMap(comments,
 				"true".equalsIgnoreCase(settings.get("showType")), modelMap);
@@ -158,34 +175,34 @@ public class NewsWidgets {
 			for (Comment c : comments) {
 				groupIds.add(Long.valueOf(c.getOwner()));
 			}
-			if (!CollectionUtils.isEmpty(groupIds)) {
-				List<Group> groups = groupService
-						.findByIdIn(new ArrayList<Long>(groupIds));
-				Map<String, TypeAndPage> tpmap = new HashMap<String, TypeAndPage>();
-				for (Group group : groups) {
-					TypeAndPage tap = new TypeAndPage();
-					tap.setType(group);
-					if (showType) {
-						List<com.slyak.cms.core.model.Widget> widgets = cmsService
-								.findWidgetsByNameAndAttribute(
-										"news.pagination", "type",
-										String.valueOf(group.getId()));
-						if (!CollectionUtils.isEmpty(widgets)) {
-							tap.setPage(widgets.get(0).getPage());
-						}
-					}
-					List<com.slyak.cms.core.model.Widget> detailWidgets = cmsService
-							.findWidgetsByNameAndAttribute("news.detail",
-									"type", String.valueOf(group.getId()));
-					if (!CollectionUtils.isEmpty(detailWidgets)) {
-						tap.setDetailPage(detailWidgets.get(0).getPage());
-					}
-					tpmap.put(String.valueOf(group.getId()), tap);
-				}
-				map.put("types", tpmap);
-			}
-		}
+			List<Group> groups = new ArrayList<Group>();
+			Map<String, TypeAndPage> tpmap = new HashMap<String, TypeAndPage>();
+			for (Long gid : groupIds) {
+				Group group = groupService.findOne(gid);
+				groups.add(group);
 
+				TypeAndPage tap = new TypeAndPage();
+				tap.setType(group);
+				if (showType) {
+					List<com.slyak.cms.core.model.Widget> widgets = cmsService
+							.findWidgetsByNameAndAttribute("news.pagination",
+									"type", String.valueOf(group.getId()));
+					if (!CollectionUtils.isEmpty(widgets)) {
+						com.slyak.cms.core.model.Widget w = widgets.get(0);
+						tap.setPage(cmsService.findPageById(w.getPageId()));
+					}
+				}
+				List<com.slyak.cms.core.model.Widget> detailWidgets = cmsService
+						.findWidgetsByNameAndAttribute("news.detail", "type",
+								String.valueOf(group.getId()));
+				if (!CollectionUtils.isEmpty(detailWidgets)) {
+					com.slyak.cms.core.model.Widget dw = detailWidgets.get(0);
+					tap.setDetailPage(cmsService.findPageById(dw.getPageId()));
+				}
+				tpmap.put(String.valueOf(group.getId()), tap);
+			}
+			map.put("types", tpmap);
+		}
 	}
 
 	@Widget(settings = {
@@ -241,7 +258,7 @@ public class NewsWidgets {
 			modelMap.put("newsId", newsId);
 			if (comment != null) {
 				commentService.view(newsId);
-				modelMap.put("comment", commentService.findOne(newsId));
+				modelMap.put("comment", comment);
 			}
 		}
 		return "detail.tpl";

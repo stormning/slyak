@@ -23,6 +23,6 @@ public interface PageDao extends JpaRepository<Page, Long> {
 	@QueryHints(@QueryHint(name=org.hibernate.annotations.QueryHints.CACHEABLE,value="true"))
 	List<Page> findByParentIdAndShowOrderByRankDesc(Long parentId,boolean show);
 
-	@Query("select p from Page p,Widget w where p = w.page and w.name=?1")
+	@Query("select p from Page p,Widget w where p.id = w.pageId and w.name=?1")
 	Page findByWidgetName(String widgetName);
 }

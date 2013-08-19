@@ -227,9 +227,9 @@ public class CmsServiceImpl implements CmsService,InitializingBean,ServletContex
 
 	@Override
 	public void saveWidgets(List<Widget> newWidgets) {
-		for (Widget widget : newWidgets) {
-			pageDao.save(widget.getPage());
-		}
+//		for (Widget widget : newWidgets) {
+//			pageDao.save(findPageById(widget.getPageId()));
+//		}
 		widgetDao.save(newWidgets);
 	}
 
