@@ -18,7 +18,7 @@ public class EventPublisherImpl implements EventPublisher,ApplicationContextAwar
 	public void asyncPublish(final String topicId, final String json) {
 		Map<String, EventComsumer> comsumers= applicationContext.getBeansOfType(EventComsumer.class);
 		for (final EventComsumer comsumer : comsumers.values()) {
-			if(comsumer.supports(topicId)){
+			if(comsumer.accept(topicId)){
 				executorService.execute(new Runnable() {
 					@Override
 					public void run() {
@@ -37,7 +37,7 @@ public class EventPublisherImpl implements EventPublisher,ApplicationContextAwar
 	public void publish(String topicId, String json) {
 		Map<String, EventComsumer> comsumers= applicationContext.getBeansOfType(EventComsumer.class);
 		for (final EventComsumer comsumer : comsumers.values()) {
-			if(comsumer.supports(topicId)){
+			if(comsumer.accept(topicId)){
 				try {
 					comsumer.resolve(json);
 				} catch (Exception e) {

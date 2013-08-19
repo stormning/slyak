@@ -29,7 +29,7 @@ public class AddCommentToBizAndOwnerComsumer implements EventComsumer {
 	}
 
 	@Override
-	public boolean supports(String topic) {
+	public boolean accept(String topic) {
 		return Constants.EventTopic.ADD_COMMENT_TO_BIZ_AND_OWNER.equals(topic);
 	}
 

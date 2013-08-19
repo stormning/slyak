@@ -99,7 +99,7 @@ public class CommentSaveComsumer implements EventComsumer {
 	}
 
 	@Override
-	public boolean supports(String topic) {
+	public boolean accept(String topic) {
 		return topic.equals(Constants.EventTopic.COMMENT_SAVE);
 	}
 	
