@@ -7,7 +7,6 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.slyak.group.dao.GroupDao;
 import com.slyak.group.model.Group;
@@ -20,7 +19,6 @@ public class GroupServiceImpl implements GroupService {
 	private GroupDao groupDao;
 
 	@Override
-	@Transactional
 	public void save(Group group) {
 		Long pid = group.getPid();
 		String pathPrefix = "|";
@@ -37,7 +35,6 @@ public class GroupServiceImpl implements GroupService {
 	}
 
 	@Override
-	@Transactional
 	public void delete(Long groupId) {
 		Group group = groupDao.findOne(groupId);
 		if(group==null){

@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.slyak.config.model.Config;
 import com.slyak.config.model.ConfigPK;
@@ -17,8 +18,10 @@ public interface ConfigService {
 	
 	<T> T findData(ConfigPK cpk,Class<T> clazz);
 	
+	@Transactional
 	void save(Config config);
 	
+	@Transactional
 	void save(ConfigPK cpk,Object data);
 	
 	Iterable<Config> findAll(List<ConfigPK> cpks);

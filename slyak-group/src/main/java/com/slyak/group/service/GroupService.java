@@ -2,12 +2,16 @@ package com.slyak.group.service;
 
 import java.util.List;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.slyak.group.model.Group;
 
 public interface GroupService {
 	
+	@Transactional
 	void save(Group group);
 
+	@Transactional
 	void delete(Long groupId);
 
 	List<Group> getRootGroups(String biz, String owner);

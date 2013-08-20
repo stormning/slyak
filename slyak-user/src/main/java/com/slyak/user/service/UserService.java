@@ -15,6 +15,8 @@
  */
 package com.slyak.user.service;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.slyak.user.model.User;
 
 /**
@@ -29,6 +31,7 @@ public interface UserService {
 	/**
 	 * @param user
 	 */
+	@Transactional
 	void regist(User user);
 	
 	boolean exist(String eamil);

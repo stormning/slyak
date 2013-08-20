@@ -7,10 +7,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,7 +33,6 @@ import com.slyak.comment.model.Comment;
 import com.slyak.comment.service.CommentService;
 import com.slyak.config.model.ConfigPK;
 import com.slyak.config.service.ConfigService;
-import com.slyak.core.io.image.CommonImage;
 import com.slyak.core.io.image.ImgConfig;
 import com.slyak.core.util.DateUtils;
 import com.slyak.core.util.JsonUtils;
@@ -62,6 +62,8 @@ public class NewsWidgets {
 		VIEW_TEMPLATE_MAP.put("listNormalFirstImportant",
 				"list-normal-first-important.tpl");
 		VIEW_TEMPLATE_MAP.put("listImages", "list-images.tpl");
+		VIEW_TEMPLATE_MAP.put("listImagesWaterwall",
+				"list-images-waterwall.tpl");
 		VIEW_TEMPLATE_MAP.put("tabNormal", "tab-normal.tpl");
 		VIEW_TEMPLATE_MAP.put("tabImages", "tab-images.tpl");
 
@@ -81,6 +83,7 @@ public class NewsWidgets {
 					@NameAndValue(name = "第二个缩放类型", value = "1"),
 					@NameAndValue(name = "第三个缩放类型", value = "2"),
 					@NameAndValue(name = "第四个缩放类型", value = "3") }),
+			@Setting(key = "newsIds", name = "逗号分隔的编号列表", inputType = InputType.TEXTAREA),
 			@Setting(key = "dateRegion", name = "时间范围", inputType = InputType.SELECT, options = {
 					@NameAndValue(name = "24小时内", value = "1"),
 					@NameAndValue(name = "一周内", value = "7"),
@@ -105,48 +108,75 @@ public class NewsWidgets {
 					@NameAndValue(name = "默认标题列表", value = "listNormal"),
 					@NameAndValue(name = "标题列表(第一个突出显示)", value = "listNormalFirstImportant"),
 					@NameAndValue(name = "图片列表(仅显示分类下拥有图片的文章)", value = "listImages"),
+					@NameAndValue(name = "图片瀑布流列表(仅显示分类下拥有图片的文章)", value = "listImagesWaterwall"),
 					@NameAndValue(name = "图片TAB页(仅显示分类下拥有图片的文章)", value = "tabImages"),
 					@NameAndValue(name = "普通TAB页", value = "tabNormal") }) })
 	public Object list(com.slyak.cms.core.model.Widget widget, ModelMap modelMap)
 			throws IOException {
 
 		Map<String, String> settings = widget.getSettings();
-		String typesStr = settings.get("types");
-		List<String> types = null;
-
-		if (!StringUtils.isEmpty(typesStr)) {
-			types = JsonUtils.toType(typesStr, List.class);
-		}
 
 		String view = settings.get("view");
 		List<Comment> comments = null;
-		int offset = NumberUtils.parseNumber(settings.get("offset"),
-				Integer.class);
-		int limit = NumberUtils.parseNumber(settings.get("limit"),
-				Integer.class);
+		List<String> types = null;
 
-		Date start = null;
-		Date end = null;
-		String drs = settings.get("dateRegion");
-		if (!StringUtils.isBlank(drs)) {
-			end = new Date();
-			int ammount = -Integer.parseInt(drs);
-			start = DateUtils.addDays(end, ammount);
-		}
+		String newsIdsStr = org.springframework.util.StringUtils
+				.trimAllWhitespace(settings.get("newsIds"));
+		if (StringUtils.isEmpty(newsIdsStr)) {
 
-		int logic = Integer.parseInt(settings.get("logic"));
+			String typesStr = settings.get("types");
 
-		boolean tabView = "tabImages".equals(view) || "tabNormal".equals(view);
-		boolean onlyImg = "listImages".equals(view) || "tabImages".equals(view);
-
-		if (tabView) {
-			Map<String,List<Comment>> commentsMap = new HashMap<String, List<Comment>>();
-			for (String type : types) {
-				commentsMap.put(type, getCommentsByLogic(logic,types,onlyImg,start,end,offset,limit));
+			if (!StringUtils.isEmpty(typesStr)) {
+				types = JsonUtils.toType(typesStr, List.class);
 			}
-			modelMap.put("commentsMap", commentsMap);
-		}else{
-			comments = getCommentsByLogic(logic,types,onlyImg,start,end,offset,limit);
+
+			int offset = NumberUtils.parseNumber(settings.get("offset"),
+					Integer.class);
+			int limit = NumberUtils.parseNumber(settings.get("limit"),
+					Integer.class);
+
+			Date start = null;
+			Date end = null;
+			String drs = settings.get("dateRegion");
+			if (!StringUtils.isBlank(drs)) {
+				end = new Date();
+				int ammount = -Integer.parseInt(drs);
+				start = DateUtils.addDays(end, ammount);
+			}
+
+			int logic = Integer.parseInt(settings.get("logic"));
+
+			boolean tabView = "tabImages".equals(view)
+					|| "tabNormal".equals(view);
+			boolean onlyImg = "listImages".equals(view)
+					|| "tabImages".equals(view);
+
+			if (tabView) {
+				Map<String, List<Comment>> commentsMap = new HashMap<String, List<Comment>>();
+				for (String type : types) {
+					commentsMap.put(
+							type,
+							getCommentsByLogic(logic, types, onlyImg, start,
+									end, offset, limit));
+				}
+				modelMap.put("commentsMap", commentsMap);
+			} else {
+				comments = getCommentsByLogic(logic, types, onlyImg, start,
+						end, offset, limit);
+				modelMap.put("comments", comments);
+			}
+		} else {
+			types = new ArrayList<String>();
+			comments = new ArrayList<Comment>();
+			String[] strNewsIds = StringUtils.split(newsIdsStr, ',');
+			for (String strNewsId : strNewsIds) {
+				Long newsId = NumberUtils.parseNumber(strNewsId, Long.class);
+				Comment c = commentService.findOne(newsId);
+				if (c != null) {
+					comments.add(c);
+					types.add(c.getOwner());
+				}
+			}
 			modelMap.put("comments", comments);
 		}
 
@@ -195,8 +225,9 @@ public class NewsWidgets {
 			ModelMap map) {
 		if (!CollectionUtils.isEmpty(owners)) {
 			List<Group> groups = new ArrayList<Group>();
+			Set<String> distinct = new HashSet<String>(owners);
 			Map<String, TypeAndPage> tpmap = new HashMap<String, TypeAndPage>();
-			for (String gidStr : owners) {
+			for (String gidStr : distinct) {
 				Long gid = Long.valueOf(gidStr);
 				Group group = groupService.findOne(gid);
 				groups.add(group);
@@ -248,7 +279,8 @@ public class NewsWidgets {
 			Page<Comment> cp = commentService.getComments(pageRequest,
 					Constants.CPK_NEWS.getBiz(), owner);
 			modelMap.put("page", cp);
-			initTypeAndDetailMap(Collections.singletonList(owner), false, modelMap);
+			initTypeAndDetailMap(Collections.singletonList(owner), false,
+					modelMap);
 		}
 		String tpl = VIEW_TEMPLATE_MAP.get(settings.get("view"));
 		return tpl == null ? "pagination-normal.tpl" : tpl;
@@ -407,29 +439,24 @@ public class NewsWidgets {
 		loop(file);
 	}
 
-	public static void loop(File f) {
-		if (f.isDirectory()) {
-			File[] fs = f.listFiles();
-			for (File file : fs) {
-				loop(file);
-			}
-		} else {
-			String baseName = FilenameUtils.getBaseName(f.getName());
-			if (baseName.equals("orginal")) {
-				// f.renameTo(new File(f.getAbsolutePath().replace("0.jpg",
-				// "c0.jpg")));
-				// System.out.println(f.getAbsolutePath().replace("0.jpg",
-				// "c0.jpg"));
-				String abp = f.getAbsolutePath();
-				try {
-					new CommonImage(f).resizeWithMaxWidth(120).save(
-							abp.replace("orginal.jpg", "z0.jpg"));
-					;
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				// ci.resizeWithMaxWidth(maxWidth).;
-			}
-		}
+	public static void loop(File f) {/*
+									 * if (f.isDirectory()) { File[] fs =
+									 * f.listFiles(); for (File file : fs) {
+									 * loop(file); } } else { String baseName =
+									 * FilenameUtils.getBaseName(f.getName());
+									 * if (baseName.equals("orginal")) { //
+									 * f.renameTo(new
+									 * File(f.getAbsolutePath().replace("0.jpg",
+									 * // "c0.jpg"))); //
+									 * System.out.println(f.getAbsolutePath
+									 * ().replace("0.jpg", // "c0.jpg")); String
+									 * abp = f.getAbsolutePath(); try { new
+									 * CommonImage
+									 * (f).resizeWithMaxWidth(120).save(
+									 * abp.replace("orginal.jpg", "z0.jpg")); ;
+									 * } catch (IOException e) {
+									 * e.printStackTrace(); } //
+									 * ci.resizeWithMaxWidth(maxWidth).; } }
+									 */
 	}
 }

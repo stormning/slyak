@@ -46,10 +46,14 @@
 			</div>
 		</div>
 		<table class="table table-bordered table-striped table-hover" id="widget${widget.id}-table">
-			<tr><th><input type="checkbox" class="no-margin"></th><th>标题</th><th>分类</th><th>创建时间</th><th>作者</th></tr>
+			<tr><th><input type="checkbox" class="no-margin"></th><th>编号</th><th>标题</th><th>分类</th><th>创建时间</th><th>作者</th></tr>
 			<#if page??&&page.content??>
 				<#list page.content as c>
-					<tr class="form-horizontal" newsId="${c.id}"><td><input autocomplete="off" type="checkbox" class="no-margin" newsId="${c.id}"></td><td>${c.title}</td><td>
+					<tr class="form-horizontal" newsId="${c.id}">
+						<td><input autocomplete="off" type="checkbox" class="no-margin" newsId="${c.id}"></td>
+						<td>${c.id}</td>
+						<td>${c.title}</td>
+						<td>
 						<#if leafGroups??>
 							<select name="owner" autocomplete="off">
 								<option value="0">未分类</option>
@@ -58,7 +62,9 @@
 								</#list>
 							</select>
 						</#if>
-					</td><td>${c.createAt}</td><td><#if c.creator??>${c.creator.name!!}</#if></td></tr>			
+						</td>
+						<td>${c.createAt}</td>
+						<td><#if c.creator??>${c.creator.name!!}</#if></td></tr>			
 				</#list>
 				<#else>
 				<tr><td colspan="4">暂无记录</td></tr>

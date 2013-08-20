@@ -16,7 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import com.slyak.comment.dao.CommentDao;
@@ -49,7 +48,6 @@ public class CommentServiceImpl implements CommentService {
 	private Map<Long, ViewDetail> hotCommentViewed = new ConcurrentHashMap<Long, ViewDetail>();
 
 	@Override
-	@Transactional
 	public void save(Comment comment, int fragmentSize, List<Long> tagIds) {
 		boolean hasTagIds = !CollectionUtils.isEmpty(tagIds);
 		Comment commentToSave = null;
@@ -318,7 +316,6 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
-	@Transactional
 	public void batchDeleteComments(List<Long> commentIds) {
 		commentDao.deleteComments(commentIds);
 	}
