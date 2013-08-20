@@ -26,9 +26,7 @@
 				        <div class="item-credits">
 			        		<a class="user" href="javascript:void(0)"><img src="${ctx}/static/images/user-34.jpg"></a>
 			        		<div style="margin-left:44px;height:34px;position:relative">
-			        			<div style="position:absolute;right:0;bottom:0;">
-			        				<a>沉城</a> 发表于 ${comment.createAt?string('yyyy-MM-dd')}
-			        			</div>
+			        			<a>沉城</a><br>发表于 ${comment.createAt?string('yyyy-MM-dd')}
 			        		</div>
 				        </div>
 			        </div>
