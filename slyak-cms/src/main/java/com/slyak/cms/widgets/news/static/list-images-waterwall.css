@@ -68,8 +68,116 @@
 	border-radius: 0px 0px 3px 3px;
 }
 
+
+#ajaxDetail .modal-body {
+	max-height: inherit;
+	padding: 0px;
+}
+
+#ajaxDetail{
+	width: 800px;
+	background-color: transparent;
+	position: absolute;
+	top:30px;
+	left: 50%;
+    margin-left: -400px;
+    box-shadow: inherit;
+    border:0px;
+}
+
 .list-images-waterwall .item-credits img{
 	width:34px;
 	height:34px;
 	float: left;
+}
+
+.news-detail,.news-comment{
+	background: #f8f8f8;
+	background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(255,255,255,0.9)), color-stop(100%, rgba(241,241,241,0.9)));
+	background: -webkit-linear-gradient(rgba(255,255,255,0.9),rgba(241,241,241,0.9));
+	background: -moz-linear-gradient(rgba(255,255,255,0.9),rgba(241,241,241,0.9));
+	background: -o-linear-gradient(rgba(255,255,255,0.9),rgba(241,241,241,0.9));
+	background: linear-gradient(rgba(255,255,255,0.9),rgba(241,241,241,0.9));
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-ms-border-radius: 3px;
+	-o-border-radius: 3px;
+	border-radius: 3px;
+}
+
+.news-detail-footer{
+	padding:11px 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+	border-top: 1px solid rgba(0, 0, 0, 0.22);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+	padding:11px 20px;
+	-webkit-border-radius: 0px 0px 3px 3px;
+	-moz-border-radius: 0px 0px 3px 3px;
+	-ms-border-radius: 0px 0px 3px 3px;
+	-o-border-radius: 0px 0px 3px 3px;
+	border-radius: 0px 0px 3px 3px;
+	margin-bottom: 20px;
+}
+
+.news-detail-footer a{
+	text-decoration: none;
+}
+
+.news-detail-bar{
+	-webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+	-moz-box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+	box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+	vertical-align: middle;
+	border-top: 1px solid #e0e0e0;
+	border-top-color: rgba(0,0,0,0.1);
+	border-bottom: 1px solid rgba(0,0,0,0.22);
+	cursor: default;
+	height: 36px;
+	padding: 8px 20px 7px;
+}
+
+.news-detail-content{
+	padding:23px 20px;
+	background-color: #fff;
+}
+
+.news-comment{
+	padding: 23px 0px;
+}
+
+.news-comment-item{
+	padding:0px 20px 14px;
+	border-bottom: 1px dotted #ccc;
+}
+
+.news-comment-item img{
+	width: 50px;
+	height: 50px;
+}
+
+.news-comment-area{
+	border-bottom: 0px;
+	padding-bottom: 0px;
+}
+
+.news-comment-item textarea{
+	width: 686px;
+}
+
+.news-comment-item .media-body p{
+	color: #171717;
+}
+
+.news-comment-more{
+	cursor: pointer;
+}
+
+.news-comment .media-body form{
+	margin-bottom: 0px;	
+}
+
+.news-comment-date{
+	font-size: 12px;
+	color: #777;
+	font-weight: normal;
 }

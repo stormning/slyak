@@ -54,4 +54,5 @@ public interface CommentDao extends JpaRepository<Comment, Long> {
 	@Modifying
 	void changeCommentOwner(Long commentId, String newOwner);
 
+	List<Comment> findByRefererOrderByIdAsc(Pageable pagebale, Long commentId);
 }

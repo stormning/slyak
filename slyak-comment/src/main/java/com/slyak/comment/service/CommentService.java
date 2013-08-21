@@ -65,4 +65,6 @@ public interface CommentService {
 			List<String> owners);
 
 	List<Comment> getLatest(List<String> owners, boolean onlyImg, Date start,Date end, int offset, int limit);
+
+	List<Comment> getCommentsByReferer(Long commentId, int offset, int limit);
 }

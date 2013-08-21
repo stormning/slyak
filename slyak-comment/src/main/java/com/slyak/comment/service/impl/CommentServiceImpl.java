@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -364,6 +363,12 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	public void changeOwner(Long commentId, String newOwner) {
 		commentDao.changeCommentOwner(commentId, newOwner);
+	}
+
+	@Override
+	public List<Comment> getCommentsByReferer(Long commentId, int offset, int limit) {
+		Pageable pagebale = new OffsetLimitRequest(offset, limit);
+		return commentDao.findByRefererOrderByIdAsc(pagebale,commentId);
 	}
 
 }

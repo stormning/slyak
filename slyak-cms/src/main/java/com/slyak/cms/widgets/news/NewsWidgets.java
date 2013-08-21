@@ -110,7 +110,8 @@ public class NewsWidgets {
 					@NameAndValue(name = "图片列表(仅显示分类下拥有图片的文章)", value = "listImages"),
 					@NameAndValue(name = "图片瀑布流列表(仅显示分类下拥有图片的文章)", value = "listImagesWaterwall"),
 					@NameAndValue(name = "图片TAB页(仅显示分类下拥有图片的文章)", value = "tabImages"),
-					@NameAndValue(name = "普通TAB页", value = "tabNormal") }) })
+					@NameAndValue(name = "普通TAB页", value = "tabNormal") }),
+			@Setting(key = "commentSize", name = "评论数", value = "10", inputType = InputType.INPUT) })
 	public Object list(com.slyak.cms.core.model.Widget widget, ModelMap modelMap)
 			throws IOException {
 
@@ -303,22 +304,33 @@ public class NewsWidgets {
 		}
 	}
 
-	@Widget(show = false, settings = { @Setting(key = "type", value = "0", name = "类型", optionsLoader = "findLeafTypes", inputType = InputType.SELECT) })
-	public String detail(Long newsId, ModelMap modelMap) {
+	@Widget(show = false, settings = {
+			@Setting(key = "type", value = "0", name = "类型", optionsLoader = "findLeafTypes", inputType = InputType.SELECT),
+			@Setting(key = "commentSize", name = "评论数", value = "10", inputType = InputType.INPUT) })
+	public String detail(com.slyak.cms.core.model.Widget widget, Long newsId,
+			ModelMap modelMap) {
 		if (newsId != null) {
 			Comment comment = commentService.findOne(newsId);
 			modelMap.put("newsId", newsId);
 			if (comment != null) {
 				commentService.view(newsId);
 				modelMap.put("comment", comment);
+				modelMap.put("children", commentService.getCommentsByReferer(
+						newsId, 0, NumberUtils.parseNumber(widget.getSettings()
+								.get("commentSize"), Integer.class)));
 			}
 		}
 		return "detail.tpl";
 	}
+	
+	public List<Comment> moreComment(Long referer,int offset,int limit){
+		return commentService.getCommentsByReferer(referer, offset, offset);
+	}
 
-	public void addNews(Comment comment, ModelMap modelMap) {
+	public Comment addNews(Comment comment, ModelMap modelMap) {
 		commentService.save(comment, 200, null);
 		modelMap.put("newsType", comment.getOwner());
+		return comment;
 	}
 
 	@Transactional

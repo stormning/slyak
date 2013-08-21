@@ -575,13 +575,13 @@ public class CmsController implements ServletContextAware,InitializingBean{
 	public ModelAndView actionByWidget(@PathVariable Long widgetId,@PathVariable String region,@PathVariable String methodName,final NativeWebRequest request,final ModelAndViewContainer container,final HttpServletResponse response,Locale locale) throws Exception{
 		
 		//action from widget
-		Widget actionForm = cmsService.findWidgetById(widgetId);
-		String[] regionAndName = StringUtils.split(actionForm.getName(),".");
+		Widget actionFrom = cmsService.findWidgetById(widgetId);
+		String[] regionAndName = StringUtils.split(actionFrom.getName(),".");
 		WidgetInfo widgetInfo = widgetManager.getWidgetInfo(regionAndName[0],regionAndName[1]);
-		Map<String,String> mergedSettings = mergeSettings(widgetInfo.getSettingsMap(),actionForm.getSettings());
-		actionForm.setSettings(mergedSettings);
+		Map<String,String> mergedSettings = mergeSettings(widgetInfo.getSettingsMap(),actionFrom.getSettings());
+		actionFrom.setSettings(mergedSettings);
 		
-		Page page = cmsService.findPageById(actionForm.getPageId());
+		Page page = cmsService.findPageById(actionFrom.getPageId());
 		Object handler = widgetManager.getRegionHandler(region);
 		Method method = null;
 		if(handler!=null){
@@ -589,14 +589,16 @@ public class CmsController implements ServletContextAware,InitializingBean{
 		}
 		if(method!=null){
 			ServletInvocableHandlerMethod handlerMethod = createServletInvocableHandlerMethod(handler, method);
-			Object result = handlerMethod.invokeForRequest(request, container,page,actionForm);
+			Object result = handlerMethod.invokeForRequest(request, container,page,actionFrom);
+			ModelMap model = container.getModel();
+			model.addAttribute("widget",actionFrom);
+			
 			//ajax request
 			if(WebUtils.isAjaxRequest(request.getNativeRequest(HttpServletRequest.class))){
 				response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 				response.setCharacterEncoding("UTF-8");
 				if(result.getClass().isAssignableFrom(String.class)&&((String)result).indexOf("tpl")!=-1){
 					String ctx = urlPathHelper.getContextPath(request.getNativeRequest(HttpServletRequest.class));
-					ModelMap model = container.getModel();
 					//common attrs
 					model.addAttribute("ctx", ctx);
 					model.addAttribute("view", ctx+"/view/"+page.getAlias());

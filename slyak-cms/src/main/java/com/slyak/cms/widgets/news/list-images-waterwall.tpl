@@ -12,14 +12,14 @@
 				<#assign tmp=''>
 				<#assign step=2>
 				<div class="item">
-					<a class="item-wrapper" href="<#if types[comment.owner]??><#assign t = types[comment.owner]><#if (t.detailPage)??>${ctx}/${t.detailPage.alias}?newsId=${comment.id}</#if></#if>" target="_blank">
-				      <img src="${ctx}/file/newsImg<@splitId idstr=comment.id/>/0/z0.jpg?ver=${comment.ver}" style="width:100%">
+					<a class="item-wrapper" data-target="#ajaxDetail" href="${action}/news/detail?newsId=${comment.id}" data-toggle="modal">
+				        <img src="${ctx}/file/newsImg<@splitId idstr=comment.id/>/0/z0.jpg?ver=${comment.ver}" style="width:100%">
 			        </a>
 			        <div class="item-meta">
 			        	<p class="item-description">${comment.title}</p>
 			        	<div class="item-social-meta">
-			        		<span>${comment.viewed} 查看</span>
-			        		<span>${comment.commented} 评论</span>
+			        		<span><em>${comment.viewed}</em> 查看</span>
+			        		<span><em class="item-comment-count">${comment.commented}</em> 评论</span>
 			        	</div>
 			        </div>
 			        <div class="item-credits">
