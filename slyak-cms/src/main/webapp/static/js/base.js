@@ -64,7 +64,7 @@ SLYAK.modal = function(args) {
 			+ args.id
 			+ "' class='modal fade easein hide' aria-hidden='false' aria-labelledby='modalLabel"
 			+ args.id + "' role='dialog' tabindex='-1'>" + header
-			+ "<div class='modal-body'></div>" + footer + "</div>");
+			+ "<div class='modal-body'>loading......</div>" + footer + "</div>");
 
 	modal.on('show', function(a, b, c, d) {
 		if (args.onShow) {

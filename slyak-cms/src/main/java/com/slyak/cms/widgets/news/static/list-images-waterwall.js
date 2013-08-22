@@ -14,7 +14,7 @@ $(function() {
 		});
 	});
 	
-	var commentCount,offset=0,ctx,commentLimit,moreCommentUrl;
+	var commentCount,offset=0,ctx,commentLimit,moreCommentUrl,commentId;
 	
 	var buildHtml = function(comment){
 		var date = new Date(comment.createAt);
@@ -34,6 +34,7 @@ $(function() {
 		nofooter : true,
 		onHidden : function() {
 			$(this).removeData('modal');
+			$(this).find(".modal-body").html("loading......");
 		},
 		onShown : function() {
 			var dataHolder = $(".data-holder");
@@ -41,6 +42,7 @@ $(function() {
 			ctx=dataHolder.attr("ctx");
 			commentLimit=parseInt(dataHolder.attr("commentLimit"));
 			moreCommentUrl=dataHolder.attr("moreCommentUrl");
+			commentId = dataHolder.attr("commentId");
 			
 			$(".news-detail-comments").on("click",function(){
 				var commentTextArea = $(".news-comment textarea");
@@ -52,10 +54,9 @@ $(function() {
 				e.preventDefault();
 				var data = {content:_this.find("[name=content]").val(),referer:_this.find("[name=referer]").val()};
 				$.post(_this.attr("action"),data,function(res){
-					var cc = $(".news-detail-comment-count");
 					commentCount = commentCount+1;
-					cc.html(commentCount);
-					$(".item-comment-count").html(commentCount);
+					$(".news-detail-comment-count").html(commentCount);
+					$(".list-images-waterwall #comment-"+commentId+" .item-comment-count").html(commentCount);
 					$(buildHtml(res)).prependTo(".news-comment").fadeIn();
 				});
 			});

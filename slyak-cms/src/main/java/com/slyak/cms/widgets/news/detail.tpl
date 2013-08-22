@@ -59,6 +59,6 @@
 				</div>
 			</div>
 		</div>
-		<div class="data-holder" ctx="${ctx}" commentCount="${comment.commented}" commentLimit="${(widget.settings.commentSize)?number}" moreCommentUrl="${action}/news/moreComment?referer=${comment.id}&limit=${(widget.settings.commentSize)?number}"></div>
+		<div class="data-holder" commentId="${comment.id}" ctx="${ctx}" commentCount="${comment.commented}" commentLimit="${(widget.settings.commentSize)?number}" moreCommentUrl="${action}/news/moreComment?referer=${comment.id}&limit=${(widget.settings.commentSize)?number}"></div>
 	</#if>
 </#if>					

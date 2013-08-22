@@ -15,7 +15,7 @@
 					<a class="item-wrapper" data-target="#ajaxDetail" href="${action}/news/detail?newsId=${comment.id}" data-toggle="modal">
 				        <img src="${ctx}/file/newsImg<@splitId idstr=comment.id/>/0/z0.jpg?ver=${comment.ver}" style="width:100%">
 			        </a>
-			        <div class="item-meta">
+			        <div class="item-meta" id="comment-${comment.id}">
 			        	<p class="item-description">${comment.title}</p>
 			        	<div class="item-social-meta">
 			        		<span><em>${comment.viewed}</em> 查看</span>
