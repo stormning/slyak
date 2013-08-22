@@ -368,7 +368,7 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	public List<Comment> getCommentsByReferer(Long commentId, int offset, int limit) {
 		Pageable pagebale = new OffsetLimitRequest(offset, limit);
-		return commentDao.findByRefererOrderByIdAsc(pagebale,commentId);
+		return commentDao.findByRefererOrderByIdDesc(pagebale,commentId);
 	}
 
 }

@@ -1,6 +1,5 @@
 package com.slyak.core.util;
 
-import java.io.File;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -16,7 +15,7 @@ public class StringUtils extends org.springframework.util.StringUtils {
 		if(isEmpty(sourceString)){
 			return null;
 		}
-		sourceString = sourceString.replaceAll("<style[^>]*?>[\\s\\S]*?</style>|<script[^>]*?>[\\s\\S]*?</script>|<.+?>", "");
+		sourceString = cleanHtml(sourceString);
 		if(isEmpty(sourceString)){
 			return null;
 		}
@@ -36,6 +35,10 @@ public class StringUtils extends org.springframework.util.StringUtils {
 			}
 		}
 		return sb.toString();
+	}
+	
+	public static String cleanHtml(String html){
+		return html.replaceAll("<style[^>]*?>[\\s\\S]*?</style>|<script[^>]*?>[\\s\\S]*?</script>|<.+?>", "");
 	}
 	
 	public static Set<String> findImgSrcs(String htmlString){

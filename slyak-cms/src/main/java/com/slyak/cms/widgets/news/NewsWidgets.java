@@ -327,9 +327,16 @@ public class NewsWidgets {
 		return commentService.getCommentsByReferer(referer, offset, offset);
 	}
 
+	//admin
 	public Comment addNews(Comment comment, ModelMap modelMap) {
 		commentService.save(comment, 200, null);
 		modelMap.put("newsType", comment.getOwner());
+		return comment;
+	}
+	
+	public Comment addComment(Comment comment) {
+		comment.setContent(com.slyak.core.util.StringUtils.cleanHtml(comment.getContent()));
+		commentService.save(comment, 200, null);
 		return comment;
 	}
 

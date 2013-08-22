@@ -50,7 +50,7 @@
 					<img class="media-object" src="${ctx}/static/images/user-34.jpg">
 				</a>
 				<div class="media-body">
-					<form action="${action}/news/addNews" method="post">
+					<form action="${action}/news/addComment" method="post">
 						<input type="hidden" name="referer" value="${comment.id}"/>
 						<h5 class="media-heading">就是你，骚年！</h5>
 						<textarea name="content"></textarea>
