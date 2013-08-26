@@ -17,7 +17,6 @@ package com.slyak.core.web;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;

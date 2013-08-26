@@ -71,10 +71,12 @@ public class CommentSaveComsumer implements EventComsumer {
 					ImgConfig imgConfig = configService.findData(new ConfigPK(com.slyak.cms.widgets.news.Constants.BIZ_NEWSTYPE, comment.getOwner()), ImgConfig.class);
 					String resouceWithIndex = parent.getFile().getPath()+File.separator+index;
 					FileUtils.forceMkdir(new File(resouceWithIndex));
-					if(imgConfig == null){
+					if(imgConfig == null||(imgConfig.getMaxHeight()<=0||imgConfig.getMaxHeight()<=0)){
 						ci.save(resouceWithIndex+File.separator+"orginal.jpg");
 					} else{
 						ci.resizeWithContainer(imgConfig.getMaxWidth(), imgConfig.getMaxHeight()).save(resouceWithIndex+File.separator+"orginal.jpg");
+					}
+					if(imgConfig!=null){
 						List<ImgSize> imgSizes = imgConfig.getImgSizes();
 						if(!CollectionUtils.isEmpty(imgSizes)){
 							int sizeIndex=0;
