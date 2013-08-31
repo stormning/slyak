@@ -18,6 +18,7 @@ package com.slyak.core.web;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -82,8 +83,6 @@ public class JpaAuthorizingRealm<T> extends AuthorizingRealm implements Initiali
 	
 	private String rolesField;
 	
-	private String permissionsField;
-	
 	protected SaltStyle saltStyle = SaltStyle.NO_SALT;
 	
 	private String saltField = "salt";
@@ -105,10 +104,6 @@ public class JpaAuthorizingRealm<T> extends AuthorizingRealm implements Initiali
 		this.rolesField = rolesField;
 	}
 
-	public void setPermissionsField(String permissionsField) {
-		this.permissionsField = permissionsField;
-	}
-	
 	public void setSaltField(String saltField) {
 		this.saltField = saltField;
 	}
@@ -128,14 +123,18 @@ public class JpaAuthorizingRealm<T> extends AuthorizingRealm implements Initiali
         if(user == null){
         	return null;
         } else {
-        	Set<String> permissions = null;
-        	if(StringUtils.isNotBlank(permissionsField)){
-        		permissions = (Set<String>) getEntityFieldValue(user,permissionsField);
-        	}
+        	Set<String> rolesSet = null;
         	if(StringUtils.isNotBlank(rolesField)){
-        		 throw new AuthorizationException("roles not supported now.");
+        		String rolesStr = (String) getEntityFieldValue(user,rolesField);
+        		if(StringUtils.isNotBlank(rolesField)){
+        			rolesSet = new HashSet<String>();
+        			String[] roles =StringUtils.split(rolesStr,",");
+        			for (String r : roles) {
+        				rolesSet.add(r);
+					}
+        		}
         	}
-        	SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(permissions);
+        	SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(rolesSet);
         	return info;
         }
 	}

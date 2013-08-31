@@ -39,6 +39,8 @@ public class User implements Serializable {
 	private String salt;
 
 	private int sex;
+	
+	private String roles;
 
     public User() {
     }
@@ -97,6 +99,14 @@ public class User implements Serializable {
 
 	public void setSex(int sex) {
 		this.sex = sex;
+	}
+
+	public String getRoles() {
+		return roles;
+	}
+
+	public void setRoles(String roles) {
+		this.roles = roles;
 	}
 
 }
