@@ -22,12 +22,14 @@ public class Location implements Serializable{
 	@Column(length=255,nullable=false)
 	private String name;
 	
-	@Column(length=255)
+	@Column(length=500)
 	private String pinyin;
 	
 	private long pid=0;
 	
 	private String path;
+	
+	private boolean parent;
 
 	public long getId() {
 		return id;
@@ -67,5 +69,13 @@ public class Location implements Serializable{
 
 	public void setPath(String path) {
 		this.path = path;
+	}
+
+	public boolean isParent() {
+		return parent;
+	}
+
+	public void setParent(boolean parent) {
+		this.parent = parent;
 	}
 }
