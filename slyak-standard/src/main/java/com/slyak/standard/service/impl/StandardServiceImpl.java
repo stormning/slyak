@@ -39,10 +39,10 @@ public class StandardServiceImpl implements StandardService {
 		String[] pidPath = StringUtils.split(location.getPath(),"|");
 		if(pidPath!=null&&pidPath.length>0){
 			List<Location> result = new ArrayList<Location>();
-			result.add(location);
 			for (int i=0;i<pidPath.length-1;i++) {
 				result.add(locationDAO.findOne(Long.valueOf(pidPath[i])));
 			}
+			result.add(location);
 			return result;
 		}else{
 			return Collections.singletonList(location);

@@ -15,9 +15,14 @@
  */
 package com.slyak.user.service;
 
-import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import com.slyak.group.model.Group;
 import com.slyak.user.model.User;
+import com.slyak.user.util.UserQuery;
 
 /**
  * .
@@ -28,14 +33,15 @@ import com.slyak.user.model.User;
  */
 public interface UserService {
 
-	/**
-	 * @param user
-	 */
-	@Transactional
 	void regist(User user);
 	
 	boolean exist(String eamil);
 	
 	User getUser(Long userId);
 
+	Page<User> pageUsers(Pageable pageable, UserQuery query);
+	
+	List<Group> getUserGroups(Long userId);
+	
+	List<Group> getUserGroups(Long userId,String biz,String owner);
 }

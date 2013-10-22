@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.slyak.user.util.Status;
+
 
 /**
  * The persistent class for the t_user database table.
@@ -41,6 +43,8 @@ public class User implements Serializable {
 	private int sex;
 	
 	private String roles;
+	
+	private Status status = Status.NORMAL;
 
     public User() {
     }
@@ -109,4 +113,11 @@ public class User implements Serializable {
 		this.roles = roles;
 	}
 
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
 }

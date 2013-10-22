@@ -43,7 +43,10 @@ public class LoginUserHelper {
 	
 	public static Long getLoginUserId(){
 		Subject currentUser = SecurityUtils.getSubject();
-		return (Long) currentUser.getPrincipal();
+		if(currentUser!=null){
+			return (Long) currentUser.getPrincipal();
+		}
+		return null;
 	}
 	
 	public static User getLoginUser() {

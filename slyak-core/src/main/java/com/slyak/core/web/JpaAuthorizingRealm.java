@@ -90,7 +90,6 @@ public class JpaAuthorizingRealm<T> extends AuthorizingRealm implements Initiali
 	public void setSaltStyle(SaltStyle saltStyle) {
 		this.saltStyle = saltStyle;
 	}
-	
 
 	public void setUsernameField(String usernameField) {
 		this.usernameField = usernameField;
@@ -108,8 +107,6 @@ public class JpaAuthorizingRealm<T> extends AuthorizingRealm implements Initiali
 		this.saltField = saltField;
 	}
 
-
-	@SuppressWarnings("unchecked")
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 		//null usernames are invalid

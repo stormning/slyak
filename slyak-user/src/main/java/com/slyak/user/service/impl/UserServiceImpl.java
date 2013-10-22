@@ -15,13 +15,27 @@
  */
 package com.slyak.user.service.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.slyak.group.model.Group;
+import com.slyak.group.service.GroupService;
+import com.slyak.user.dao.UserExtDao;
 import com.slyak.user.dao.UserDao;
+import com.slyak.user.dao.UserGroupDao;
 import com.slyak.user.model.User;
+import com.slyak.user.model.UserGroup;
 import com.slyak.user.service.UserService;
+import com.slyak.user.util.UserQuery;
 
 /**
  * .
@@ -31,10 +45,20 @@ import com.slyak.user.service.UserService;
  * @version V1.0, 2012-12-14
  */
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private UserDao userDao;
+	
+	@Autowired
+	private UserExtDao userExtDao;
+	
+	@Autowired
+	private UserGroupDao userGroupDao;
+	
+	@Autowired
+	private GroupService groupService;
 	
 	@Override
 	public void regist(User user) {
@@ -58,6 +82,46 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User getUser(Long userId) {
 		return userDao.findOne(userId);
+	}
+
+	@Override
+	public Page<User> pageUsers(Pageable pageable, UserQuery query) {
+		return userExtDao.pageUsers(pageable,query);
+	}
+
+	@Override
+	public List<Group> getUserGroups(Long userId) {
+		return getUserGroups(userId, null);
+	}
+
+	@Override
+	public List<Group> getUserGroups(Long userId, final String biz, final String owner) {
+		return getUserGroups(userId,new UserGroupFilter() {
+			@Override
+			public boolean match(Group group) {
+				return biz.equalsIgnoreCase(group.getBiz())&&owner.equalsIgnoreCase(group.getOwner());
+			}
+		});
+	}
+	
+	interface UserGroupFilter{
+		boolean match(Group group);
+	}
+	
+	private List<Group> getUserGroups(Long userId,UserGroupFilter filter){
+		List<UserGroup> ugs = userGroupDao.findByIdUserId(userId);
+		if(CollectionUtils.isEmpty(ugs)){
+			return Collections.emptyList();
+		}else{
+			List<Group> gs = new ArrayList<Group>();
+			for (UserGroup ug : ugs) {
+				Group group = groupService.findOne(ug.getId().getGroupId());
+				if(filter == null || !filter.match(group)){
+					gs.add(group);
+				}
+			}
+			return gs;
+		}
 	}
 
 }

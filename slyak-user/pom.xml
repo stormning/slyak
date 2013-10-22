@@ -6,4 +6,11 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>slyak-user</artifactId>
+  <dependencies>
+  	<dependency>
+  		<groupId>com.slyak</groupId>
+  		<artifactId>slyak-group</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  </dependencies>
 </project>
