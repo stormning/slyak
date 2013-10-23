@@ -8,8 +8,10 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.slyak.group.dao.GroupAccessDao;
 import com.slyak.group.dao.GroupDao;
 import com.slyak.group.model.Group;
+import com.slyak.group.model.GroupAccess;
 import com.slyak.group.service.GroupService;
 
 @Service
@@ -17,6 +19,9 @@ public class GroupServiceImpl implements GroupService {
 
 	@Autowired
 	private GroupDao groupDao;
+	
+	@Autowired
+	private GroupAccessDao groupAccessDao;
 
 	@Override
 	public void save(Group group) {
@@ -114,5 +119,10 @@ public class GroupServiceImpl implements GroupService {
 	@Override
 	public List<Group> findByIdIn(List<Long> groupIds) {
 		return groupDao.findByIdIn(groupIds);
+	}
+
+	@Override
+	public List<GroupAccess> findGroupAccesses(Long groupId) {
+		return groupAccessDao.findByGroupId(groupId);
 	}
 }

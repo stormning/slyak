@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.slyak.group.model.Group;
+import com.slyak.group.model.GroupAccess;
 
 public interface GroupService {
 	
@@ -31,4 +32,6 @@ public interface GroupService {
 	List<Group> findAllLeaves(String biz, String owner);
 
 	List<Group> findByIdIn(List<Long> groupIds);
+	
+	List<GroupAccess> findGroupAccesses(Long groupId);
 }
