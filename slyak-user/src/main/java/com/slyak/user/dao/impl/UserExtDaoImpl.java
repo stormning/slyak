@@ -70,6 +70,9 @@ public class UserExtDaoImpl implements UserExtDao {
 		int total = ((Number) countQuery.getSingleResult()).intValue();
 		List<User> content = null;
 		if (total > 0) {
+			int offset = pageable.getPageNumber()*pageable.getPageSize();
+			listQuery.setFirstResult(offset);
+			listQuery.setMaxResults(pageable.getPageSize());
 			content = listQuery.getResultList();
 		} else {
 			content = Collections.emptyList();

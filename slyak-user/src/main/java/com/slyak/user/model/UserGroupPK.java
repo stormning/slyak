@@ -14,6 +14,10 @@ public class UserGroupPK implements Serializable {
 	
 	private Long groupId;
 	
+	public UserGroupPK(){
+		
+	}
+	
 	public UserGroupPK(Long userId,Long groupId){
 		this.userId = userId;
 		this.groupId = groupId;

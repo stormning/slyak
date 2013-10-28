@@ -17,9 +17,11 @@ package com.slyak.user.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +29,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import com.slyak.group.model.Group;
 import com.slyak.group.service.GroupService;
-import com.slyak.user.dao.UserExtDao;
 import com.slyak.user.dao.UserDao;
+import com.slyak.user.dao.UserExtDao;
 import com.slyak.user.dao.UserGroupDao;
 import com.slyak.user.model.User;
 import com.slyak.user.model.UserGroup;
+import com.slyak.user.model.UserGroupPK;
 import com.slyak.user.service.UserService;
 import com.slyak.user.util.UserQuery;
 
@@ -111,29 +115,52 @@ public class UserServiceImpl implements UserService {
 					gsFiltered.add(g);
 				}
 			}
-			return null;
+			return gsFiltered;
 		}
-	}
-
-	interface UserGroupFilter {
-		boolean match(Group group);
 	}
 
 	private List<Group> getUserAllGroups(Long userId) {
 		List<Group> groups = userGroupsContext.get();
-		if (userGroupsContext.get() == null) {
+		if ((groups = userGroupsContext.get()) == null) {
 			List<UserGroup> ugs = userGroupDao.findByIdUserId(userId);
 			if (CollectionUtils.isEmpty(ugs)) {
-				ugs = Collections.emptyList();
+				groups = Collections.emptyList();
 			} else {
-				List<Group> gs = new ArrayList<Group>();
+				groups = new ArrayList<Group>();
 				for (UserGroup ug : ugs) {
-					gs.add(groupService.findOne(ug.getId().getGroupId()));
+					groups.add(groupService.findOne(ug.getId().getGroupId()));
 				}
-				userGroupsContext.set(gs);
+				userGroupsContext.set(groups);
 			}
 		}
-		return userGroupsContext.get();
+		return groups;
+	}
+
+	@Override
+	public Map<Long, List<Group>> getUsersGroups(Set<Long> userIds) {
+		List<UserGroup> ugs = userGroupDao.findByIdUserIdIn(userIds);
+		if (CollectionUtils.isEmpty(ugs)) {
+			return Collections.emptyMap();
+		} else {
+			Map<Long, List<Group>> usgs = new HashMap<Long, List<Group>>();
+			for (Long uid : userIds) {
+				usgs.put(uid, new ArrayList<Group>());
+			}
+			for (UserGroup ug : ugs) {
+				UserGroupPK ugp = ug.getId();
+				usgs.get(ugp.getUserId()).add(
+						groupService.findOne(ugp.getGroupId()));
+			}
+			return usgs;
+		}
+	}
+
+	@Override
+	public Map<Long, List<Group>> getUsersGroups(Set<Long> userIds, String biz,
+			String owner) {
+		List<UserGroup> ugs = userGroupDao.findByIdUserIdInBizAndOwner(userIds,
+				biz, owner);
+		return null;
 	}
 
 }

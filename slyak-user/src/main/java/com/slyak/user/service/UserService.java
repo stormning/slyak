@@ -16,6 +16,8 @@
 package com.slyak.user.service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,4 +46,8 @@ public interface UserService {
 	List<Group> getUserGroups(Long userId);
 	
 	List<Group> getUserGroups(Long userId,String biz,String owner);
+	
+	Map<Long,List<Group>> getUsersGroups(Set<Long> userIds);
+	
+	Map<Long,List<Group>> getUsersGroups(Set<Long> userIds,String biz,String owner);
 }
