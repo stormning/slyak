@@ -138,18 +138,23 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Map<Long, List<Group>> getUsersGroups(Set<Long> userIds) {
-		List<UserGroup> ugs = userGroupDao.findByIdUserIdIn(userIds);
+		return convertToUsersGroups(userGroupDao.findByIdUserIdIn(userIds));
+	}
+
+	private Map<Long, List<Group>> convertToUsersGroups(List<UserGroup> ugs) {
 		if (CollectionUtils.isEmpty(ugs)) {
 			return Collections.emptyMap();
 		} else {
 			Map<Long, List<Group>> usgs = new HashMap<Long, List<Group>>();
-			for (Long uid : userIds) {
-				usgs.put(uid, new ArrayList<Group>());
-			}
 			for (UserGroup ug : ugs) {
 				UserGroupPK ugp = ug.getId();
-				usgs.get(ugp.getUserId()).add(
-						groupService.findOne(ugp.getGroupId()));
+				Long uid = ugp.getUserId();
+				List<Group> gs = usgs.get(uid);
+				if (gs == null) {
+					gs = new ArrayList<Group>();
+					usgs.put(uid, gs);
+				}
+				gs.add(groupService.findOne(ugp.getGroupId()));
 			}
 			return usgs;
 		}
@@ -158,9 +163,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Map<Long, List<Group>> getUsersGroups(Set<Long> userIds, String biz,
 			String owner) {
-		List<UserGroup> ugs = userGroupDao.findByIdUserIdInBizAndOwner(userIds,
-				biz, owner);
-		return null;
+		return convertToUsersGroups(userGroupDao.findByIdUserIdInBizAndOwner(
+				userIds, biz, owner));
 	}
 
 }
