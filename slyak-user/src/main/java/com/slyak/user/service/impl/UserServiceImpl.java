@@ -166,5 +166,10 @@ public class UserServiceImpl implements UserService {
 		return convertToUsersGroups(userGroupDao.findByIdUserIdInBizAndOwner(
 				userIds, biz, owner));
 	}
+	
+	public static void main(String[] args) {
+		int a = 0200;
+		System.out.println(a);
+	}
 
 }
