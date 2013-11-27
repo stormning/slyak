@@ -1,3 +1,11 @@
+/**
+ * Project name : slyak-tag
+ * File name : TagServiceImpl.java
+ * Package name : com.slyak.tag.service.impl
+ * Date : 2013-11-27
+ * Copyright : 2013 , SLYAK.COM All Rights Reserved
+ * Author : stormning@163.com
+ */
 package com.slyak.tag.service.impl;
 
 import java.util.List;

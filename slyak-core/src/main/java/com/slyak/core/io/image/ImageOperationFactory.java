@@ -1,17 +1,10 @@
-/*
- * Project:  any
- * Module:   slyak-core
- * File:     ImageOperationFactory.java
- * Modifier: zhouning
- * Modified: 2012-12-9 下午8:11:02 
- *
- * Copyright (c) 2012 Sanyuan Ltd. All Rights Reserved.
- *
- * Copying of this document or code and giving it to others and the
- * use or communication of the contents thereof, are forbidden without
- * expressed authority. Offenders are liable to the payment of damages.
- * All rights reserved in the event of the grant of a invention patent or the
- * registration of a utility model, design or code.
+/**
+ * Project name : slyak-core
+ * File name : ImageOperationFactory.java
+ * Package name : com.slyak.core.io.image
+ * Date : 2013-11-27
+ * Copyright : 2013 , SLYAK.COM All Rights Reserved
+ * Author : stormning@163.com
  */
 package com.slyak.core.io.image;
 

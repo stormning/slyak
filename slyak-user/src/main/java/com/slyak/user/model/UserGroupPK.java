@@ -1,3 +1,11 @@
+/**
+ * Project name : slyak-user
+ * File name : UserGroupPK.java
+ * Package name : com.slyak.user.model
+ * Date : 2013-11-27
+ * Copyright : 2013 , SLYAK.COM All Rights Reserved
+ * Author : stormning@163.com
+ */
 package com.slyak.user.model;
 
 import java.io.Serializable;

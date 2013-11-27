@@ -1,3 +1,11 @@
+/**
+ * Project name : slyak-group
+ * File name : GroupAccess.java
+ * Package name : com.slyak.group.model
+ * Date : 2013-11-27
+ * Copyright : 2013 , SLYAK.COM All Rights Reserved
+ * Author : stormning@163.com
+ */
 package com.slyak.group.model;
 
 import java.io.Serializable;

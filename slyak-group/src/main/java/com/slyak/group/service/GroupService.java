@@ -1,3 +1,11 @@
+/**
+ * Project name : slyak-group
+ * File name : GroupService.java
+ * Package name : com.slyak.group.service
+ * Date : 2013-11-27
+ * Copyright : 2013 , SLYAK.COM All Rights Reserved
+ * Author : stormning@163.com
+ */
 package com.slyak.group.service;
 
 import java.util.List;

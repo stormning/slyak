@@ -1,8 +1,10 @@
-/*
- * @(#)CommonFileOperation.java 2011
- *
- * Copyright 2011 Slyak SoftWare, Inc. All rights reserved.
- * SLYAK Limited Company/CONFIDENTIAL. Use is subject to license terms.
+/**
+ * Project name : slyak-core
+ * File name : CommonFile.java
+ * Package name : com.slyak.core.io
+ * Date : 2013-11-27
+ * Copyright : 2013 , SLYAK.COM All Rights Reserved
+ * Author : stormning@163.com
  */
 package com.slyak.core.io;
 

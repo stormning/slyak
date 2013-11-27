@@ -1,3 +1,11 @@
+/**
+ * Project name : slyak-cms
+ * File name : CmsController.java
+ * Package name : com.slyak.cms.web
+ * Date : 2013-11-27
+ * Copyright : 2013 , SLYAK.COM All Rights Reserved
+ * Author : stormning@163.com
+ */
 package com.slyak.cms.web;
 
 import java.io.File;

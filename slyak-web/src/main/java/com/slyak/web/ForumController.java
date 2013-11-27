@@ -1,3 +1,11 @@
+/**
+ * Project name : slyak-web
+ * File name : ForumController.java
+ * Package name : com.slyak.web
+ * Date : 2013-11-27
+ * Copyright : 2013 , SLYAK.COM All Rights Reserved
+ * Author : stormning@163.com
+ */
 package com.slyak.web;
 
 import java.util.List;
