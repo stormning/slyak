@@ -30,6 +30,8 @@ public interface UserService {
 
 	void regist(User user);
 	
+	void update(User user);
+	
 	boolean exist(String eamil);
 	
 	User getUser(Long userId);
@@ -43,4 +45,18 @@ public interface UserService {
 	Map<Long,List<Group>> getUsersGroups(Set<Long> userIds);
 	
 	Map<Long,List<Group>> getUsersGroups(Set<Long> userIds,String biz,String owner);
+
+	void toggleStatus(Long userId);
+
+	List<User> recentRegist(int fetchSize);
+	
+	long countRealUser();
+	
+	User randomFakeUser();
+	
+	User generateFakeUser(String password);
+
+	User findFakeUser();
+	
+	Map<Long,User> getUsersByIds(Set<Long> userIds);
 }

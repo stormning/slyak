@@ -23,12 +23,15 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.cache.Cache;
 import org.springframework.cache.Cache.ValueWrapper;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+@Component
 public class JavaScriptHandler implements InitializingBean {
 
-	private Resource[] jsLibs;
+	private Resource[] jsLibs = new Resource[] {new ClassPathResource("/com/slyak/core/js/env.rhino.1.2.js"),new ClassPathResource("/com/slyak/core/js/jquery.js")};
 
 	private Scriptable global;
 
@@ -127,4 +130,14 @@ public class JavaScriptHandler implements InitializingBean {
 		this.jsLibs = jsLibs;
 	}
 
+	public static void main(String[] args) {
+		JavaScriptHandler handler = new JavaScriptHandler();
+		try {
+			handler.afterPropertiesSet();
+			Object obj = handler.evalFunction("function(str){return $(str).find(':not(span)').html()}","<div><span>aaaa</span><b>bb</b></div><script>alert(1)</script>");
+			System.out.println(obj.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

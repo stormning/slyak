@@ -8,8 +8,6 @@
  */
 package com.slyak.core.web;
 
-import java.util.Set;
-
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 

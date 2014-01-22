@@ -15,6 +15,11 @@ import java.io.Writer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
+import org.springframework.util.AntPathMatcher;
+import org.springframework.util.PathMatcher;
+import org.springframework.web.util.UrlPathHelper;
+
 import com.alibaba.fastjson.JSON;
 
 public class WebUtils extends org.springframework.web.util.WebUtils {
@@ -60,5 +65,28 @@ public class WebUtils extends org.springframework.web.util.WebUtils {
 	
 	public static void writeToResponse(String result,HttpServletResponse response) throws IOException{
 		response.getWriter().write(result);
+	}
+	
+	private static final PathMatcher PATH_MATCHER = new AntPathMatcher();
+	private static final UrlPathHelper PATH_HELPER = new UrlPathHelper();
+	public static boolean requestMatch(HttpServletRequest request,String pattern){
+		return PATH_MATCHER.match(pattern, PATH_HELPER.getOriginatingRequestUri(request));
+	}
+	
+	public static void main(String[] args) {
+		PathMatcher matcher = new AntPathMatcher();
+		System.out.println(matcher.match("/user/**", "/user/1"));
+	}
+
+	public static boolean argumentsMatch(HttpServletRequest request,
+			String arguments) {
+		String[] argValueStrs = StringUtils.split(arguments,"&");
+		for (String argValue : argValueStrs) {
+			String[] ava =  StringUtils.split(argValue,"=");
+			if(!StringUtils.equals(request.getParameter(ava[0]), ava[1])){
+				return false;
+			}
+		}
+		return true;
 	}
 }

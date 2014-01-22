@@ -105,7 +105,7 @@ public class StaticResourceMappingManagerImpl implements StaticResourceMappingMa
 
 	@Override
 	public Resource getRealPathByBizAndOwner(String biz, String owner) {
-		String path = StringUtils.cleanPath(getUploadPath()+File.separator+biz+devideOwner(owner,File.separator));
+		String path = StringUtils.cleanPath(getUploadPath()+File.separator+biz+com.slyak.core.util.StringUtils.devidePath(owner,File.separator));
 		Resource resource = resourceLoader.getResource(path);
 		try {
 			if(!resource.exists()){
@@ -122,23 +122,9 @@ public class StaticResourceMappingManagerImpl implements StaticResourceMappingMa
 
 	@Override
 	public String getHttpPathByBizAndOwner(String biz, String owner) {
-		return getHttpPathPrefix()+"/"+biz+devideOwner(owner,"/");
+		return getHttpPathPrefix()+"/"+biz+com.slyak.core.util.StringUtils.devidePath(owner,"/");
 	}
 	
-	private String devideOwner(String owner,String seperator){
-		int len = owner.length();
-		int start = 0;
-		StringBuffer sb = new StringBuffer();
-		int step = 2;
-		while(start<len){
-			if(len-start<step){
-				step = len-start;
-			}
-			sb.append(seperator+owner.substring(start,start+step));
-			start+=2;
-		}
-		return sb.toString();
-	}
 	
 	public static void main(String[] args) {
 		String owner = "123456";
@@ -154,6 +140,14 @@ public class StaticResourceMappingManagerImpl implements StaticResourceMappingMa
 			start+=2;
 		}
 		System.out.println(sb.toString());
+	}
+
+	/* (non-Javadoc)
+	 * @see com.slyak.core.io.StaticResourceMappingManager#getResourceByPath(java.lang.String)
+	 */
+	@Override
+	public Resource getResourceByPath(String path) {
+		return resourceLoader.getResource(StringUtils.cleanPath(getUploadPath()+path.replaceFirst(getHttpPathPrefix(), "")));
 	}
 	
 }

@@ -62,6 +62,39 @@ public class StringUtils extends org.springframework.util.StringUtils {
 		return imgSrcs;
 	}
 	
+	public static String devidePath(String longPath,String seperator){
+		int len = longPath.length();
+		int start = 0;
+		StringBuffer sb = new StringBuffer();
+		int step = 2;
+		while(start<len){
+			if(len-start<step){
+				step = len-start;
+			}
+			sb.append(seperator+longPath.substring(start,start+step));
+			start+=2;
+		}
+		return sb.toString();
+	}
+	
+	public static String randomName() {
+		String[] simple = { "an", "ao", "andy", "apple", "blue", "boy", "ben",
+				"bob", "black", "cold", "code", "color", "cream", "cindy",
+				"doctor", "dany", "dog", "dick", "egg", "easy", "editor",
+				"fox", "fade", "fall", "fancy", "green", "gentle", "good",
+				"glass", "happy", "half", "hard", "holidy", "jack", "jade",
+				"jeep", "july", "kid", "kind", "king", "killer", "lucky",
+				"luck", "looser", "lord", "mm", "moon", "magic", "music",
+				"note", "noah", "nil", "nut", "orange", "open", "ok", "old",
+				"pop", "park", "painter", "print", "queen", "quite", "quake",
+				"quail", "red", "rapid", "rabbit", "rose", "soul", "saga",
+				"sailor", "soldier", "tiger", "tag", "trick", "touch", "UFO",
+				"guly", "under", "user", "victor", "visitor", "visual", "void",
+				"world", "wise", "wide", "water", "x-ray", "x", "yellow",
+				"year", "yolk", "yew", "zink", "zealot", "zebra", "zero" };
+		return simple[(int) Math.floor(Math.random() * (simple.length))];
+	}
+	
 	public static void main(String[] args) {
 		//<img class="current" src="http://f.any123.com/pagelet/ad/index/Banner1.jpg" />aaa<img src="">
 		//<img data-ke-src="http://static.oschina.net/uploads/img/201211/13065445_YtoG.png" src="http://static.oschina.net/uploads/img/201211/13065445_YtoG.png" alt="eXo Platform">

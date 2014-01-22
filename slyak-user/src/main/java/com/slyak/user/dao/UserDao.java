@@ -9,6 +9,7 @@
 package com.slyak.user.dao;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.QueryHint;
 
@@ -42,4 +43,26 @@ public interface UserDao extends JpaRepository<User, Long> {
 
 	@Query("select u from User u")
 	List<User> listUsers(Pageable pageable);
+
+	@Query("select u from User u order by u.createAt desc")
+	List<User> findAllOrderByCreateAt(Pageable olr);
+
+	/**
+	 * @param fake
+	 * @return
+	 */
+	@Query("select count(u) from User u where u.fake=?1")
+	@QueryHints({@QueryHint(name=org.hibernate.annotations.QueryHints.CACHEABLE,value="true")}) 
+	long countByFake(boolean fake);
+	
+	
+	@Query("select u from User u where u.fake=?1")
+	@QueryHints({@QueryHint(name=org.hibernate.annotations.QueryHints.CACHEABLE,value="true")}) 
+	Page<User> findByFake(Pageable pageable, boolean fake);
+
+	/**
+	 * @param userIds
+	 * @return
+	 */
+	List<User> findByIdIn(Set<Long> userIds);
 }

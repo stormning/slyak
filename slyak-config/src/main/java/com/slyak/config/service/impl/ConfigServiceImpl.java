@@ -49,7 +49,7 @@ public class ConfigServiceImpl implements ConfigService {
 	}
 
 	@Override
-	public Iterable<Config> findAll(List<ConfigPK> cpks) {
+	public List<Config> findAll(List<ConfigPK> cpks) {
 		return configDao.findAll(cpks);
 	}
 

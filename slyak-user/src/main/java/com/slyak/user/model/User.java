@@ -9,6 +9,7 @@
 package com.slyak.user.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +17,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 
 import com.slyak.user.util.Status;
 
@@ -25,7 +29,7 @@ import com.slyak.user.util.Status;
  * 
  */
 @Entity
-@Table(name="t_user")
+@Table(name="t_user",uniqueConstraints={@UniqueConstraint(columnNames="email"),@UniqueConstraint(columnNames="nick_name")})
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -52,7 +56,14 @@ public class User implements Serializable {
 	
 	private String roles;
 	
-	private Status status = Status.NORMAL;
+	private Status status = Status.ENABLED;
+	
+	private String info;
+	
+	private boolean fake = false;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date createAt = new Date(); 
 
     public User() {
     }
@@ -127,5 +138,29 @@ public class User implements Serializable {
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	public String getInfo() {
+		return info;
+	}
+
+	public void setInfo(String info) {
+		this.info = info;
+	}
+
+	public Date getCreateAt() {
+		return createAt;
+	}
+
+	public void setCreateAt(Date createAt) {
+		this.createAt = createAt;
+	}
+
+	public boolean isFake() {
+		return fake;
+	}
+
+	public void setFake(boolean fake) {
+		this.fake = fake;
 	}
 }

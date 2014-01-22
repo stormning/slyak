@@ -32,7 +32,7 @@ public interface ConfigService {
 	@Transactional
 	void save(ConfigPK cpk,Object data);
 	
-	Iterable<Config> findAll(List<ConfigPK> cpks);
+	List<Config> findAll(List<ConfigPK> cpks);
 	
 	Page<Config> findByBiz(Pageable pageable,final String biz, Set<Integer> status);
 

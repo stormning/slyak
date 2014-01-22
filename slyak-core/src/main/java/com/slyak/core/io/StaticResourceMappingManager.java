@@ -21,4 +21,6 @@ public interface StaticResourceMappingManager {
 	
 	//use when view
 	String getHttpPathByBizAndOwner(String biz,String owner);
+	
+	Resource getResourceByPath(String path);
 }

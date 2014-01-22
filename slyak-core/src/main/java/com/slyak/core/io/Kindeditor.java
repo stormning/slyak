@@ -21,6 +21,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FilenameUtils;
+
 
 @SuppressWarnings({"rawtypes","unchecked"})
 public class Kindeditor implements TextEditor {
@@ -57,7 +59,7 @@ public class Kindeditor implements TextEditor {
 				hash.put("is_photo", false);
 				hash.put("filetype", "");
 			} else if(file.isFile()){
-				String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+				String fileExt = FilenameUtils.getExtension(fileName);
 				hash.put("is_dir", false);
 				hash.put("has_file", false);
 				hash.put("filesize", file.length());

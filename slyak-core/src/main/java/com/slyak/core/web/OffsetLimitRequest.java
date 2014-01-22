@@ -50,4 +50,36 @@ public class OffsetLimitRequest implements Pageable {
 		return this.sort;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.springframework.data.domain.Pageable#next()
+	 */
+	@Override
+	public Pageable next() {
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.springframework.data.domain.Pageable#previousOrFirst()
+	 */
+	@Override
+	public Pageable previousOrFirst() {
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.springframework.data.domain.Pageable#first()
+	 */
+	@Override
+	public Pageable first() {
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.springframework.data.domain.Pageable#hasPrevious()
+	 */
+	@Override
+	public boolean hasPrevious() {
+		return false;
+	}
+
 }
