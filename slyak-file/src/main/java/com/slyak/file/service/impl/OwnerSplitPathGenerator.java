@@ -12,34 +12,19 @@ import java.io.File;
 
 import com.slyak.file.service.OwnerPathGenerator;
 
-public class OwnerSplitPathGenerator implements OwnerPathGenerator{
+public class OwnerSplitPathGenerator implements OwnerPathGenerator {
 
 	@Override
 	public String generateOwnerPath(String owner) {
-		StringBuffer path = new StringBuffer();
+		int len = owner.length();
 		int begin = 0;
-		int total = owner.length();
-		int step = Math.min(2, owner.length()-begin);
-		while(begin<total) {
-			path.append(File.pathSeparatorChar).append(owner.substring(begin,step));
-			begin += step;
-			step = Math.min(2, owner.length()-begin);
+		int setp = 2;
+		StringBuffer path = new StringBuffer();
+		while(begin < len) {
+			int end = Math.min(begin + setp, len);
+			path.append(File.separatorChar).append(owner.substring(begin, end));
+			begin = end;
 		}
 		return path.toString();
 	}
-	
-	public static void main(String[] args) {
-		String owner = "123";
-		StringBuffer path = new StringBuffer();
-		int begin = 0;
-		int total = owner.length();
-		int step = Math.min(2, owner.length()-begin);
-		while(begin<total) {
-			path.append(File.pathSeparatorChar).append(owner.substring(begin,step));
-			begin += step;
-			step = Math.min(2, owner.length()-begin);
-		}
-		System.out.println(path.toString());
-	}
-
 }

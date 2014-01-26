@@ -47,12 +47,9 @@ public class FileController{
 	
 	private TextEditor textEditor = new Kindeditor();
 	
+	@Autowired(required = false)
 	private ImageConfigService imageConfigService ;
 	
-	public void setImageConfigService(ImageConfigService imageConfigService) {
-		this.imageConfigService = imageConfigService;
-	}
-
 	@Autowired(required = false)
 	private FileService fileService;
 	
@@ -122,7 +119,7 @@ public class FileController{
 	public Map<String,Object> textEditorFiles(String order,String path){
 		try{
 			File folder = fileService.findReal(FileService.BIZ_TEXT_EDITOR, null, null);
-			return textEditor.listFiles(folder.getAbsolutePath(),path,order);
+			return textEditor.listFiles(folder.getPath(),path,order);
 		} catch (Exception e) {
 			return Collections.emptyMap();
 		}

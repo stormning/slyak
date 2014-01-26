@@ -9,6 +9,7 @@
 package com.slyak.core.io;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.util.ResourceUtils;
 
 
 @SuppressWarnings({"rawtypes","unchecked"})
@@ -48,51 +50,55 @@ public class Kindeditor implements TextEditor {
 	@Override
 	public Map<String, Object> listFiles(String rootPath,String dir,String order) {
 		List<Hashtable> fileList = new ArrayList<Hashtable>();
-		File directory = new File(rootPath+File.separator+dir.replaceFirst("r", ""));
-		for (File file : directory.listFiles()) {
-			Hashtable hash = new Hashtable();
-			String fileName = file.getName();
-			if(file.isDirectory()) {
-				hash.put("is_dir", true);
-				hash.put("has_file", (file.listFiles() != null));
-				hash.put("filesize", 0L);
-				hash.put("is_photo", false);
-				hash.put("filetype", "");
-			} else if(file.isFile()){
-				String fileExt = FilenameUtils.getExtension(fileName);
-				hash.put("is_dir", false);
-				hash.put("has_file", false);
-				hash.put("filesize", file.length());
-				hash.put("is_photo", Arrays.<String>asList(imgSuffix).contains(fileExt));
-				hash.put("filetype", fileExt);
+		try {
+			File directory = ResourceUtils.getFile(rootPath+File.separator+dir.replaceFirst("r", ""));
+			for (File file : directory.listFiles()) {
+				Hashtable hash = new Hashtable();
+				String fileName = file.getName();
+				if(file.isDirectory()) {
+					hash.put("is_dir", true);
+					hash.put("has_file", (file.listFiles() != null));
+					hash.put("filesize", 0L);
+					hash.put("is_photo", false);
+					hash.put("filetype", "");
+				} else if(file.isFile()){
+					String fileExt = FilenameUtils.getExtension(fileName);
+					hash.put("is_dir", false);
+					hash.put("has_file", false);
+					hash.put("filesize", file.length());
+					hash.put("is_photo", Arrays.<String>asList(imgSuffix).contains(fileExt));
+					hash.put("filetype", fileExt);
+				}
+				hash.put("filename", fileName);
+				hash.put("datetime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(file.lastModified()));
+				fileList.add(hash);
 			}
-			hash.put("filename", fileName);
-			hash.put("datetime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(file.lastModified()));
-			fileList.add(hash);
+			
+			if ("size".equals(order)) {
+				Collections.sort(fileList, new SizeComparator());
+			} else if ("type".equals(order)) {
+				Collections.sort(fileList, new TypeComparator());
+			} else {
+				Collections.sort(fileList, new NameComparator());
+			}
+			Map<String,Object> result = new HashMap<String,Object>();
+			
+			int pos = directory.getPath().indexOf("textEditor");
+			
+			int currentDirPathPos = pos+9;
+			
+			String currentDirPath = directory.getPath().substring(currentDirPathPos).replace('\\', '/');
+			
+			String[] splited = currentDirPath.split("/");
+			result.put("moveup_dir_path", splited.length>1?splited[0]:"");
+			result.put("current_dir_path", currentDirPath);
+			result.put("current_url", ("/file/"+directory.getPath().substring(pos)+"/").replace('\\', '/'));
+			result.put("total_count", fileList.size());
+			result.put("file_list", fileList);
+			return result;
+		} catch (FileNotFoundException e) {
+			return Collections.emptyMap();
 		}
-		
-		if ("size".equals(order)) {
-			Collections.sort(fileList, new SizeComparator());
-		} else if ("type".equals(order)) {
-			Collections.sort(fileList, new TypeComparator());
-		} else {
-			Collections.sort(fileList, new NameComparator());
-		}
-		Map<String,Object> result = new HashMap<String,Object>();
-		
-		int pos = directory.getPath().indexOf("textEditor");
-		
-		int currentDirPathPos = pos+9;
-		
-		String currentDirPath = directory.getPath().substring(currentDirPathPos).replace('\\', '/');
-		
-		String[] splited = currentDirPath.split("/");
-		result.put("moveup_dir_path", splited.length>1?splited[0]:"");
-		result.put("current_dir_path", currentDirPath);
-		result.put("current_url", ("/file/"+directory.getPath().substring(pos)+"/").replace('\\', '/'));
-		result.put("total_count", fileList.size());
-		result.put("file_list", fileList);
-		return result;
 	}
 	
 	private class NameComparator implements Comparator {

@@ -85,14 +85,14 @@ public class FileServiceImpl implements FileService, ServletContextAware,
 	private String getRelativePath(String biz, String owner, String fileName) {
 		StringBuffer path = new StringBuffer();
 		if (StringUtils.hasText(biz)) {
-			path.append(File.pathSeparatorChar).append(biz);
+			path.append(File.separatorChar).append(biz);
 		}
 		if (StringUtils.hasText(owner)) {
-			path.append(File.pathSeparatorChar)
+			path.append(File.separatorChar)
 					.append(ownerToPath(null, owner));
 		}
 		if (StringUtils.hasText(fileName)) {
-			path.append(File.pathSeparatorChar).append(fileName);
+			path.append(File.separatorChar).append(fileName);
 		}
 		return StringUtils.cleanPath(path.toString());
 	}
