@@ -6,13 +6,9 @@
  * Copyright : 2013 , SLYAK.COM All Rights Reserved
  * Author : stormning@163.com
  */
-package com.slyak.core.io;
+package com.slyak.file.service;
 
-import org.springframework.web.multipart.MultipartFile;
-
-public interface FilePathGenerator {
+public interface OwnerPathGenerator {
 	
-	boolean supports(String owner);
-	
-	String generatePath(MultipartFile file,String owner);
+	String generateOwnerPath(String owner);
 }
