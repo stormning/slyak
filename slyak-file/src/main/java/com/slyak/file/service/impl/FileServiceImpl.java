@@ -9,6 +9,8 @@
 package com.slyak.file.service.impl;
 
 import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,7 +81,12 @@ public class FileServiceImpl implements FileService, ServletContextAware,
 	public File findReal(String biz, String owner, String fileName) {
 		StringBuffer path = new StringBuffer(uploadPath);
 		path.append(getRelativePath(biz, owner, fileName));
-		return new File(StringUtils.cleanPath(path.toString()));
+		try {
+			return new File(new URI(StringUtils.cleanPath(path.toString())));
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	private String getRelativePath(String biz, String owner, String fileName) {
@@ -88,8 +95,7 @@ public class FileServiceImpl implements FileService, ServletContextAware,
 			path.append(File.separatorChar).append(biz);
 		}
 		if (StringUtils.hasText(owner)) {
-			path.append(File.separatorChar)
-					.append(ownerToPath(null, owner));
+			path.append(ownerToPath(null, owner));
 		}
 		if (StringUtils.hasText(fileName)) {
 			path.append(File.separatorChar).append(fileName);
@@ -131,8 +137,7 @@ public class FileServiceImpl implements FileService, ServletContextAware,
 	@Override
 	public String getFileHttpPath(String requestPrefix, String biz,
 			String owner, String fileName) {
-		return servletContext.getContextPath() + "/" + requestPrefix
-				+ getRelativePath(biz, owner, fileName);
+		return StringUtils.cleanPath(servletContext.getContextPath() + requestPrefix + File.separatorChar + biz + File.separatorChar + owner + File.separatorChar + fileName); 
 	}
 
 	/*

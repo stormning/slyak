@@ -18,6 +18,8 @@ public interface FileService {
 	
 	String ORIGINAL_FILE = "original";
 	
+	String TMP_FILE = "tmp";
+	
 	void saveVirtual(VirtualFile virtualFile);
 
 	VirtualFile findVirtual(String biz, String owner);

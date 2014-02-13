@@ -8,28 +8,37 @@
  */
 package com.slyak.file.web;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UrlPathHelper;
 
 import com.slyak.core.io.Kindeditor;
 import com.slyak.core.io.TextEditor;
@@ -39,9 +48,12 @@ import com.slyak.file.bo.VirtualFile;
 import com.slyak.file.service.FileService;
 import com.slyak.file.service.ImageConfigService;
 
+import freemarker.template.Configuration;
+import freemarker.template.TemplateException;
+
 @Controller
 @RequestMapping("/file")
-public class FileController{
+public class FileController implements InitializingBean{
 	
 	private static final String REQUEST_PREFIX = "/file";
 	
@@ -50,14 +62,18 @@ public class FileController{
 	@Autowired(required = false)
 	private ImageConfigService imageConfigService ;
 	
-	@Autowired(required = false)
+	@Autowired
 	private FileService fileService;
+	
+	private Configuration configuration;
+	
+	private UrlPathHelper urlPathHelper = new UrlPathHelper();
 	
 	@RequestMapping(value="/upload",method=RequestMethod.POST)
 	@ResponseBody
 	public VirtualFile uploadOriginalFile(HttpServletRequest request,HttpServletResponse response,MultipartFile file,String biz,String owner) throws IOException{
-		fileService.findReal(biz, owner, FileService.ORIGINAL_FILE);
-		FileCopyUtils.copy(file.getInputStream(), response.getOutputStream());
+		File original = fileService.findReal(biz, owner, FileService.ORIGINAL_FILE);
+		FileCopyUtils.copy(file.getInputStream(), FileUtils.openOutputStream(original));
 		VirtualFile virtualFile = new VirtualFile();
 		virtualFile.setBiz(biz);
 		virtualFile.setOwner(owner);
@@ -68,10 +84,42 @@ public class FileController{
 		return virtualFile;
 	}
 	
+	@RequestMapping(value="/uploadTmp",method=RequestMethod.POST)
+	public String uploadTmpFile(HttpServletRequest request,HttpServletResponse response,MultipartFile file,String biz,String owner) throws IOException{
+		File tmp = fileService.findReal(biz, owner, FileService.TMP_FILE);
+		FileCopyUtils.copy(file.getInputStream(), FileUtils.openOutputStream(tmp));
+		return "redirect:/file/crop?biz="+biz+"&owner="+owner;
+	}
+	
+	@RequestMapping(value="/crop",method=RequestMethod.GET)
+	public void cropOriginalFileView(String biz,String owner,Model model,Locale locale,HttpServletRequest request,HttpServletResponse response) throws TemplateException, IOException {
+		File tmp = fileService.findReal(biz, owner, FileService.TMP_FILE);
+		if(tmp.exists()) {
+			model.addAttribute("tmp", fileService.getFileHttpPath(REQUEST_PREFIX+"/view", biz, owner, FileService.TMP_FILE));
+		}
+		if(fileService.findReal(biz, owner, FileService.ORIGINAL_FILE).exists()) {
+			model.addAttribute("croped", true);
+		}
+		ImgSize first = imageConfigService.findSizes(biz).values().iterator().next();
+		model.addAttribute("aspectRatio",(double)first.getWidth()/first.getHeight());
+		model.addAttribute("ctx", urlPathHelper.getContextPath(request));
+		model.addAttribute("biz", biz);
+		model.addAttribute("owner", owner);
+		response.getWriter().print(FreeMarkerTemplateUtils.processTemplateIntoString(configuration.getTemplate("crop.ftl",locale), model));
+	}
+	
+	@RequestMapping(value="/crop",method=RequestMethod.POST)
+	@ResponseBody
+	public String cropOriginalFile(String biz,String owner,int left,int top,int width,int height,Model model) throws IOException {
+		File tmp = fileService.findReal(biz, owner, FileService.TMP_FILE);
+		CommonImage ci = new CommonImage(tmp);
+		ci.crop(left, top, width, height).save(fileService.findReal(biz, owner, FileService.ORIGINAL_FILE));
+		return "callback script";
+	}
+	
 	@RequestMapping(value="/download/{biz}/{owner}",method=RequestMethod.POST)
 	public ResponseEntity<byte[]> download(@PathVariable String biz,@PathVariable String owner) throws IOException{
 		File original = fileService.findReal(biz,owner,FileService.ORIGINAL_FILE);
-		
 		if(original.exists()) {
 			HttpHeaders headers = new HttpHeaders();  
 		    headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);  
@@ -86,8 +134,8 @@ public class FileController{
 	@RequestMapping(value="/view/{biz}/{owner}/{fileName}")
 	public void view(HttpServletResponse response,@PathVariable String biz,@PathVariable String owner,@PathVariable String fileName) throws IOException{
 		//find size config
-		ImgSize imgSize = imageConfigService.findSize(biz,fileName);
-		if(imgSize!=null) {
+		ImgSize imgSize = null;
+		if(fileName.equals(FileService.TMP_FILE) || (imgSize=imageConfigService.findSize(biz,fileName))!=null) {
 			//find file in size
 			File fileInType = fileService.findReal(biz, owner ,fileName);
 			if(!fileInType.exists()) {
@@ -123,5 +171,17 @@ public class FileController{
 		} catch (Exception e) {
 			return Collections.emptyMap();
 		}
+	}
+
+
+	/* (non-Javadoc)
+	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+	 */
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		FreeMarkerConfigurationFactoryBean fcfb = new FreeMarkerConfigurationFactoryBean();
+		fcfb.setTemplateLoaderPaths("classpath:/META-INF");
+		fcfb.setDefaultEncoding("UTF-8");
+		this.configuration = fcfb.createConfiguration();
 	}
 }
