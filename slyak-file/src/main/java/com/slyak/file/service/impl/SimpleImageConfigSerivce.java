@@ -8,27 +8,32 @@
  */
 package com.slyak.file.service.impl;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Map;
 
-import com.slyak.core.io.image.ImgSize;
+import org.springframework.util.ResourceUtils;
+
+import com.slyak.file.bo.ImageConfig;
 import com.slyak.file.service.ImageConfigService;
 
 public class SimpleImageConfigSerivce implements ImageConfigService{
 	
-	private Map<String,Map<String, ImgSize>> bizTypeImgSizeConfig;
+	
+	private Map<String,Map<String, ImageConfig>> bizTypeImgSizeConfig;
 	
 	/* (non-Javadoc)
 	 * @see com.slyak.file.service.ImageConfigService#findSize(java.lang.String, java.lang.String)
 	 */
 	public void setBizTypeImgSizeConfig(
-			Map<String, Map<String, ImgSize>> bizTypeImgSizeConfig) {
+			Map<String, Map<String, ImageConfig>> bizTypeImgSizeConfig) {
 		this.bizTypeImgSizeConfig = bizTypeImgSizeConfig;
 	}
 
 	@Override
-	public ImgSize findSize(String biz, String type) {
+	public ImageConfig findImageConfig(String biz, String type) {
 		//biz:{small:40x40,big:60x60}
-		Map<String, ImgSize> typeImgSizes = findSizes(biz);
+		Map<String, ImageConfig> typeImgSizes = findImageConfigs(biz);
 		if(typeImgSizes!=null) {
 			return typeImgSizes.get(type);
 		}
@@ -39,8 +44,24 @@ public class SimpleImageConfigSerivce implements ImageConfigService{
 	 * @see com.slyak.file.service.ImageConfigService#findSizes(java.lang.String)
 	 */
 	@Override
-	public Map<String, ImgSize> findSizes(String biz) {
+	public Map<String, ImageConfig> findImageConfigs(String biz) {
 		return bizTypeImgSizeConfig.get(biz);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.slyak.file.service.ImageConfigService#getDefaultImage(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public File findDefaultImage(String biz, String fileName) {
+		ImageConfig imageConfig = findImageConfig(biz, fileName);
+		if (imageConfig == null) {
+			return null;
+		}
+		try {
+			return ResourceUtils.getFile(imageConfig.getDefaultImgLocation());
+		} catch (FileNotFoundException e) {
+			return null;
+		}
 	}
 
 }

@@ -8,14 +8,17 @@
  */
 package com.slyak.file.service;
 
+import java.io.File;
 import java.util.Map;
 
-import com.slyak.core.io.image.ImgSize;
+import com.slyak.file.bo.ImageConfig;
 
 public interface ImageConfigService {
 
-	ImgSize findSize(String biz, String fileName);
+	ImageConfig findImageConfig(String biz, String fileName);
 
-	Map<String, ImgSize> findSizes(String biz);
-
+	Map<String, ImageConfig> findImageConfigs(String biz);
+	
+	File findDefaultImage(String biz,String fileName);
+	
 }

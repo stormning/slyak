@@ -51,8 +51,7 @@ public class FileServiceImpl implements FileService, ServletContextAware,
 	}
 
 	{
-		defaultPathGenerators
-				.put(BIZ_TEXT_EDITOR, new OwnerDatePathGenerator());
+		defaultPathGenerators.put(BIZ_TEXT_EDITOR, new OwnerDatePathGenerator());
 	}
 
 	/*
@@ -63,8 +62,7 @@ public class FileServiceImpl implements FileService, ServletContextAware,
 	 */
 	@Override
 	public com.slyak.file.bo.VirtualFile findVirtual(String biz, String owner) {
-		List<VirtualFile> virtualFiles = virtualFileDao.findByBizAndOwner(biz,
-				owner);
+		List<VirtualFile> virtualFiles = virtualFileDao.findByBizAndOwner(biz,owner);
 		if (!CollectionUtils.isEmpty(virtualFiles)) {
 			return virtualFiles.get(0);
 		}

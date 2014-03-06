@@ -8,16 +8,14 @@
  */
 package com.slyak.file.web;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 
-import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -44,6 +42,7 @@ import com.slyak.core.io.Kindeditor;
 import com.slyak.core.io.TextEditor;
 import com.slyak.core.io.image.CommonImage;
 import com.slyak.core.io.image.ImgSize;
+import com.slyak.file.bo.ImageConfig;
 import com.slyak.file.bo.VirtualFile;
 import com.slyak.file.service.FileService;
 import com.slyak.file.service.ImageConfigService;
@@ -95,12 +94,15 @@ public class FileController implements InitializingBean{
 	public void cropOriginalFileView(String biz,String owner,Model model,Locale locale,HttpServletRequest request,HttpServletResponse response) throws TemplateException, IOException {
 		File tmp = fileService.findReal(biz, owner, FileService.TMP_FILE);
 		if(tmp.exists()) {
-			model.addAttribute("tmp", fileService.getFileHttpPath(REQUEST_PREFIX+"/view", biz, owner, FileService.TMP_FILE));
+			model.addAttribute("uploaded", true);
 		}
 		if(fileService.findReal(biz, owner, FileService.ORIGINAL_FILE).exists()) {
 			model.addAttribute("croped", true);
 		}
-		ImgSize first = imageConfigService.findSizes(biz).values().iterator().next();
+		Entry<String, ImageConfig> firstEntry = imageConfigService.findImageConfigs(biz).entrySet().iterator().next();
+		ImgSize first = firstEntry.getValue().getImgSize();
+		model.addAttribute("firtFileName",firstEntry.getKey());
+		model.addAttribute("aspectRatio",(double)first.getWidth()/first.getHeight());
 		model.addAttribute("aspectRatio",(double)first.getWidth()/first.getHeight());
 		model.addAttribute("ctx", urlPathHelper.getContextPath(request));
 		model.addAttribute("biz", biz);
@@ -134,20 +136,27 @@ public class FileController implements InitializingBean{
 	@RequestMapping(value="/view/{biz}/{owner}/{fileName}")
 	public void view(HttpServletResponse response,@PathVariable String biz,@PathVariable String owner,@PathVariable String fileName) throws IOException{
 		//find size config
-		ImgSize imgSize = null;
-		if(fileName.equals(FileService.TMP_FILE) || (imgSize=imageConfigService.findSize(biz,fileName))!=null) {
+		ImageConfig imgConfig = imageConfigService.findImageConfig(biz,fileName);
+		File fileInType = null;
+		if(fileName.equals(FileService.TMP_FILE) || imgConfig!=null) {
 			//find file in size
-			File fileInType = fileService.findReal(biz, owner ,fileName);
+			fileInType = fileService.findReal(biz, owner ,fileName);
 			if(!fileInType.exists()) {
 				File original = fileService.findReal(biz, owner,FileService.ORIGINAL_FILE);
 				if(original.exists()) {
 					//resize
+					ImgSize imgSize =imgConfig.getImgSize();
 					new CommonImage(original).resizeWithContainer(imgSize.getWidth(), imgSize.getHeight()).save(fileInType);
 				}
 			}
-			if(fileInType.exists()) {
-				FileCopyUtils.copy(new FileInputStream(fileInType), response.getOutputStream());
-			}
+		}
+		
+		if(fileInType == null || !fileInType.exists()) {
+			fileInType = imageConfigService.findDefaultImage(biz, fileName);
+		}
+		
+		if(fileInType!=null && fileInType.exists()) {
+			FileCopyUtils.copy(new FileInputStream(fileInType), response.getOutputStream());
 		}
 	}
 	

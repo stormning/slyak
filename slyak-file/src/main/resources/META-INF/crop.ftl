@@ -7,13 +7,14 @@
 		<link rel="stylesheet" href="${ctx}/fileResource/js/Jcrop/css/jquery.Jcrop.css" type="text/css" />
 		<style>
 			.cropArea{
-				font-size : 12px;
-				padding:15px;
+			   font-size : 12px;
+			   padding:15px;
 			}
+			
 			#preview-pane {
-			  border: 1px rgba(0,0,0,.4) solid;
-			  background-color: white;
-			  margin-bottom:15px;
+			   border: 1px rgba(0,0,0,.4) solid;
+			   background-color: white;
+			   margin-bottom:15px;
 			}
 			
 			.crop-header #preview-pane,.crop-header p{
@@ -105,15 +106,22 @@
 			<div class="crop-header">
 				<div id="preview-pane">
 				    <div class="preview-container" style="width:90px;height:${90/aspectRatio}px">
-				      <img src="${ctx}/file/view/${biz}/${owner}/tmp" class="jcrop-preview" alt="Preview" />
+				      <#if uploaded??>
+					  	<img src="${ctx}/file/view/${biz}/${owner}/tmp" class="jcrop-preview" alt="Preview" />
+					  <#else>
+				      	<img src="${ctx}/file/view/${biz}/${owner}/${firtFileName}" style="width:90px;height:${90/aspectRatio}px" class="jcrop-preview" alt="Preview" />
+					  </#if>
 				    </div>
 				</div>
 				<p>请截取需要上传的图片区域</p>
 				<div style="clear:both"></div>
 			</div>
-			<div class="tmpImageContainer">
-				<img src="${ctx}/file/view/${biz}/${owner}/tmp" id="tmpImage"/>
-			</div>
+			
+			<#if uploaded??&&!croped??>
+				<div class="tmpImageContainer">
+					<img src="${ctx}/file/view/${biz}/${owner}/tmp" id="tmpImage"/>
+				</div>
+			</#if>
 		</div>
 	</body>
 </html>
