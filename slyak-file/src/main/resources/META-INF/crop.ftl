@@ -4,11 +4,14 @@
 	<meta charset="UTF-8">
 		<script src="${ctx}/fileResource/js/jquery-1.7.2.min.js"></script>
 		<script src="${ctx}/fileResource/js/Jcrop/js/jquery.Jcrop.js"></script>
-		<link rel="stylesheet" href="${ctx}/fileResource/js/Jcrop/css/jquery.Jcrop.css" type="text/css" />
+		<link rel="stylesheet" type="text/css" href="${ctx}/fileResource/js/Jcrop/css/jquery.Jcrop.css" type="text/css" />
+		<script src="${ctx}/fileResource/js/uploadify/jquery.uploadify.min.js" type="text/javascript"></script>
+		<link rel="stylesheet" type="text/css" href="${ctx}/fileResource/js/uploadify/uploadify.css">
 		<style>
 			.cropArea{
 			   font-size : 12px;
 			   padding:15px;
+			   margin:0px;
 			}
 			
 			#preview-pane {
@@ -26,6 +29,12 @@
 				margin:0px;
 			}
 			
+			.crop-footer{
+				background-color:#f0f0f0;
+				padding:10px;
+				border-top:1px solid #ccc;
+			}
+			
 			#preview-pane .preview-container {
 			  overflow: hidden;
 			}
@@ -33,6 +42,12 @@
 			.tmpImageContainer{
 				padding-top:10px;
 				border-top:1px solid #ccc;
+			}
+			
+			.uploadify-button{
+				border:1px solid #ddd;
+				background-color:#eee;
+				text-align:center
 			}
 		</style>
 		<script>
@@ -89,20 +104,34 @@
 				    this.setSelect([x,y,w,h]);
 				});
 				
-				$("#uploadTmp").on("change",function(){
-					$("#uploadTmpForm").submit();
+				$('#uploadTmp').uploadify({
+					'formData':{
+						'biz': '${biz}',
+						'owner': '${owner}'
+					},
+					'fileObjName':'file',
+					'multi': false,
+					'fileTypeExts' : '*.gif; *.jpg; *.png',
+					'swf':'${ctx}/fileResource/js/uploadify/uploadify.swf',
+					'uploader' : '${ctx}/file/uploadTmp',
+					'buttonText':'选择图片',
+					'width':90;
+					'height':26;
+					'fileSizeLimit' : '30MB',
+					'onUploadSuccess':function(){
+						location.reload();
+					}
 				});
 				
 			});
 		</script>
 	</head>
 	<body class="cropArea">
-		<form action="${ctx}/file/uploadTmp" method="POST" id="uploadTmpForm" enctype="multipart/form-data">
-			<input type="hidden" name="biz" value="${biz}"/>
-			<input type="hidden" name="owner" value="${owner}"/>
-			<input type="file" id="uploadTmp" name="file"/>
-		</form>
 		<div>
+			<form>
+				<div id="queue"></div>
+				<input type="file" id="uploadTmp" name="file"/>
+			</form>
 			<div class="crop-header">
 				<div id="preview-pane">
 				    <div class="preview-container" style="width:90px;height:${90/aspectRatio}px">
@@ -120,6 +149,10 @@
 			<#if uploaded??&&!croped??>
 				<div class="tmpImageContainer">
 					<img src="${ctx}/file/view/${biz}/${owner}/tmp" id="tmpImage"/>
+				</div>
+				<div class="crop-footer">
+					<input type="submit" value="确认" id="submitCrop">
+					<a href="#" id="cancelCrop">取消</a>
 				</div>
 			</#if>
 		</div>

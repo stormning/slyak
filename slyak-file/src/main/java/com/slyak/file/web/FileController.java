@@ -84,10 +84,11 @@ public class FileController implements InitializingBean{
 	}
 	
 	@RequestMapping(value="/uploadTmp",method=RequestMethod.POST)
+	@ResponseBody
 	public String uploadTmpFile(HttpServletRequest request,HttpServletResponse response,MultipartFile file,String biz,String owner) throws IOException{
 		File tmp = fileService.findReal(biz, owner, FileService.TMP_FILE);
 		FileCopyUtils.copy(file.getInputStream(), FileUtils.openOutputStream(tmp));
-		return "redirect:/file/crop?biz="+biz+"&owner="+owner;
+		return "1";
 	}
 	
 	@RequestMapping(value="/crop",method=RequestMethod.GET)
@@ -102,7 +103,6 @@ public class FileController implements InitializingBean{
 		Entry<String, ImageConfig> firstEntry = imageConfigService.findImageConfigs(biz).entrySet().iterator().next();
 		ImgSize first = firstEntry.getValue().getImgSize();
 		model.addAttribute("firtFileName",firstEntry.getKey());
-		model.addAttribute("aspectRatio",(double)first.getWidth()/first.getHeight());
 		model.addAttribute("aspectRatio",(double)first.getWidth()/first.getHeight());
 		model.addAttribute("ctx", urlPathHelper.getContextPath(request));
 		model.addAttribute("biz", biz);
