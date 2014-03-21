@@ -23,6 +23,8 @@ public interface FileService {
 	void saveVirtual(VirtualFile virtualFile);
 
 	VirtualFile findVirtual(String biz, String owner);
+	
+	File findBaseFlolder(String biz);
 
 	/**
 	 * return file or directory
@@ -34,6 +36,8 @@ public interface FileService {
 	File findReal(String biz, String owner ,String fileName);
 	
 	String getFileHttpPath(String requestPrefix,String biz, String owner ,String fileName);
+	
+	File getFileByHttpPath(String requestPrefix,String httpPath);
 	
 	String ownerToPath(String biz, String owner);
 }

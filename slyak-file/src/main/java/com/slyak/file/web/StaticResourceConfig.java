@@ -45,7 +45,16 @@ public class StaticResourceConfig implements ApplicationContextAware,ServletCont
 		requestHandler.setServletContext(servletContext);
 		requestHandler.setApplicationContext(applicationContext);
 		urlMap.put("/fileResource/**", requestHandler);
+		
+		ResourceHttpRequestHandler textEditorRequestHandler = new ResourceHttpRequestHandler();
+		textEditorRequestHandler.setLocations(Collections.singletonList(applicationContext.getResource("file:///opt/upload/textEditor/")));
+		textEditorRequestHandler.setCacheSeconds(31556926);
+		textEditorRequestHandler.setServletContext(servletContext);
+		textEditorRequestHandler.setApplicationContext(applicationContext);
+		urlMap.put("/file/textEditor/**", textEditorRequestHandler);
+		
 		handlerMapping.setUrlMap(urlMap);
+		
 		applicationContext.getAutowireCapableBeanFactory().initializeBean(handlerMapping, null);
 		
 		ConfigurableApplicationContext configurableApplicationContext = (ConfigurableApplicationContext) applicationContext;  

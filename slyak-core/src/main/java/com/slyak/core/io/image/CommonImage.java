@@ -23,6 +23,7 @@ import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 
 import org.apache.commons.io.FileUtils;
+import org.springframework.util.ResourceUtils;
 
 import com.slyak.core.io.FileOperation;
 
@@ -42,7 +43,7 @@ public class CommonImage implements FileOperation {
     }
 
     public CommonImage(String fileLocation) throws IOException {
-        this(new File(fileLocation));
+        this(ResourceUtils.getFile(fileLocation));
     }
 
     public CommonImage(File imageFile) throws IOException {

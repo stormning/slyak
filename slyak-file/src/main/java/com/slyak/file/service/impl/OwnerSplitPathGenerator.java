@@ -10,12 +10,17 @@ package com.slyak.file.service.impl;
 
 import java.io.File;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.slyak.file.service.OwnerPathGenerator;
 
 public class OwnerSplitPathGenerator implements OwnerPathGenerator {
 
 	@Override
 	public String generateOwnerPath(String owner) {
+		if(StringUtils.isBlank(owner)) {
+			return StringUtils.EMPTY;
+		}
 		int len = owner.length();
 		int begin = 0;
 		int setp = 2;

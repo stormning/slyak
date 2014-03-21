@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -34,6 +35,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UrlPathHelper;
@@ -92,11 +94,8 @@ public class FileController implements InitializingBean{
 	}
 	
 	@RequestMapping(value="/crop",method=RequestMethod.GET)
-	public void cropOriginalFileView(String biz,String owner,Model model,Locale locale,HttpServletRequest request,HttpServletResponse response) throws TemplateException, IOException {
-		File tmp = fileService.findReal(biz, owner, FileService.TMP_FILE);
-		if(tmp.exists()) {
-			model.addAttribute("uploaded", true);
-		}
+	public void cropOriginalFileView(String biz,String owner,@RequestParam(value="uploaded",defaultValue="false") boolean uploaded,Model model,Locale locale,HttpServletRequest request,HttpServletResponse response) throws TemplateException, IOException {
+		model.addAttribute("uploaded", uploaded);
 		if(fileService.findReal(biz, owner, FileService.ORIGINAL_FILE).exists()) {
 			model.addAttribute("croped", true);
 		}
@@ -112,11 +111,13 @@ public class FileController implements InitializingBean{
 	
 	@RequestMapping(value="/crop",method=RequestMethod.POST)
 	@ResponseBody
-	public String cropOriginalFile(String biz,String owner,int left,int top,int width,int height,Model model) throws IOException {
+	public Map<String, Object> cropOriginalFile(String biz,String owner,int left,int top,int width,int height,Model model) throws IOException {
 		File tmp = fileService.findReal(biz, owner, FileService.TMP_FILE);
 		CommonImage ci = new CommonImage(tmp);
 		ci.crop(left, top, width, height).save(fileService.findReal(biz, owner, FileService.ORIGINAL_FILE));
-		return "callback script";
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", true);
+		return result;
 	}
 	
 	@RequestMapping(value="/download/{biz}/{owner}",method=RequestMethod.POST)
@@ -164,7 +165,8 @@ public class FileController implements InitializingBean{
 	@ResponseBody
 	public Map<String,Object> textEditorUpload(HttpServletRequest request,MultipartFile file){
 		try {
-			fileService.findReal(FileService.BIZ_TEXT_EDITOR, null, file.getOriginalFilename());
+			File realFile = fileService.findReal(FileService.BIZ_TEXT_EDITOR, null, file.getOriginalFilename());
+			FileCopyUtils.copy(file.getBytes(), realFile);
 			return textEditor.onFileUploadSuccess(fileService.getFileHttpPath(REQUEST_PREFIX,FileService.BIZ_TEXT_EDITOR, null, file.getOriginalFilename()));
 		} catch (Exception e) {
 			return textEditor.onFileUploadFailed(e);
@@ -175,7 +177,7 @@ public class FileController implements InitializingBean{
 	@ResponseBody
 	public Map<String,Object> textEditorFiles(String order,String path){
 		try{
-			File folder = fileService.findReal(FileService.BIZ_TEXT_EDITOR, null, null);
+			File folder = fileService.findBaseFlolder(FileService.BIZ_TEXT_EDITOR);
 			return textEditor.listFiles(folder.getPath(),path,order);
 		} catch (Exception e) {
 			return Collections.emptyMap();

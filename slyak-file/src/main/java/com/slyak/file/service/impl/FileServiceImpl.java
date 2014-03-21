@@ -92,9 +92,7 @@ public class FileServiceImpl implements FileService, ServletContextAware,
 		if (StringUtils.hasText(biz)) {
 			path.append(File.separatorChar).append(biz);
 		}
-		if (StringUtils.hasText(owner)) {
-			path.append(ownerToPath(null, owner));
-		}
+		path.append(ownerToPath(biz, owner));
 		if (StringUtils.hasText(fileName)) {
 			path.append(File.separatorChar).append(fileName);
 		}
@@ -163,5 +161,28 @@ public class FileServiceImpl implements FileService, ServletContextAware,
 		} else {
 			ownerPathGenerators.putAll(defaultPathGenerators);
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see com.slyak.file.service.FileService#findBaseFlolder(java.lang.String)
+	 */
+	@Override
+	public File findBaseFlolder(String biz) {
+		return new File(uploadPath+File.separator+biz);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.slyak.file.service.FileService#getFileByHttpPath(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public File getFileByHttpPath(String requestPrefix, String httpPath) {
+		String biz = getBizByHttpPath(httpPath.replaceFirst(requestPrefix, ""));
+		String owner = "";
+		String fileName = "";
+		return findReal(biz, owner, fileName);
+	}
+
+	private String getBizByHttpPath(String httpPath) {
+		return httpPath.substring(httpPath.indexOf('/'));
 	}
 }

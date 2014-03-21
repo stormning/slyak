@@ -8,6 +8,7 @@
  */
 package com.slyak.file.service.impl;
 
+import java.io.File;
 import java.util.Date;
 
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -18,7 +19,7 @@ public class OwnerDatePathGenerator implements OwnerPathGenerator {
 
 	@Override
 	public String generateOwnerPath(String owner) {
-		return DateFormatUtils.format(new Date(), "yyyy-MM-dd");
+		return File.separatorChar+DateFormatUtils.format(new Date(), "yyyy-MM-dd");
 	}
 
 }

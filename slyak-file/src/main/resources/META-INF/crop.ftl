@@ -15,7 +15,7 @@
 			}
 			
 			#preview-pane {
-			   border: 1px rgba(0,0,0,.4) solid;
+			   border: 1px #ccc solid;
 			   background-color: white;
 			   margin-bottom:15px;
 			}
@@ -115,12 +115,45 @@
 					'swf':'${ctx}/fileResource/js/uploadify/uploadify.swf',
 					'uploader' : '${ctx}/file/uploadTmp',
 					'buttonText':'选择图片',
-					'width':90;
-					'height':26;
+					'width':90,
+					'height':26,
 					'fileSizeLimit' : '30MB',
 					'onUploadSuccess':function(){
-						location.reload();
+						if(location.href.indexOf('uploaded')==-1){
+							location.href = location.href+'&uploaded=true';
+						} else {
+							location.reload();
+						}
 					}
+				});
+				
+				$('#submitCrop').on('click',function(){
+					var selected = jcrop_api.tellSelect();
+					var nh = Math.floor(selected.h);
+					var nw = Math.floor(nh*${aspectRatio});
+					$.post("${ctx}/file/crop",{
+						biz : '${biz}',
+						owner:'${owner}',
+						left:Math.floor(selected.x),
+						top:Math.floor(selected.y),
+						width:nw,
+						height:nh
+					},function(res){
+						//do after crop
+						if(res.success){
+							if(document.parent){
+								if(document.parent){
+									if(document.parent.onCropSuccess){
+										document.parent.onCropSuccess();
+									} else {
+										document.parent.location.reload();
+									}
+								}
+							} else {
+								location.reload();
+							}
+						}
+					});
 				});
 				
 			});
@@ -146,13 +179,13 @@
 				<div style="clear:both"></div>
 			</div>
 			
-			<#if uploaded??&&!croped??>
+			<#if uploaded??>
 				<div class="tmpImageContainer">
 					<img src="${ctx}/file/view/${biz}/${owner}/tmp" id="tmpImage"/>
 				</div>
 				<div class="crop-footer">
 					<input type="submit" value="确认" id="submitCrop">
-					<a href="#" id="cancelCrop">取消</a>
+					<a href="javascript:void(0)" id="cancelCrop">取消</a>
 				</div>
 			</#if>
 		</div>
